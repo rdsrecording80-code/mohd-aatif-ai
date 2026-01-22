@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohd Aatif AI | Gemini Studio</title>
+    <style>
+        :root { --bg: #131314; --side: #1e1f20; --border: #444746; --blue: #8ab4f8; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: #e3e3e3; font-family: 'Segoe UI', sans-serif; height: 100vh; overflow: hidden; }
+        .layout { display: flex; height: 100vh; }
+        .sidebar { width: 280px; background: var(--side); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
+        .chat-main { flex: 1; display: flex; flex-direction: column; position: relative; }
+        .header { padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .header b { color: var(--blue); font-size: 18px; }
+        #chatBox { flex: 1; overflow-y: auto; padding: 40px 15%; scroll-behavior: smooth; }
+        .msg { margin-bottom: 30px; font-size: 17px; line-height: 1.6; }
+        .label { font-size: 12px; color: var(--blue); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; }
+        .input-container { padding: 20px 15% 40px; }
+        .input-bar { background: var(--side); border: 1px solid var(--border); border-radius: 30px; padding: 12px 25px; display: flex; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        input { flex: 1; background: transparent; border: none; color: #fff; font-size: 16px; outline: none; }
+        .run-btn { color: #a8c7fa; font-weight: bold; cursor: pointer; padding: 5px 15px; }
+        @media (max-width: 800px) { .sidebar { display: none; } #chatBox { padding: 20px; } .input-container { padding: 15px; } }
+    </style>
+</head>
+<body>
+<div class="layout">
+    <div class="sidebar">
+        <div style="background:#333537; color:#a8c7fa; padding:12px; border-radius:25px; text-align:center; margin-bottom:20px;">+ New Prompt</div>
+        <div style="color:#9aa0a6; font-size:11px; margin-left:10px;">RECENT</div>
+        <div style="padding:10px; font-size:14px; color:#c4c7c5;">Aatif Official Bio</div>
+    </div>
+    <div class="chat-main">
+        <div class="header">
+            <b>MOHD AATIF AI STUDIO</b>
+            <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" style="width:35px; height:35px; border-radius:50%; border:1px solid gold;">
+        </div>
+        <div id="chatBox">
+            <div class="msg">
+                <div class="label">Gemini Studio</div>
+                अस्सलाम वालेकुम! मोहम्मद आतिफ ऑफिशियल एआई स्टूडियो अब गिटहब पर लाइव है। पूछिए, मैं आपकी क्या मदद कर सकता हूँ?
+            </div>
+        </div>
+        <div class="input-container">
+            <div class="input-bar">
+                <input type="text" id="uInp" placeholder="Enter a prompt here..." onkeypress="if(event.key=='Enter') ask()">
+                <div class="run-btn" onclick="ask()">Run</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const brain = { "kaun ho": "मैं मोहम्मद आतिफ ऑफिशियल एआई हूँ।", "aatif": "मोहम्मद आतिफ एक मशहूर नात ख्वान हैं।" };
+    function ask() {
+        const i = document.getElementById("uInp");
+        const d = document.getElementById("chatBox");
+        if(!i.value.trim()) return;
+        d.innerHTML += `<div style="text-align:right; margin-bottom:20px;"><span style="background:#333537; padding:10px 20px; border-radius:20px; display:inline-block;">${i.value}</span></div>`;
+        let r = "इसकी जानकारी जल्द अपडेट होगी।";
+        for(let k in brain) { if(i.value.toLowerCase().includes(k)) r = brain[k]; }
+        setTimeout(() => {
+            d.innerHTML += `<div class="msg"><div class="label">Response</div>${r}</div>`;
+            d.scrollTop = d.scrollHeight;
+            let s = new SpeechSynthesisUtterance(r); s.lang = 'hi-IN'; window.speechSynthesis.speak(s);
+        }, 500);
+        i.value = "";
+    }
+</script>
+</body>
+</html>
