@@ -6,130 +6,109 @@
     <title>Mohd Aatif AI Studio PRO</title>
     <style>
         :root { --accent: #8ab4f8; --bg: #0b0b0d; --panel: #1e1f20; --text: #e8eaed; --gold: #ffd700; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, sans-serif; height: 100%; overflow: hidden; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); height: 100%; overflow: hidden; }
 
-        /* Professional Header */
+        /* Header Fix */
         .header { 
             display: flex; align-items: center; padding: 12px 20px; 
-            background: rgba(30, 31, 32, 0.8); backdrop-filter: blur(10px);
+            background: rgba(30, 31, 32, 0.95); backdrop-filter: blur(10px);
             border-bottom: 1px solid #3c4043; position: fixed; top: 0; width: 100%; z-index: 1000; 
         }
-        .header img { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--gold); object-fit: cover; margin-right: 12px; }
-        .header b { font-size: 15px; letter-spacing: 0.5px; color: var(--gold); }
-        .header span { display: block; font-size: 9px; color: var(--accent); text-transform: uppercase; }
+        .header img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; margin-right: 12px; }
+        .header b { font-size: 14px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Professional Chat Area */
-        #chatDisplay { 
-            height: 100vh; overflow-y: auto; padding: 85px 15px 160px;
-            display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth;
+        /* Chat Window */
+        #chatBox { 
+            height: 100vh; overflow-y: auto; padding: 80px 15px 180px;
+            display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth;
         }
-        .msg { max-width: 88%; padding: 14px 18px; border-radius: 18px; font-size: 15px; line-height: 1.6; position: relative; animation: fadeInUp 0.3s ease; }
-        .ai-msg { background: #202124; border: 1px solid #3c4043; align-self: flex-start; border-bottom-left-radius: 4px; color: #fff; }
-        .user-msg { background: var(--accent); color: #000; font-weight: 500; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .msg { max-width: 85%; padding: 14px; border-radius: 18px; font-size: 15px; line-height: 1.6; animation: slide 0.3s ease; }
+        .ai { background: #202124; border: 1px solid #3c4043; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .user { background: var(--accent); color: #000; font-weight: 500; align-self: flex-end; border-bottom-right-radius: 4px; }
 
-        /* Typing Animation */
-        .typing { font-style: italic; font-size: 12px; color: var(--accent); margin-bottom: 10px; }
+        /* Typing Effect */
+        .typing-dots { font-size: 12px; color: var(--accent); margin-left: 5px; font-style: italic; }
 
-        /* Input Bar - Superior Mobile Fix */
-        .input-wrap { position: fixed; bottom: 35px; left: 0; right: 0; padding: 0 15px; z-index: 1001; }
+        /* Input Box Fix for Mobile Keyboard */
+        .input-area { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 15px; z-index: 1001; }
         .pill { 
-            background: #2d2e31; border: 1px solid #5f6368; border-radius: 28px; 
-            display: flex; padding: 6px 20px; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            background: #2d2e31; border: 1px solid #5f6368; border-radius: 30px; 
+            display: flex; padding: 5px 20px; align-items: center; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
-        input { flex: 1; background: transparent; border: none; color: white; padding: 10px 0; outline: none; font-size: 16px; }
-        .send-icon { color: var(--accent); font-weight: bold; cursor: pointer; padding: 5px; }
+        input { flex: 1; background: transparent; border: none; color: white; padding: 12px 0; outline: none; font-size: 16px; }
+        .go-btn { color: var(--accent); font-weight: bold; cursor: pointer; padding: 5px 10px; }
 
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Hidden Verification Screen */
-        #secretScanner { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .cam-frame { width: 260px; height: 260px; border: 2px solid var(--accent); border-radius: 50%; overflow: hidden; position: relative; }
+        @keyframes slide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div id="secretScanner">
-    <div class="cam-frame"><video id="v" autoplay muted playsinline style="width:100%; height:100%; object-fit:cover;"></video></div>
-    <p style="color:var(--accent); margin-top:20px; letter-spacing:2px;">SECURE LOG-IN...</p>
-</div>
-
 <div class="header">
     <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="Aatif">
-    <div><b>MOHD AATIF AI STUDIO</b><span>Advanced Intelligence System</span></div>
+    <div><b>Mohd Aatif AI</b><br><span style="font-size:9px; color:var(--accent);">High-Performance Intelligent System</span></div>
 </div>
 
-<div id="chatDisplay">
-    <div class="msg ai-msg">Assalamu Alaikum. How can I assist you today? I am trained to provide information on technology, education, and general knowledge.</div>
+<div id="chatBox">
+    <div class="msg ai">Assalamu Alaikum. How can I assist you today? I am a professional AI system ready for your queries.</div>
 </div>
 
-<div class="input-wrap">
+<div class="input-area">
     <div class="pill">
-        <input type="text" id="userInput" placeholder="Ask a question..." onkeypress="if(event.key=='Enter') ask()">
-        <div class="send-icon" onclick="ask()">RUN</div>
+        <input type="text" id="userInput" placeholder="Ask anything..." onkeypress="if(event.key=='Enter') process()">
+        <div class="go-btn" onclick="process()">RUN</div>
     </div>
 </div>
 
 <script>
-    // Secret code for Aatif Bhai: Just type "admin786" to trigger scanner
-    let isOwner = false;
+    const knowledgeBase = {
+        "naat": "Naat Sharif is a beautiful way to express love for the Prophet Muhammad (PBUH). Listening to or reciting Naat brings peace to the soul. You can find many collections on Master Aatif's official channels.",
+        "quran": "The Holy Quran is the final revelation of Allah, providing guidance for all humanity. Reciting it with understanding brings immense blessings and success in both worlds.",
+        "durood": "Reciting Durood Sharif is a way of sending blessings upon the Prophet (PBUH). It is a highly rewarded act that helps in the acceptance of prayers.",
+        "who": "I am a Professional AI Studio Model developed by Mohd Aatif. I specialize in technology, research, and educational data."
+    };
 
-    function ask() {
+    function process() {
         const inp = document.getElementById("userInput");
-        const box = document.getElementById("chatDisplay");
-        const query = inp.value.trim();
-        if(!query) return;
+        const box = document.getElementById("chatBox");
+        const val = inp.value.trim();
+        if(!val) return;
 
-        addMsg(query, 'user-msg');
+        addMsg(val, 'user');
         inp.value = "";
 
-        if(query.toLowerCase() === "admin786") {
-            triggerSecretScan();
-            return;
-        }
-
-        // Professional Response Logic
+        // Show Thinking...
         const typing = document.createElement("div");
-        typing.className = "typing";
-        typing.innerText = "Thinking...";
+        typing.className = "typing-dots";
+        typing.innerText = "Searching database...";
         box.appendChild(typing);
         box.scrollTop = box.scrollHeight;
 
         setTimeout(() => {
             typing.remove();
             let response = "";
-            
-            if(query.toLowerCase().includes("kaun ho") || query.toLowerCase().includes("who are you")) {
-                response = "I am an Advanced AI model developed within the Mohd Aatif AI Studio. I specialize in providing accurate, real-time information and educational support.";
-            } else if(query.toLowerCase().includes("gana") || query.toLowerCase().includes("music")) {
-                response = "I am programmed for professional and educational purposes. I do not play music, but I can assist you with Naat Sharif information or Islamic studies.";
-            } else {
-                // Online Search Mock - High Quality Answer
-                response = `Based on my latest database analysis for "${query}": <br><br> It appears to be a significant topic. In professional terms, it involves complex elements that require detailed study. You can explore more through verified educational sources. (This system is optimized for high-performance knowledge retrieval).`;
+            let found = false;
+
+            // Search in Knowledge Base
+            for (let key in knowledgeBase) {
+                if (val.toLowerCase().includes(key)) {
+                    response = knowledgeBase[key];
+                    found = true;
+                    break;
+                }
             }
-            
-            addMsg(response, 'ai-msg');
-            speak(response.replace(/<br>/g, " "));
+
+            if (!found) {
+                response = `I have analyzed your query about "${val}". According to my high-speed data retrieval system, this topic is currently being updated in my educational database. Please ask related to Education, Technology or Islamic Studies for a detailed answer.`;
+            }
+
+            addMsg(response, 'ai');
+            speak(response);
         }, 1500);
     }
 
-    function triggerSecretScan() {
-        const s = document.getElementById("secretScanner");
-        s.style.display = "flex";
-        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-            document.getElementById("v").srcObject = stream;
-            setTimeout(() => {
-                s.style.display = "none";
-                stream.getTracks().forEach(t => t.stop());
-                isOwner = true;
-                addMsg("Access Granted. Assalamu Alaikum, Aatif. System is now in Developer Mode.", "ai-msg");
-                speak("Identity confirmed. Hello Aatif.");
-            }, 3000);
-        });
-    }
-
     function addMsg(t, c) {
-        const box = document.getElementById("chatDisplay");
+        const box = document.getElementById("chatBox");
         const m = document.createElement("div");
         m.className = `msg ${c}`;
         m.innerHTML = t;
@@ -141,7 +120,6 @@
         window.speechSynthesis.cancel();
         let s = new SpeechSynthesisUtterance(t);
         s.lang = 'hi-IN';
-        s.rate = 1.0;
         window.speechSynthesis.speak(s);
     }
 </script>
