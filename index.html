@@ -1,80 +1,180 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mohd Aatif AI Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohd Aatif | Professional Smart AI</title>
     <style>
-        body, html { margin: 0; padding: 0; background: #131314; color: #e3e3e3; font-family: sans-serif; height: 100%; overflow: hidden; }
-        .wrapper { display: flex; height: 100vh; width: 100vw; }
+        :root { --accent: #8ab4f8; --bg: #0b0b0d; --panel: #1e1f20; --border: #3c4043; --gold: #ffd700; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: #e8eaed; font-family: 'Google Sans', 'Segoe UI', sans-serif; height: 100vh; overflow: hidden; }
         
-        /* Sidebar - Gemini Look */
-        .side-bar { width: 260px; background: #1e1f20; border-right: 1px solid #444746; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
-        .new-btn { background: #333537; color: #a8c7fa; padding: 12px; border-radius: 25px; text-align: center; margin-bottom: 20px; font-weight: bold; cursor: pointer; }
+        .app-container { display: flex; height: 100vh; }
 
-        /* Main Section */
-        .main-chat { flex: 1; display: flex; flex-direction: column; background: #131314; position: relative; }
-        .top-nav { padding: 15px 25px; border-bottom: 1px solid #444746; display: flex; justify-content: space-between; align-items: center; }
-        .top-nav b { color: #8ab4f8; font-size: 18px; }
+        /* Sidebar Decor */
+        .sidebar { width: 300px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding-top: 40px; }
+        .dp-container { position: relative; width: 120px; height: 120px; border-radius: 50%; padding: 5px; background: linear-gradient(45deg, var(--gold), #fff); box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); margin-bottom: 15px; }
+        .dp-container img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--panel); }
+        .status-dot { position: absolute; bottom: 10px; right: 10px; width: 15px; height: 15px; background: #34a853; border-radius: 50%; border: 2px solid var(--panel); }
+        .profile-name { font-weight: bold; font-size: 18px; letter-spacing: 1px; color: var(--gold); }
 
-        /* Chat Messages */
-        #chatContent { flex: 1; overflow-y: auto; padding: 30px 10%; scroll-behavior: smooth; }
-        .ai-text { margin-bottom: 25px; line-height: 1.6; }
-        .name-tag { font-size: 12px; color: #8ab4f8; font-weight: bold; margin-bottom: 5px; }
+        /* Main Chat Area */
+        .chat-area { flex: 1; display: flex; flex-direction: column; background: radial-gradient(circle at top right, #1a1a1c, #0b0b0d); }
+        .chat-header { padding: 20px 40px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        #chatDisplay { flex: 1; overflow-y: auto; padding: 40px 15%; }
+        
+        /* Messages Styling */
+        .message { margin-bottom: 30px; animation: fadeIn 0.5s ease; }
+        .label-ai { font-size: 12px; font-weight: bold; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; }
+        .bubble { padding: 15px 20px; border-radius: 15px; line-height: 1.6; font-size: 17px; display: inline-block; max-width: 85%; }
+        .ai-bubble { background: rgba(255,255,255,0.05); border: 1px solid var(--border); }
+        .user-bubble { background: var(--panel); border: 1px solid var(--accent); float: right; }
 
-        /* Floating Input Bar */
-        .bottom-box { padding: 20px 10% 40px; background: #131314; }
-        .input-pill { background: #1e1f20; border: 1px solid #444746; border-radius: 30px; padding: 10px 20px; display: flex; align-items: center; }
-        input { flex: 1; background: transparent; border: none; color: white; outline: none; font-size: 16px; padding: 10px; }
-        .send { color: #a8c7fa; font-weight: bold; cursor: pointer; margin-left: 10px; }
+        /* Input Section */
+        .input-section { padding: 30px 15%; background: transparent; }
+        .input-pill { background: #2a2b2e; border: 1px solid var(--border); border-radius: 35px; padding: 10px 25px; display: flex; align-items: center; transition: 0.3s; }
+        .input-pill:focus-within { border-color: var(--accent); box-shadow: 0 0 15px rgba(138, 180, 248, 0.2); }
+        input { flex: 1; background: transparent; border: none; color: white; font-size: 16px; outline: none; }
+        .run-btn { color: var(--accent); font-weight: bold; cursor: pointer; padding: 5px 15px; border-radius: 20px; }
+        .run-btn:hover { background: rgba(138, 180, 248, 0.1); }
 
-        /* Mobile View Fix */
-        @media (max-width: 768px) {
-            .side-bar { display: none; }
-            #chatContent { padding: 20px 5%; }
-            .bottom-box { padding: 15px 5% 30px; }
-        }
+        /* YouTube Link Button */
+        .yt-btn { display: inline-block; margin-top: 15px; padding: 10px 20px; background: #ff0000; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; transition: 0.3s; }
+        .yt-btn:hover { background: #cc0000; transform: scale(1.05); }
+
+        /* Security Overlay */
+        #faceScan { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .scan-frame { width: 300px; height: 300px; border: 3px solid var(--accent); position: relative; border-radius: 20px; overflow: hidden; }
+        .laser { position: absolute; width: 100%; height: 4px; background: var(--accent); box-shadow: 0 0 20px var(--accent); animation: laserMove 2s infinite linear; }
+        @keyframes laserMove { 0% {top: 0;} 100% {top: 100%;} }
+        @keyframes fadeIn { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
+
+        @media (max-width: 800px) { .sidebar { display: none; } #chatDisplay { padding: 20px; } .input-section { padding: 15px; } }
     </style>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="side-bar">
-            <div class="new-btn">+ New Prompt</div>
-            <div style="color: #9aa0a6; font-size: 12px;">RECENT</div>
-            <div style="margin-top: 15px; font-size: 14px; opacity: 0.7;">Aatif AI Chat</div>
+
+<div id="faceScan">
+    <div class="scan-frame">
+        <div class="laser"></div>
+        <video id="webcam" autoplay muted playsinline style="width:100%; height:100%; object-fit:cover;"></video>
+    </div>
+    <h2 style="color: var(--accent); margin-top: 30px; letter-spacing: 5px;">BIOMETRIC SCANNING...</h2>
+</div>
+
+<div class="app-container">
+    <div class="sidebar">
+        <div class="dp-container">
+            <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="Mohd Aatif">
+            <div class="status-dot"></div>
         </div>
-        <div class="main-chat">
-            <div class="top-nav">
-                <b>MOHD AATIF AI STUDIO</b>
-                <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" style="width:35px; border-radius:50%; border:1px solid gold;">
+        <div class="profile-name">MOHD AATIF</div>
+        <div style="font-size: 11px; color: #888; margin-top: 5px;">SMART AI DEVELOPER</div>
+        <div style="margin-top: 50px; width: 100%; padding: 0 20px;">
+            <div style="color:var(--accent); font-size:12px; font-weight:bold; margin-bottom:15px;">SYSTEM CATEGORIES</div>
+            <div style="font-size:14px; margin-bottom:10px; color:#aaa;">📁 Educational Material</div>
+            <div style="font-size:14px; margin-bottom:10px; color:#aaa;">📁 Smart Software Dev</div>
+            <div style="font-size:14px; margin-bottom:10px; color:#aaa;">📁 Islamic Naat Center</div>
+        </div>
+    </div>
+
+    <div class="chat-area">
+        <div class="chat-header">
+            <div style="display:flex; align-items:center;">
+                <div style="width:10px; height:10px; background:var(--gold); border-radius:50%; margin-right:10px;"></div>
+                <span style="font-weight:bold; letter-spacing:1px;">AATIF AI STUDIO PRO</span>
             </div>
-            <div id="chatContent">
-                <div class="ai-text">
-                    <div class="name-tag">GEMINI STUDIO</div>
-                    अस्सलाम वालेकुम! अब आपका एआई स्टूडियो पूरी तरह तैयार है। नीचे दिए गए बॉक्स में अपना सवाल लिखें।
-                </div>
+            <div style="font-size:12px; color:#888;">ENCRYPTED SESSION</div>
+        </div>
+
+        <div id="chatDisplay">
+            <div class="message">
+                <div class="label-ai">AI System Initialized</div>
+                <div class="bubble ai-bubble">Assalamu Alaikum! I am the official Smart AI model of Mohd Aatif. My system is purely dedicated to <b>Education & Smart Technology</b>. How can I assist your learning today?</div>
             </div>
-            <div class="bottom-box">
-                <div class="input-pill">
-                    <input type="text" id="userInput" placeholder="Ask Mohd Aatif AI..." onkeypress="if(event.key=='Enter') startChat()">
-                    <div class="send" onclick="startChat()">Run</div>
-                </div>
+        </div>
+
+        <div class="input-section">
+            <div class="input-pill">
+                <input type="text" id="userInput" placeholder="Ask your Master or request educational data..." onkeypress="if(event.key=='Enter') execute()">
+                <div class="run-btn" onclick="execute()">RUN COMMAND</div>
             </div>
         </div>
     </div>
-    <script>
-        function startChat() {
-            const input = document.getElementById("userInput");
-            const box = document.getElementById("chatContent");
-            if(!input.value.trim()) return;
-            box.innerHTML += `<div style="text-align:right; margin-bottom:20px;"><span style="background:#333537; padding:12px 18px; border-radius:20px; display:inline-block;">${input.value}</span></div>`;
-            setTimeout(() => {
-                box.innerHTML += `<div class="ai-text"><div class="name-tag">RESPONSE</div>अभी मैं और सीख रहा हूँ, आतिफ भाई जल्द मेरी याददाश्त बढ़ाएंगे।</div>`;
-                box.scrollTop = box.scrollHeight;
-            }, 500);
-            input.value = "";
+</div>
+
+<script>
+    let isMasterVerified = false;
+
+    function execute() {
+        const inp = document.getElementById("userInput");
+        const box = document.getElementById("chatDisplay");
+        const val = inp.value.trim().toLowerCase();
+        if(!val) return;
+
+        box.innerHTML += `<div class="message" style="overflow:hidden;"><div class="bubble user-bubble">${inp.value}</div></div>`;
+
+        if (val.includes("mohd aatif") || val.includes("aatif hoon")) {
+            startBiometricScan();
+        } else if (isMasterVerified) {
+            respondAsModel(val);
+        } else {
+            respondPublic(val);
         }
-    </script>
+        inp.value = "";
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function startBiometricScan() {
+        const screen = document.getElementById("faceScan");
+        screen.style.display = "flex";
+        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+            document.getElementById("webcam").srcObject = stream;
+            setTimeout(() => {
+                screen.style.display = "none";
+                stream.getTracks().forEach(t => t.stop());
+                isMasterVerified = true;
+                const msg = "Identity Verified! Assalamu Alaikum Aatif Bhai. Main aapka hi banaya hua special smart model hoon. Aapke har hukum ke liye main hajir hoon. Bataiye Master, kya madad karun?";
+                addResponse("SYSTEM UNLOCKED", msg);
+                speak(msg);
+            }, 4000);
+        });
+    }
+
+    function respondAsModel(q) {
+        let r = "Aatif Bhai, as your private model, I am analyzing your request with high-speed smart software.";
+        if(q.includes("song") || q.includes("gana")) {
+            r = "Master, aapne hi mujhe design kiya hai aur aapne gaano se mana kiya hai. Aap sirf Naat Sharif suniye.";
+        }
+        addResponse("MASTER COMMAND", r);
+        speak(r);
+    }
+
+    function respondPublic(q) {
+        let r = "I am a Smart Educational AI. Please ask questions related to technology or education.";
+        let showYT = false;
+
+        if(q.includes("song") || q.includes("gana") || q.includes("music")) {
+            r = "My system is for Education only. Main gaane nahi sunata. Aap ruhan-e-sukoon ke liye Naat Sharif sun sakte hain mere YouTube channel par.";
+            showYT = true;
+        }
+
+        addResponse("AI RESPONSE", r, showYT);
+        speak(r);
+    }
+
+    function addResponse(label, text, showYT = false) {
+        const box = document.getElementById("chatDisplay");
+        let ytHTML = showYT ? `<br><a href="https://youtube.com/@mohdaatif9?si=0RgZNFPZFqHg-AHl" class="yt-btn" target="_blank">Watch Naat Sharif on YouTube</a>` : '';
+        box.innerHTML += `<div class="message"><div class="label-ai">${label}</div><div class="bubble ai-bubble">${text}${ytHTML}</div></div>`;
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function speak(t) {
+        window.speechSynthesis.cancel();
+        let s = new SpeechSynthesisUtterance(t);
+        s.lang = 'hi-IN';
+        window.speechSynthesis.speak(s);
+    }
+</script>
 </body>
 </html>
-
