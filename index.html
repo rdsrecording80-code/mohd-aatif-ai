@@ -1,81 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mohd Aatif AI Studio PRO</title>
+    <title>Mohd Aatif AI Studio</title>
     <style>
-        :root { --accent: #8ab4f8; --bg: #0b0b0d; --gold: #ffd700; }
+        :root { --primary: #8ab4f8; --bg: #0b0b0d; --card: #1e1f20; --gold: #ffd700; }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: #e8eaed; height: 100%; overflow: hidden; }
-        .header { display: flex; align-items: center; padding: 12px 20px; background: #1e1f20; border-bottom: 1px solid #3c4043; position: fixed; top: 0; width: 100%; z-index: 1000; }
-        .header img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--gold); margin-right: 15px; }
-        #chatBox { height: 100vh; overflow-y: auto; padding: 90px 15px 170px; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 85%; padding: 14px; border-radius: 18px; font-size: 16px; line-height: 1.6; animation: slide 0.3s ease; }
-        .ai { background: #202124; border-left: 4px solid var(--accent); align-self: flex-start; }
-        .user { background: var(--accent); color: #000; font-weight: 600; align-self: flex-end; }
-        .input-area { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 15px; }
-        .pill { background: #2d2e31; border: 1px solid #5f6368; border-radius: 35px; display: flex; padding: 5px 20px; align-items: center; }
+        body { margin: 0; background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; }
+
+        /* Header */
+        .header { padding: 12px 20px; background: var(--card); border-bottom: 1px solid #3c4043; display: flex; align-items: center; gap: 15px; }
+        .header img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); }
+
+        /* Chat Window */
+        #chatBox { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .msg { max-width: 85%; padding: 15px; border-radius: 18px; font-size: 16px; line-height: 1.6; animation: slide 0.3s ease; }
+        .user { align-self: flex-end; background: var(--primary); color: #000; font-weight: 600; border-bottom-right-radius: 4px; }
+        .ai { align-self: flex-start; background: var(--card); border-left: 4px solid var(--primary); border-bottom-left-radius: 4px; }
+
+        /* Input Area */
+        .input-area { padding: 20px; background: var(--bg); border-top: 1px solid #333; }
+        .pill { background: #2d2e31; border-radius: 30px; display: flex; padding: 5px 20px; align-items: center; border: 1px solid #555; }
         input { flex: 1; background: transparent; border: none; color: white; padding: 12px; outline: none; font-size: 16px; }
-        .run-btn { color: var(--accent); font-weight: bold; cursor: pointer; }
+        .run-btn { color: var(--primary); font-weight: bold; cursor: pointer; padding: 10px; }
+
         @keyframes slide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
-    <b>MOHD AATIF AI STUDIO</b>
+    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="Aatif">
+    <div><b>MOHD AATIF AI STUDIO</b><br><span style="font-size: 10px; color: var(--primary);">Universal Intelligence (No API Mode)</span></div>
 </div>
 
 <div id="chatBox">
-    <div class="msg ai">Assalamu Alaikum! Main ab har kaam kar sakta hoon. Calculator, Translation, aur har sawal ka jawab. Poochiye?</div>
+    <div class="msg ai">Assalamu Alaikum Aatif Bhai! Main ab tayyar hoon. Main hisab (Calculator), translation aur duniya ke har sawal ka jawab yahan likh sakta hoon.</div>
 </div>
 
 <div class="input-area">
     <div class="pill">
-        <input type="text" id="userInput" placeholder="Type here..." onkeypress="if(event.key=='Enter') start()">
-        <div class="run-btn" onclick="start()">RUN</div>
+        <input type="text" id="userInput" placeholder="Ask anything (e.g. 55*2 or Who is Newton?)" onkeypress="if(event.key=='Enter') process()">
+        <div class="run-btn" onclick="process()">RUN</div>
     </div>
 </div>
 
 <script>
-    async function start() {
+    async function process() {
         const inp = document.getElementById("userInput");
-        const query = inp.value.trim();
-        if(!query) return;
-        addMsg(query, 'user');
+        const box = document.getElementById("chatBox");
+        const val = inp.value.trim();
+        if(!val) return;
+
+        addMsg(val, 'user');
         inp.value = "";
 
         let reply = "";
-        let low = query.toLowerCase();
 
-        // 1. Calculator Logic
-        if (/[0-9]/.test(query) && /[\+\-\*\/]/.test(query)) {
-            try { reply = "Hisab ka jawab hai: " + eval(query); } 
-            catch { reply = "Calculation mein galti hui."; }
-        } 
-        // 2. Translator Logic (English to Hindi)
-        else if (low.includes("translate") || low.includes("meaning")) {
-            reply = "Bhai, translate karne ke liye main abhi basic words samajh sakta hoon. Detailed translation ke liye main live update ho raha hoon.";
+        // 1. CALCULATOR LOGIC (Ek dum sahi calculation karega)
+        if (/^[0-9+\-*/().\s]+$/.test(val) && /[\+\-\*\/]/.test(val)) {
+            try {
+                reply = "Bhai, iska sahi hisab hai: " + eval(val);
+            } catch { reply = "Hisab likhne mein thodi galti hui hai."; }
         }
-        // 3. Creator Info
-        else if (low.includes("aatif") || low.includes("developer")) {
-            reply = "Mohd Aatif ek professional developer hain, unhone mujhe har sawal ka jawab dene ke liye banaya hai.";
+        // 2. TRANSLATION LOGIC (Basic Words)
+        else if (val.toLowerCase().includes("translate")) {
+            reply = "Bhai, translation ke liye main abhi basic meanings dikha sakta hoon. Poora sentence translate karne ke liye main naya server connect kar raha hoon.";
         }
-        // 4. World Knowledge (Real Answer Fetching)
+        // 3. CREATOR BIO
+        else if (val.toLowerCase().includes("aatif")) {
+            reply = "Mohammad Aatif ek bohot hi kabil Developer hain, unhone mujhe aapki madad ke liye design kiya hai.";
+        }
+        // 4. WORLD KNOWLEDGE (Wiki Engine - Yeh screen par likhega)
         else {
             try {
-                const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+                const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(val)}`);
                 const data = await res.json();
-                reply = data.extract ? data.extract : "Bhai, iske baare mein main search kar raha hoon. Tab tak aap kuch aur poochein.";
+                reply = data.extract ? data.extract : "Bhai, '" + val + "' ke baare mein jankari nikaal raha hoon. Aap thodi der baad poochein ya fir kuch aur poochein.";
             } catch {
-                reply = "Net problem hai, par main jawab dhoond raha hoon.";
+                reply = "Internet connection check karein Aatif bhai.";
             }
         }
 
-        addMsg(reply, 'ai');
-        speak(reply);
+        setTimeout(() => {
+            addMsg(reply, 'ai');
+            speak(reply);
+        }, 500);
     }
 
     function addMsg(t, c) {
