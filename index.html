@@ -5,91 +5,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mohd Aatif AI Studio PRO</title>
     <style>
-        :root { --accent: #8ab4f8; --bg: #0b0b0d; --gold: #ffd700; --card: #1e1f20; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        :root { --accent: #8ab4f8; --bg: #0b0b0d; --gold: #ffd700; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body, html { margin: 0; padding: 0; background: var(--bg); color: #e8eaed; height: 100%; overflow: hidden; }
-
-        .header { 
-            display: flex; align-items: center; padding: 12px 20px; 
-            background: var(--card); border-bottom: 1px solid #3c4043; 
-            position: fixed; top: 0; width: 100%; z-index: 1000; 
-        }
+        .header { display: flex; align-items: center; padding: 12px 20px; background: #1e1f20; border-bottom: 1px solid #3c4043; position: fixed; top: 0; width: 100%; z-index: 1000; }
         .header img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--gold); margin-right: 15px; }
-        .header b { font-size: 14px; color: var(--gold); letter-spacing: 1px; }
-
         #chatBox { height: 100vh; overflow-y: auto; padding: 90px 15px 170px; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 88%; padding: 14px 18px; border-radius: 20px; font-size: 16px; line-height: 1.6; animation: slideUp 0.4s ease; }
-        .ai { background: #202124; border: 1px solid #3c4043; align-self: flex-start; border-bottom-left-radius: 4px; border-left: 4px solid var(--accent); }
-        .user { background: var(--accent); color: #000; font-weight: 600; align-self: flex-end; border-bottom-right-radius: 4px; }
-
-        .input-area { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 15px; z-index: 1001; }
-        .pill { background: #2d2e31; border: 1px solid #5f6368; border-radius: 35px; display: flex; padding: 5px 22px; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        input { flex: 1; background: transparent; border: none; color: white; padding: 12px 0; outline: none; font-size: 16px; }
-        .run-btn { color: var(--accent); font-weight: bold; cursor: pointer; padding: 5px 10px; }
-
-        .search-link { display: inline-block; margin-top: 10px; color: var(--gold); font-weight: bold; text-decoration: underline; cursor: pointer; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .msg { max-width: 85%; padding: 14px; border-radius: 18px; font-size: 16px; line-height: 1.6; animation: slide 0.3s ease; }
+        .ai { background: #202124; border-left: 4px solid var(--accent); align-self: flex-start; }
+        .user { background: var(--accent); color: #000; font-weight: 600; align-self: flex-end; }
+        .input-area { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 15px; }
+        .pill { background: #2d2e31; border: 1px solid #5f6368; border-radius: 35px; display: flex; padding: 5px 20px; align-items: center; }
+        input { flex: 1; background: transparent; border: none; color: white; padding: 12px; outline: none; font-size: 16px; }
+        .run-btn { color: var(--accent); font-weight: bold; cursor: pointer; }
+        @keyframes slide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="Aatif">
-    <div><b>MOHD AATIF AI STUDIO</b><br><span style="font-size:9px; color:var(--accent);">Universal Smart Intelligence</span></div>
+    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
+    <b>MOHD AATIF AI STUDIO</b>
 </div>
 
 <div id="chatBox">
-    <div class="msg ai">Assalamu Alaikum! Main Mohd Aatif ka Intelligent AI hoon. Main duniya ke har sawal ka jawab dene ke liye taiyar hoon.</div>
+    <div class="msg ai">Assalamu Alaikum! Main ab har kaam kar sakta hoon. Calculator, Translation, aur har sawal ka jawab. Poochiye?</div>
 </div>
 
 <div class="input-area">
     <div class="pill">
-        <input type="text" id="userInput" placeholder="Ask any question..." onkeypress="if(event.key=='Enter') execute()">
-        <div class="run-btn" onclick="execute()">RUN</div>
+        <input type="text" id="userInput" placeholder="Type here..." onkeypress="if(event.key=='Enter') start()">
+        <div class="run-btn" onclick="start()">RUN</div>
     </div>
 </div>
 
 <script>
-    function execute() {
+    async function start() {
         const inp = document.getElementById("userInput");
-        const box = document.getElementById("chatBox");
         const query = inp.value.trim();
         if(!query) return;
-
         addMsg(query, 'user');
         inp.value = "";
 
-        setTimeout(() => {
-            let reply = "";
-            let low = query.toLowerCase();
+        let reply = "";
+        let low = query.toLowerCase();
 
-            // 1. Personal Creator Info
-            if (low.includes("aatif") || low.includes("developer")) {
-                reply = "Bhai, Mohd Aatif ek high-professional developer hain. Unhone mujhe advanced technology aur education research ke liye design kiya hai.";
-            } 
-            // 2. Educational & General Answers
-            else if (low.includes("computer")) {
-                reply = "Computer ek electronic device hai jo data ko process karta hai. Iska invention Charles Babbage ne kiya tha.";
+        // 1. Calculator Logic
+        if (/[0-9]/.test(query) && /[\+\-\*\/]/.test(query)) {
+            try { reply = "Hisab ka jawab hai: " + eval(query); } 
+            catch { reply = "Calculation mein galti hui."; }
+        } 
+        // 2. Translator Logic (English to Hindi)
+        else if (low.includes("translate") || low.includes("meaning")) {
+            reply = "Bhai, translate karne ke liye main abhi basic words samajh sakta hoon. Detailed translation ke liye main live update ho raha hoon.";
+        }
+        // 3. Creator Info
+        else if (low.includes("aatif") || low.includes("developer")) {
+            reply = "Mohd Aatif ek professional developer hain, unhone mujhe har sawal ka jawab dene ke liye banaya hai.";
+        }
+        // 4. World Knowledge (Real Answer Fetching)
+        else {
+            try {
+                const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+                const data = await res.json();
+                reply = data.extract ? data.extract : "Bhai, iske baare mein main search kar raha hoon. Tab tak aap kuch aur poochein.";
+            } catch {
+                reply = "Net problem hai, par main jawab dhoond raha hoon.";
             }
-            else if (low.includes("quran") || low.includes("islam")) {
-                reply = "Quran Shareef Allah ki aakhiri kitab hai jo puri insaniyat ki hidayat ke liye nazil hui hai.";
-            }
-            // 3. Global AI Intelligence Fallback (Har sawal ka jawab likhega)
-            else {
-                reply = "Bhai, aapka sawal '" + query + "' bahut important hai. Mere smart data ke mutabik ye ek technical ya educational vishay hai. Iska pura detail answer niche diye gaye link par search karke dekhein, kyunki main live database se connect ho raha hoon.";
-                reply += `<br><br><span class="search-link" onclick="window.open('https://www.google.com/search?q=${query}')">🌐 View Full Real-Time Answer</span>`;
-            }
+        }
 
-            addMsg(reply, 'ai');
-            speak(reply.replace(/<[^>]*>/g, ''));
-        }, 500);
+        addMsg(reply, 'ai');
+        speak(reply);
     }
 
     function addMsg(t, c) {
         const box = document.getElementById("chatBox");
         const m = document.createElement("div");
         m.className = `msg ${c}`;
-        m.innerHTML = t;
+        m.innerText = t;
         box.appendChild(m);
         box.scrollTop = box.scrollHeight;
     }
