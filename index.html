@@ -5,110 +5,111 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mohd Aatif | Smart Studio</title>
     <style>
-        :root { --bg: #000; --accent: #1a73e8; --text: #fff; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { margin: 0; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-
-        /* Header */
+        :root { --bg: #000; --accent: #2080ff; }
+        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; }
         header { padding: 30px; text-align: center; border-bottom: 1px solid #222; }
         .p-img { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent); }
-        h1 { margin: 10px 0 5px; font-size: 20px; letter-spacing: 1px; }
+        
+        /* Secret Admin Setting Box */
+        #adminPanel { background: #111; padding: 15px; border-bottom: 1px solid var(--accent); text-align: center; }
+        #keyInput { background: #000; border: 1px solid #444; color: #0f0; padding: 8px; border-radius: 5px; width: 80%; outline: none; margin-bottom: 10px; }
+        .save-btn { background: var(--accent); color: white; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; }
 
-        /* Secret Key Setting (Safe from Block) */
-        .settings-bar { background: #111; padding: 10px; font-size: 11px; text-align: center; border-bottom: 1px solid #222; }
-        #keyInput { background: #000; border: 1px solid #444; color: #0f0; border-radius: 5px; width: 200px; padding: 3px; }
-
-        /* Chat Window */
-        #chatBox { flex: 1; overflow-y: auto; padding: 25px; display: flex; flex-direction: column; gap: 20px; }
-        .msg { max-width: 85%; padding: 15px 20px; border-radius: 18px; line-height: 1.6; font-size: 16px; animation: slideUp 0.3s ease; }
+        #chatBox { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .msg { max-width: 85%; padding: 15px; border-radius: 18px; line-height: 1.6; }
         .ai { background: #111; border-left: 4px solid var(--accent); align-self: flex-start; }
-        .user { background: var(--accent); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .user { background: var(--accent); color: white; align-self: flex-end; }
 
-        /* Perplexity Style Search */
         .input-area { padding: 20px; background: var(--bg); }
-        .pill { background: #1a1a1a; border-radius: 30px; display: flex; padding: 8px 25px; border: 1px solid #333; align-items: center; }
-        input { flex: 1; background: transparent; border: none; color: white; outline: none; font-size: 16px; padding: 10px; }
-        button { background: none; border: none; color: var(--accent); font-weight: bold; cursor: pointer; font-size: 16px; }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .pill { background: #1a1a1a; border-radius: 30px; display: flex; padding: 5px 20px; border: 1px solid #333; }
+        input[type="text"] { flex: 1; background: transparent; border: none; color: white; padding: 12px; outline: none; }
+        .run-btn { background: none; border: none; color: var(--accent); font-weight: bold; cursor: pointer; }
     </style>
 </head>
-<body onclick="startVoice()">
+<body onclick="enableSpeech()">
 
 <header>
     <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" class="p-img">
-    <h1>MOHD AATIF</h1>
-    <div style="font-size: 10px; color: var(--accent); font-weight: bold;">● GEMINI PRO ACTIVE</div>
+    <h1 style="font-size: 18px; margin: 10px 0 0;">MOHD AATIF</h1>
+    <p style="font-size: 10px; color: #555;">GLOBAL AI ENGINE</p>
 </header>
 
-<div class="settings-bar">
-    🛡️ Private Security: <input type="password" id="keyInput" placeholder="Paste Key Here..." onchange="saveKey()">
+<div id="adminPanel">
+    <div style="font-size: 12px; margin-bottom: 10px;">Aatif Bhai, apni API Key yahan ek baar save karein:</div>
+    <input type="password" id="keyInput" placeholder="Paste Gemini Key Here...">
+    <br>
+    <button class="save-btn" onclick="saveKey()">SAVE KEY & START AI</button>
 </div>
 
 <div id="chatBox">
-    <div class="msg ai"><b>Welcome to your Professional Studio.</b><br>Assalamu Alaikum Aatif Bhai! Main Gemini AI hoon. Ab main internet aur asli AI se connect hoon. Aap mujhse kisi bhi cheez ki fazilat ya mushkil sawal pooch sakte hain.</div>
+    <div class="msg ai"><b>System Ready.</b><br>Assalamu Alaikum Aatif Bhai! Key save karne ke baad main internet se connect ho jaunga.</div>
 </div>
 
 <div class="input-area">
     <div class="pill">
         <input type="text" id="userInput" placeholder="Ask me anything..." onkeypress="if(event.key=='Enter') runAI()">
-        <button onclick="runAI()">RUN AI</button>
+        <button class="run-btn" onclick="runAI()">RUN AI</button>
     </div>
 </div>
 
 <script>
     let canSpeak = false;
-    function startVoice() { canSpeak = true; }
+    function enableSpeech() { canSpeak = true; }
 
-    // Key ko safe rakhne ke liye settings
+    // Key save hone par Panel gayab ho jayega
     function saveKey() {
-        localStorage.setItem('my_secret_key', document.getElementById('keyInput').value);
+        const val = document.getElementById('keyInput').value;
+        if(val) {
+            localStorage.setItem('aatif_key_new', val);
+            document.getElementById('adminPanel').style.display = 'none';
+            alert("Success! Ab aapka AI connect ho gaya hai.");
+        }
     }
 
+    // Check if key exists on load
     window.onload = () => {
-        const saved = localStorage.getItem('my_secret_key');
-        if(saved) document.getElementById('keyInput').value = saved;
+        if(localStorage.getItem('aatif_key_new')) {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
     }
 
     async function runAI() {
-        const key = document.getElementById('keyInput').value;
+        const key = localStorage.getItem('aatif_key_new');
         const inp = document.getElementById("userInput");
-        const box = document.getElementById("chatBox");
         const query = inp.value.trim();
         
         if(!query) return;
-        if(!key) { alert("Aatif Bhai, pehle key box mein paste karein!"); return; }
+        if(!key) { 
+            alert("Aatif Bhai, pehle upar API Key save karein!"); 
+            document.getElementById('adminPanel').style.display = 'block';
+            return; 
+        }
 
-        addMsg(query, 'user');
+        addChat(query, 'user');
         inp.value = "";
-        const loader = addMsg("AI is thinking...", 'ai');
+        const loader = addChat("Thinking...", 'ai');
 
         try {
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: "Address the user as Aatif Bhai and respond in professional Hinglish (Roman Urdu/Hindi). Give detailed answers. Query: " + query }] }]
+                    contents: [{ parts: [{ text: "Address as Aatif Bhai, answer in professional Hinglish: " + query }] }]
                 })
             });
-
             const data = await response.json();
             const result = data.candidates[0].content.parts[0].text;
-            
             loader.innerText = result;
-            
             if(canSpeak) {
                 window.speechSynthesis.cancel();
                 let s = new SpeechSynthesisUtterance(result);
                 s.lang = 'hi-IN';
                 window.speechSynthesis.speak(s);
             }
-        } catch (e) {
-            loader.innerText = "Error: Key block ho gayi hai ya sahi nahi hai. Please check karein.";
-        }
+        } catch (e) { loader.innerText = "Error: Key sahi nahi hai."; }
     }
 
-    function addMsg(t, c) {
+    function addChat(t, c) {
         const box = document.getElementById("chatBox");
         const d = document.createElement("div");
         d.className = `msg ${c}`;
