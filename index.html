@@ -1,43 +1,34 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mohd Aatif AI Studio PRO</title>
     <style>
-        :root { --accent: #8ab4f8; --bg: #0b0b0d; --card: #1e1f20; --gold: #ffd700; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        :root { --accent: #8ab4f8; --bg: #0b0b0d; --gold: #ffd700; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body, html { margin: 0; padding: 0; background: var(--bg); color: #e8eaed; height: 100%; overflow: hidden; }
 
-        /* Professional Header */
+        /* Header */
         .header { 
             display: flex; align-items: center; padding: 12px 20px; 
-            background: rgba(30, 31, 32, 0.98); backdrop-filter: blur(15px);
-            border-bottom: 1px solid #3c4043; position: fixed; top: 0; width: 100%; z-index: 1000; 
+            background: rgba(30, 31, 32, 0.98); border-bottom: 1px solid #3c4043; 
+            position: fixed; top: 0; width: 100%; z-index: 1000; 
         }
         .header img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; margin-right: 15px; }
-        .header b { font-size: 15px; color: var(--gold); letter-spacing: 0.5px; }
+        .header b { font-size: 14px; color: var(--gold); letter-spacing: 1px; }
 
         /* Chat Window */
-        #chatBox { 
-            height: 100vh; overflow-y: auto; padding: 90px 15px 160px;
-            display: flex; flex-direction: column; gap: 18px; scroll-behavior: smooth;
-        }
-        .msg { max-width: 88%; padding: 14px 18px; border-radius: 20px; font-size: 15px; line-height: 1.6; animation: fadeIn 0.3s ease; }
-        .ai { background: #202124; border: 1px solid #3c4043; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 2px 2px 10px rgba(0,0,0,0.3); }
+        #chatBox { height: 100vh; overflow-y: auto; padding: 90px 15px 170px; display: flex; flex-direction: column; gap: 18px; }
+        .msg { max-width: 85%; padding: 14px 18px; border-radius: 20px; font-size: 15px; line-height: 1.6; animation: fadeIn 0.3s ease; }
+        .ai { background: #202124; border: 1px solid #3c4043; align-self: flex-start; border-bottom-left-radius: 4px; }
         .user { background: var(--accent); color: #000; font-weight: 600; align-self: flex-end; border-bottom-right-radius: 4px; }
 
-        /* Thinking Animation */
-        .loader { font-size: 12px; color: var(--accent); margin-left: 10px; font-style: italic; display: none; }
-
-        /* Search Box Fix for Mobile */
-        .input-container { position: fixed; bottom: 25px; left: 0; right: 0; padding: 0 15px; z-index: 1001; }
-        .pill { 
-            background: #2d2e31; border: 1px solid #5f6368; border-radius: 35px; 
-            display: flex; padding: 6px 22px; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-        }
+        /* Input Area Fix */
+        .input-area { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 15px; z-index: 1001; }
+        .pill { background: #2d2e31; border: 1px solid #5f6368; border-radius: 35px; display: flex; padding: 6px 22px; align-items: center; }
         input { flex: 1; background: transparent; border: none; color: white; padding: 12px 0; outline: none; font-size: 16px; }
-        .run-btn { color: var(--accent); font-weight: bold; cursor: pointer; padding: 5px 10px; text-transform: uppercase; font-size: 14px; }
+        .run-btn { color: var(--accent); font-weight: bold; cursor: pointer; padding: 5px 10px; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -46,63 +37,60 @@
 
 <div class="header">
     <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="Aatif">
-    <div><b>Mohd Aatif AI Studio</b><br><span style="font-size:9px; color:var(--accent);">High-Professional Smart Education System</span></div>
+    <div><b>Mohd Aatif AI Studio</b><br><span style="font-size:9px; color:var(--accent);">Smart Education & Professional System</span></div>
 </div>
 
 <div id="chatBox">
-    <div class="msg ai">अस्सलाम वालेकुम! मैं मोहम्मद आतिफ़ का आधिकारिक एआई सिस्टम हूँ। मैं शिक्षा और तकनीक से जुड़े आपके सभी सवालों के जवाब हिंदी में देने के लिए तैयार हूँ। मैं आपकी क्या मदद कर सकता हूँ?</div>
+    <div class="msg ai">Assalamu Alaikum! Main Mohd Aatif dwara banaya gaya professional AI hoon. Poochiye, main aapki kaise madad kar sakta hoon?</div>
 </div>
 
-<div id="loader" class="typing-dots" style="padding-left: 20px; color: var(--accent); font-size: 12px; display: none;">सिस्टम सोच रहा है...</div>
-
-<div class="input-container">
+<div class="input-area">
     <div class="pill">
-        <input type="text" id="userInput" placeholder="यहाँ अपना सवाल पूछें..." onkeypress="if(event.key=='Enter') execute()">
+        <input type="text" id="userInput" placeholder="Ask anything..." onkeypress="if(event.key=='Enter') execute()">
         <div class="run-btn" onclick="execute()">RUN</div>
     </div>
 </div>
 
 <script>
+    // System data in Hindi for Voice
+    const responses = {
+        "aatif": "Mohd Aatif is a high-professional developer. Unhone mujhe smart education aur advanced software research ke liye design kiya hai.",
+        "quran": "The Holy Quran is the word of Allah. Isse humein zindagi guzarna ka sahi rasta milta hai.",
+        "naat": "Naat Sharif Huzoor Sallallahu Alaihi Wasallam ki tareef mein padhi jati hai. Yeh rukh ko sukoon deti hai.",
+        "default": "Aapka sawal bahut important hai. Master Aatif dwara banaya gaya yeh system iska solution nikaal raha hai."
+    };
+
     function execute() {
         const i = document.getElementById("userInput");
         const b = document.getElementById("chatBox");
-        const l = document.getElementById("loader");
         const val = i.value.trim();
         if(!val) return;
 
         addMsg(val, 'user');
         i.value = "";
-        
-        l.style.display = "block";
-        b.scrollTop = b.scrollHeight;
 
         setTimeout(() => {
-            l.style.display = "none";
-            let res = "";
             let low = val.toLowerCase();
+            let textRes = "";
+            let voiceRes = "";
 
-            // Custom Professional Bio Logic
-            if (low.includes("aatif") || low.includes("creator") || low.includes("developer") || low.includes("owner")) {
-                res = "मुझे <b>Mohd Aatif</b> (मोहम्मद आतिफ़) ने डिज़ाइन किया है। वह एक हाई-प्रोफेशनल डेवलपर हैं जिन्होंने मुझे स्मार्ट शिक्षा और उच्च गुणवत्ता वाले सॉफ़्टवेयर रिसर्च के लिए बनाया है। मैं उनके द्वारा तैयार किया गया एक एडवांस इंटेलिजेंट मॉडल हूँ।";
-            } 
-            // Knowledge Base Logic
-            else if (low.includes("quran") || low.includes("islam")) {
-                res = "कुरान शरीफ अल्लाह की आखिरी किताब है जो पूरी मानवता के लिए मार्गदर्शन है। इसे समझकर पढ़ने से रूह को सुकून और दुनिया-आखिरत में कामयाबी मिलती है।";
-            }
-            else if (low.includes("jee") || low.includes("paper") || low.includes("study")) {
-                res = "परीक्षा की तैयारी के लिए आपको सिलेबस को गहराई से समझना चाहिए। मेरे डेटाबेस के अनुसार, प्रोफेशनल तरीके से पढ़ाई करने के लिए पिछले साल के पेपर्स का अभ्यास करना सबसे अच्छा तरीका है।";
-            }
-            else if (low.includes("song") || low.includes("gana")) {
-                res = "क्षमा करें, मुझे केवल शिक्षा और तकनीक के लिए बनाया गया है। मैं गाने नहीं बजा सकता, लेकिन मैं आपको नाअत शरीफ या तालीमी जानकारियाँ दे सकता हूँ।";
-            }
-            // Smart Generic Answer
-            else {
-                res = `आपके सवाल "${val}" पर मैंने विश्लेषण किया है। यह एक महत्वपूर्ण विषय है। मेरा सिस्टम वर्तमान में इस पर और अधिक डेटा इकट्ठा कर रहा है ताकि आपको और भी प्रोफेशनल जानकारी दी जा सके। तब तक आप शिक्षा या तकनीक से संबंधित अन्य सवाल पूछ सकते हैं।`;
+            if (low.includes("aatif") || low.includes("creator")) {
+                textRes = "Master Mohd Aatif designed me for High-Quality Professional Education.";
+                voiceRes = "Mujhe Mohammad Aatif ne high quality professional education ke liye design kiya hai.";
+            } else if (low.includes("quran") || low.includes("kuran")) {
+                textRes = "The Quran provides guidance for all humanity.";
+                voiceRes = "Quran shareef poori insaniyat ke liye hidayat ki kitaab hai.";
+            } else if (low.includes("naat")) {
+                textRes = "Naat Sharif is a beautiful way to show love for the Prophet (PBUH).";
+                voiceRes = "Naat shareef padhna aur sun-na dil ko bahut sukoon deta hai.";
+            } else {
+                textRes = `I am processing your query: "${val}". Please wait...`;
+                voiceRes = `Master Aatif ke system ne aapka sawal samajh liya hai. Main iska jawab jaldi hi bataunga.`;
             }
 
-            addMsg(res, 'ai');
-            speak(res.replace(/<[^>]*>/g, ''));
-        }, 1500);
+            addMsg(textRes, 'ai');
+            speakHindi(voiceRes);
+        }, 1000);
     }
 
     function addMsg(t, c) {
@@ -114,12 +102,11 @@
         b.scrollTop = b.scrollHeight;
     }
 
-    function speak(t) {
+    function speakHindi(t) {
         window.speechSynthesis.cancel();
         let s = new SpeechSynthesisUtterance(t);
-        s.lang = 'hi-IN';
-        s.pitch = 1;
-        s.rate = 1;
+        s.lang = 'hi-IN'; // Force Hindi Voice
+        s.rate = 0.9;
         window.speechSynthesis.speak(s);
     }
 </script>
