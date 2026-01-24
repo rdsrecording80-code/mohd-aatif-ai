@@ -1,91 +1,108 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mohd Aatif AI Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohd Aatif | Professional AI Studio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #8ab4f8; --bg: #0b0b0d; --card: #1e1f20; --gold: #ffd700; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { margin: 0; background: var(--bg); color: white; height: 100vh; display: flex; flex-direction: column; }
+        :root { --primary: #8ab4f8; --bg: #0b0d0f; --card: #1e1f20; --gold: #ffd700; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: 0.3s; }
+        body { margin: 0; background: var(--bg); color: white; overflow-x: hidden; }
 
-        /* Header */
-        .header { padding: 12px 20px; background: var(--card); border-bottom: 1px solid #3c4043; display: flex; align-items: center; gap: 15px; }
-        .header img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); }
+        /* Navigation / Home Section */
+        header { padding: 20px; background: var(--card); text-align: center; border-bottom: 2px solid var(--primary); }
+        .profile-img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--gold); margin-bottom: 10px; }
+        .social-links { margin-top: 15px; display: flex; justify-content: center; gap: 20px; }
+        .social-links a { color: white; font-size: 24px; text-decoration: none; }
+        .social-links a:hover { color: var(--primary); transform: scale(1.2); }
 
-        /* Chat Window */
-        #chatBox { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 85%; padding: 15px; border-radius: 18px; font-size: 16px; line-height: 1.6; animation: slide 0.3s ease; }
-        .user { align-self: flex-end; background: var(--primary); color: #000; font-weight: 600; border-bottom-right-radius: 4px; }
-        .ai { align-self: flex-start; background: var(--card); border-left: 4px solid var(--primary); border-bottom-left-radius: 4px; }
+        /* Main Chat Area */
+        #chatBox { height: 50vh; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; background: rgba(255,255,255,0.02); }
+        .msg { max-width: 85%; padding: 15px; border-radius: 15px; line-height: 1.6; font-size: 15px; }
+        .ai { background: var(--card); border-left: 4px solid var(--primary); align-self: flex-start; }
+        .user { background: var(--primary); color: #000; font-weight: bold; align-self: flex-end; }
 
-        /* Input Area */
-        .input-area { padding: 20px; background: var(--bg); border-top: 1px solid #333; }
-        .pill { background: #2d2e31; border-radius: 30px; display: flex; padding: 5px 20px; align-items: center; border: 1px solid #555; }
+        /* Input System */
+        .footer-input { padding: 20px; background: var(--card); }
+        .input-pill { background: #2d2e31; border-radius: 30px; display: flex; padding: 5px 20px; align-items: center; border: 1px solid #444; }
         input { flex: 1; background: transparent; border: none; color: white; padding: 12px; outline: none; font-size: 16px; }
-        .run-btn { color: var(--primary); font-weight: bold; cursor: pointer; padding: 10px; }
+        .send-btn { background: var(--primary); color: black; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
 
-        @keyframes slide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Home Page Text */
+        .intro-text { padding: 20px; text-align: center; font-size: 14px; color: #aaa; }
     </style>
 </head>
-<body>
+<body onclick="startVoice()">
 
-<div class="header">
-    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="Aatif">
-    <div><b>MOHD AATIF AI STUDIO</b><br><span style="font-size: 10px; color: var(--primary);">Universal Intelligence (No API Mode)</span></div>
+<header>
+    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" class="profile-img" alt="Aatif">
+    <div style="font-size: 20px; font-weight: bold; color: var(--gold);">MOHD AATIF</div>
+    <div style="font-size: 12px; letter-spacing: 2px;">PROFESSIONAL DEVELOPER</div>
+    
+    <div class="social-links">
+        <a href="https://instagram.com/your_username" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://youtube.com/your_channel" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a href="https://facebook.com/your_page" target="_blank"><i class="fab fa-facebook"></i></a>
+        <a href="mailto:your-email@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
+</header>
+
+<div class="intro-text">
+    Welcome to my AI Studio. I can calculate, translate, and answer any world question.
 </div>
 
 <div id="chatBox">
-    <div class="msg ai">Assalamu Alaikum Aatif Bhai! Main ab tayyar hoon. Main hisab (Calculator), translation aur duniya ke har sawal ka jawab yahan likh sakta hoon.</div>
+    <div class="msg ai">Assalamu Alaikum! Main Mohd Aatif ka Advanced AI Assistant hoon. Aap kya jaanna chahte hain?</div>
 </div>
 
-<div class="input-area">
-    <div class="pill">
-        <input type="text" id="userInput" placeholder="Ask anything (e.g. 55*2 or Who is Newton?)" onkeypress="if(event.key=='Enter') process()">
-        <div class="run-btn" onclick="process()">RUN</div>
+<div class="footer-input">
+    <div class="input-pill">
+        <input type="text" id="userInput" placeholder="Ask me anything..." onkeypress="if(event.key=='Enter') askAI()">
+        <button class="send-btn" onclick="askAI()">RUN</button>
     </div>
 </div>
 
 <script>
-    async function process() {
+    let voiceEnabled = false;
+    function startVoice() { voiceEnabled = true; }
+
+    async function askAI() {
         const inp = document.getElementById("userInput");
         const box = document.getElementById("chatBox");
-        const val = inp.value.trim();
-        if(!val) return;
+        const query = inp.value.trim();
+        if(!query) return;
 
-        addMsg(val, 'user');
+        addMsg(query, 'user');
         inp.value = "";
 
-        let reply = "";
+        let result = "";
+        let low = query.toLowerCase();
 
-        // 1. CALCULATOR LOGIC (Ek dum sahi calculation karega)
-        if (/^[0-9+\-*/().\s]+$/.test(val) && /[\+\-\*\/]/.test(val)) {
-            try {
-                reply = "Bhai, iska sahi hisab hai: " + eval(val);
-            } catch { reply = "Hisab likhne mein thodi galti hui hai."; }
+        // 1. Math Calculation
+        if (/^[0-9+\-*/().\s]+$/.test(query) && /[\+\-\*\/]/.test(query)) {
+            try { result = "Calculation Result: " + eval(query); } 
+            catch { result = "Math error! Please type correctly."; }
         }
-        // 2. TRANSLATION LOGIC (Basic Words)
-        else if (val.toLowerCase().includes("translate")) {
-            reply = "Bhai, translation ke liye main abhi basic meanings dikha sakta hoon. Poora sentence translate karne ke liye main naya server connect kar raha hoon.";
-        }
-        // 3. CREATOR BIO
-        else if (val.toLowerCase().includes("aatif")) {
-            reply = "Mohammad Aatif ek bohot hi kabil Developer hain, unhone mujhe aapki madad ke liye design kiya hai.";
-        }
-        // 4. WORLD KNOWLEDGE (Wiki Engine - Yeh screen par likhega)
+        // 2. Knowledge Result
         else {
             try {
-                const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(val)}`);
+                const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
                 const data = await res.json();
-                reply = data.extract ? data.extract : "Bhai, '" + val + "' ke baare mein jankari nikaal raha hoon. Aap thodi der baad poochein ya fir kuch aur poochein.";
+                result = data.extract ? data.extract : "Bhai, iska result dhoondne ke liye main global database scan kar raha hoon. Thoda intezar karein ya kuch aur poochein.";
             } catch {
-                reply = "Internet connection check karein Aatif bhai.";
+                result = "Connection error! Please check your internet.";
             }
         }
 
         setTimeout(() => {
-            addMsg(reply, 'ai');
-            speak(reply);
+            addMsg(result, 'ai');
+            if(voiceEnabled) {
+                window.speechSynthesis.cancel();
+                let s = new SpeechSynthesisUtterance(result);
+                s.lang = 'hi-IN';
+                window.speechSynthesis.speak(s);
+            }
         }, 500);
     }
 
@@ -96,13 +113,6 @@
         m.innerText = t;
         box.appendChild(m);
         box.scrollTop = box.scrollHeight;
-    }
-
-    function speak(t) {
-        window.speechSynthesis.cancel();
-        let s = new SpeechSynthesisUtterance(t);
-        s.lang = 'hi-IN';
-        window.speechSynthesis.speak(s);
     }
 </script>
 </body>
