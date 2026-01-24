@@ -1,154 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mohd Aatif AI Studio PRO</title>
     <style>
-        :root { --accent: #8ab4f8; --bg: #0b0b0d; --panel: #1e1f20; --text: #e8eaed; --gold: #ffd700; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); height: 100%; overflow: hidden; }
+        :root { --accent: #8ab4f8; --bg: #0b0b0d; --card: #1e1f20; --gold: #ffd700; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: #e8eaed; height: 100%; overflow: hidden; }
 
+        /* Professional Header */
         .header { 
             display: flex; align-items: center; padding: 12px 20px; 
-            background: rgba(30, 31, 32, 0.95); backdrop-filter: blur(10px);
+            background: rgba(30, 31, 32, 0.98); backdrop-filter: blur(15px);
             border-bottom: 1px solid #3c4043; position: fixed; top: 0; width: 100%; z-index: 1000; 
         }
-        .header img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; margin-right: 12px; }
-        .header b { font-size: 14px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+        .header img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; margin-right: 15px; }
+        .header b { font-size: 15px; color: var(--gold); letter-spacing: 0.5px; }
 
+        /* Chat Window */
         #chatBox { 
-            height: 100vh; overflow-y: auto; padding: 80px 15px 180px;
-            display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth;
+            height: 100vh; overflow-y: auto; padding: 90px 15px 160px;
+            display: flex; flex-direction: column; gap: 18px; scroll-behavior: smooth;
         }
-        .msg { max-width: 85%; padding: 14px; border-radius: 18px; font-size: 15px; line-height: 1.6; animation: slide 0.3s ease; }
-        .ai { background: #202124; border: 1px solid #3c4043; align-self: flex-start; border-bottom-left-radius: 4px; }
-        .user { background: var(--accent); color: #000; font-weight: 500; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .msg { max-width: 88%; padding: 14px 18px; border-radius: 20px; font-size: 15px; line-height: 1.6; animation: fadeIn 0.3s ease; }
+        .ai { background: #202124; border: 1px solid #3c4043; align-self: flex-start; border-bottom-left-radius: 4px; box-shadow: 2px 2px 10px rgba(0,0,0,0.3); }
+        .user { background: var(--accent); color: #000; font-weight: 600; align-self: flex-end; border-bottom-right-radius: 4px; }
 
-        .typing-dots { font-size: 12px; color: var(--accent); margin-left: 10px; font-style: italic; }
+        /* Thinking Animation */
+        .loader { font-size: 12px; color: var(--accent); margin-left: 10px; font-style: italic; display: none; }
 
-        .input-area { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 15px; z-index: 1001; }
+        /* Search Box Fix for Mobile */
+        .input-container { position: fixed; bottom: 25px; left: 0; right: 0; padding: 0 15px; z-index: 1001; }
         .pill { 
-            background: #2d2e31; border: 1px solid #5f6368; border-radius: 30px; 
-            display: flex; padding: 5px 20px; align-items: center; box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            background: #2d2e31; border: 1px solid #5f6368; border-radius: 35px; 
+            display: flex; padding: 6px 22px; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
         input { flex: 1; background: transparent; border: none; color: white; padding: 12px 0; outline: none; font-size: 16px; }
-        .go-btn { color: var(--accent); font-weight: bold; cursor: pointer; padding: 5px 10px; }
+        .run-btn { color: var(--accent); font-weight: bold; cursor: pointer; padding: 5px 10px; text-transform: uppercase; font-size: 14px; }
 
-        @keyframes slide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="header">
     <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="Aatif">
-    <div><b>Mohd Aatif AI</b><br><span style="font-size:9px; color:var(--accent);">Professional Multi-Language AI System</span></div>
+    <div><b>Mohd Aatif AI Studio</b><br><span style="font-size:9px; color:var(--accent);">High-Professional Smart Education System</span></div>
 </div>
 
 <div id="chatBox">
-    <div class="msg ai">Assalamu Alaikum. How can I assist you today? / मैं आपकी किस प्रकार सहायता कर सकता हूँ?</div>
+    <div class="msg ai">अस्सलाम वालेकुम! मैं मोहम्मद आतिफ़ का आधिकारिक एआई सिस्टम हूँ। मैं शिक्षा और तकनीक से जुड़े आपके सभी सवालों के जवाब हिंदी में देने के लिए तैयार हूँ। मैं आपकी क्या मदद कर सकता हूँ?</div>
 </div>
 
-<div class="input-area">
+<div id="loader" class="typing-dots" style="padding-left: 20px; color: var(--accent); font-size: 12px; display: none;">सिस्टम सोच रहा है...</div>
+
+<div class="input-container">
     <div class="pill">
-        <input type="text" id="userInput" placeholder="Ask anything in Hindi or English..." onkeypress="if(event.key=='Enter') process()">
-        <div class="go-btn" onclick="process()">RUN</div>
+        <input type="text" id="userInput" placeholder="यहाँ अपना सवाल पूछें..." onkeypress="if(event.key=='Enter') execute()">
+        <div class="run-btn" onclick="execute()">RUN</div>
     </div>
 </div>
 
 <script>
-    let lastEnglishResponse = "";
-
-    const knowledgeBase = {
-        "naat": {
-            en: "Naat Sharif is a beautiful way to express love for the Prophet Muhammad (PBUH). Reciting Naat brings peace to the soul.",
-            hi: "नाअत शरीफ पैगंबर मुहम्मद (PBUH) के प्रति प्रेम व्यक्त करने का एक सुंदर तरीका है। नाअत पढ़ने से रूह को सुकून मिलता है।"
-        },
-        "quran": {
-            en: "The Holy Quran is the final revelation of Allah, providing guidance for all humanity.",
-            hi: "पवित्र कुरान अल्लाह का अंतिम रहस्योद्घाटन है, जो पूरी मानवता के लिए मार्गदर्शन प्रदान करता है।"
-        },
-        "durood": {
-            en: "Reciting Durood Sharif is a way of sending blessings upon the Prophet (PBUH). It is highly rewarded.",
-            hi: "दुरूद शरीफ पढ़ना पैगंबर (PBUH) पर बरकत भेजने का एक तरीका है। यह एक बहुत ही सवाब का काम है।"
-        },
-        "aatif": {
-            en: "Mohd Aatif is a Professional Developer and the creator of this High-Performance AI Studio. He specializes in Smart Software, Educational Research, and High-Tech Intelligent Systems.",
-            hi: "मोहम्मद आतिफ़ एक प्रोफेशनल डेवलपर और इस हाई-परफॉर्मेंस AI स्टूडियो के निर्माता हैं। वह स्मार्ट सॉफ्टवेयर, शैक्षिक अनुसंधान और हाई-टेक इंटेलिजेंट सिस्टम के विशेषज्ञ हैं।"
-        }
-    };
-
-    function process() {
-        const inp = document.getElementById("userInput");
-        const box = document.getElementById("chatBox");
-        const val = inp.value.trim();
+    function execute() {
+        const i = document.getElementById("userInput");
+        const b = document.getElementById("chatBox");
+        const l = document.getElementById("loader");
+        const val = i.value.trim();
         if(!val) return;
 
         addMsg(val, 'user');
-        inp.value = "";
-
-        const typing = document.createElement("div");
-        typing.className = "typing-dots";
-        typing.innerText = "Analyzing query...";
-        box.appendChild(typing);
-        box.scrollTop = box.scrollHeight;
+        i.value = "";
+        
+        l.style.display = "block";
+        b.scrollTop = b.scrollHeight;
 
         setTimeout(() => {
-            typing.remove();
-            let response = "";
-            let lowerVal = val.toLowerCase();
+            l.style.display = "none";
+            let res = "";
+            let low = val.toLowerCase();
 
-            // Special Case: Hindi Request
-            if (lowerVal.includes("hindi") || lowerVal.includes("हिंदी")) {
-                response = "मैं आपकी बात समझ गया हूँ। अब मैं आपको हिंदी में जानकारी दे रहा हूँ।";
-                for (let key in knowledgeBase) {
-                    if (lastEnglishResponse.includes(key) || lowerVal.includes(key)) {
-                        response = knowledgeBase[key].hi;
-                    }
-                }
-                if(response.includes("समझ गया")) response = "कृपया अपना सवाल पूछें, मैं हिंदी में जवाब देने के लिए तैयार हूँ।";
+            // Custom Professional Bio Logic
+            if (low.includes("aatif") || low.includes("creator") || low.includes("developer") || low.includes("owner")) {
+                res = "मुझे <b>Mohd Aatif</b> (मोहम्मद आतिफ़) ने डिज़ाइन किया है। वह एक हाई-प्रोफेशनल डेवलपर हैं जिन्होंने मुझे स्मार्ट शिक्षा और उच्च गुणवत्ता वाले सॉफ़्टवेयर रिसर्च के लिए बनाया है। मैं उनके द्वारा तैयार किया गया एक एडवांस इंटेलिजेंट मॉडल हूँ।";
             } 
-            // Personal Info Check
-            else if (lowerVal.includes("aatif") || lowerVal.includes("admin") || lowerVal.includes("developer")) {
-                response = (lowerVal.match(/[अ-ह]/)) ? knowledgeBase.aatif.hi : knowledgeBase.aatif.en;
+            // Knowledge Base Logic
+            else if (low.includes("quran") || low.includes("islam")) {
+                res = "कुरान शरीफ अल्लाह की आखिरी किताब है जो पूरी मानवता के लिए मार्गदर्शन है। इसे समझकर पढ़ने से रूह को सुकून और दुनिया-आखिरत में कामयाबी मिलती है।";
             }
-            // Other Knowledge Base
+            else if (low.includes("jee") || low.includes("paper") || low.includes("study")) {
+                res = "परीक्षा की तैयारी के लिए आपको सिलेबस को गहराई से समझना चाहिए। मेरे डेटाबेस के अनुसार, प्रोफेशनल तरीके से पढ़ाई करने के लिए पिछले साल के पेपर्स का अभ्यास करना सबसे अच्छा तरीका है।";
+            }
+            else if (low.includes("song") || low.includes("gana")) {
+                res = "क्षमा करें, मुझे केवल शिक्षा और तकनीक के लिए बनाया गया है। मैं गाने नहीं बजा सकता, लेकिन मैं आपको नाअत शरीफ या तालीमी जानकारियाँ दे सकता हूँ।";
+            }
+            // Smart Generic Answer
             else {
-                let found = false;
-                for (let key in knowledgeBase) {
-                    if (lowerVal.includes(key)) {
-                        response = (lowerVal.match(/[अ-ह]/)) ? knowledgeBase[key].hi : knowledgeBase[key].en;
-                        lastEnglishResponse = key; 
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    response = (lowerVal.match(/[अ-ह]/)) ? 
-                    `मैंने आपके सवाल "${val}" का विश्लेषण किया है। यह जानकारी वर्तमान में अपडेट की जा रही है।` : 
-                    `I have analyzed your query about "${val}". This topic is currently being updated in my educational database.`;
-                }
+                res = `आपके सवाल "${val}" पर मैंने विश्लेषण किया है। यह एक महत्वपूर्ण विषय है। मेरा सिस्टम वर्तमान में इस पर और अधिक डेटा इकट्ठा कर रहा है ताकि आपको और भी प्रोफेशनल जानकारी दी जा सके। तब तक आप शिक्षा या तकनीक से संबंधित अन्य सवाल पूछ सकते हैं।`;
             }
 
-            addMsg(response, 'ai');
-            speak(response);
-        }, 1200);
+            addMsg(res, 'ai');
+            speak(res.replace(/<[^>]*>/g, ''));
+        }, 1500);
     }
 
     function addMsg(t, c) {
-        const box = document.getElementById("chatBox");
+        const b = document.getElementById("chatBox");
         const m = document.createElement("div");
         m.className = `msg ${c}`;
         m.innerHTML = t;
-        box.appendChild(m);
-        box.scrollTop = box.scrollHeight;
+        b.appendChild(m);
+        b.scrollTop = b.scrollHeight;
     }
 
     function speak(t) {
         window.speechSynthesis.cancel();
         let s = new SpeechSynthesisUtterance(t);
-        // Automatically detect language for voice
-        s.lang = (t.match(/[अ-ह]/)) ? 'hi-IN' : 'en-US';
+        s.lang = 'hi-IN';
+        s.pitch = 1;
+        s.rate = 1;
         window.speechSynthesis.speak(s);
     }
 </script>
