@@ -9,7 +9,6 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); height: 100%; overflow: hidden; }
 
-        /* Header Fix */
         .header { 
             display: flex; align-items: center; padding: 12px 20px; 
             background: rgba(30, 31, 32, 0.95); backdrop-filter: blur(10px);
@@ -18,7 +17,6 @@
         .header img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; margin-right: 12px; }
         .header b { font-size: 14px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Chat Window */
         #chatBox { 
             height: 100vh; overflow-y: auto; padding: 80px 15px 180px;
             display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth;
@@ -27,10 +25,8 @@
         .ai { background: #202124; border: 1px solid #3c4043; align-self: flex-start; border-bottom-left-radius: 4px; }
         .user { background: var(--accent); color: #000; font-weight: 500; align-self: flex-end; border-bottom-right-radius: 4px; }
 
-        /* Typing Effect */
-        .typing-dots { font-size: 12px; color: var(--accent); margin-left: 5px; font-style: italic; }
+        .typing-dots { font-size: 12px; color: var(--accent); margin-left: 10px; font-style: italic; }
 
-        /* Input Box Fix for Mobile Keyboard */
         .input-area { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 15px; z-index: 1001; }
         .pill { 
             background: #2d2e31; border: 1px solid #5f6368; border-radius: 30px; 
@@ -46,26 +42,40 @@
 
 <div class="header">
     <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="Aatif">
-    <div><b>Mohd Aatif AI</b><br><span style="font-size:9px; color:var(--accent);">High-Performance Intelligent System</span></div>
+    <div><b>Mohd Aatif AI</b><br><span style="font-size:9px; color:var(--accent);">Professional Multi-Language AI System</span></div>
 </div>
 
 <div id="chatBox">
-    <div class="msg ai">Assalamu Alaikum. How can I assist you today? I am a professional AI system ready for your queries.</div>
+    <div class="msg ai">Assalamu Alaikum. How can I assist you today? / मैं आपकी किस प्रकार सहायता कर सकता हूँ?</div>
 </div>
 
 <div class="input-area">
     <div class="pill">
-        <input type="text" id="userInput" placeholder="Ask anything..." onkeypress="if(event.key=='Enter') process()">
+        <input type="text" id="userInput" placeholder="Ask anything in Hindi or English..." onkeypress="if(event.key=='Enter') process()">
         <div class="go-btn" onclick="process()">RUN</div>
     </div>
 </div>
 
 <script>
+    let lastEnglishResponse = "";
+
     const knowledgeBase = {
-        "naat": "Naat Sharif is a beautiful way to express love for the Prophet Muhammad (PBUH). Listening to or reciting Naat brings peace to the soul. You can find many collections on Master Aatif's official channels.",
-        "quran": "The Holy Quran is the final revelation of Allah, providing guidance for all humanity. Reciting it with understanding brings immense blessings and success in both worlds.",
-        "durood": "Reciting Durood Sharif is a way of sending blessings upon the Prophet (PBUH). It is a highly rewarded act that helps in the acceptance of prayers.",
-        "who": "I am a Professional AI Studio Model developed by Mohd Aatif. I specialize in technology, research, and educational data."
+        "naat": {
+            en: "Naat Sharif is a beautiful way to express love for the Prophet Muhammad (PBUH). Reciting Naat brings peace to the soul.",
+            hi: "नाअत शरीफ पैगंबर मुहम्मद (PBUH) के प्रति प्रेम व्यक्त करने का एक सुंदर तरीका है। नाअत पढ़ने से रूह को सुकून मिलता है।"
+        },
+        "quran": {
+            en: "The Holy Quran is the final revelation of Allah, providing guidance for all humanity.",
+            hi: "पवित्र कुरान अल्लाह का अंतिम रहस्योद्घाटन है, जो पूरी मानवता के लिए मार्गदर्शन प्रदान करता है।"
+        },
+        "durood": {
+            en: "Reciting Durood Sharif is a way of sending blessings upon the Prophet (PBUH). It is highly rewarded.",
+            hi: "दुरूद शरीफ पढ़ना पैगंबर (PBUH) पर बरकत भेजने का एक तरीका है। यह एक बहुत ही सवाब का काम है।"
+        },
+        "aatif": {
+            en: "Mohd Aatif is a Professional Developer and the creator of this High-Performance AI Studio. He specializes in Smart Software, Educational Research, and High-Tech Intelligent Systems.",
+            hi: "मोहम्मद आतिफ़ एक प्रोफेशनल डेवलपर और इस हाई-परफॉर्मेंस AI स्टूडियो के निर्माता हैं। वह स्मार्ट सॉफ्टवेयर, शैक्षिक अनुसंधान और हाई-टेक इंटेलिजेंट सिस्टम के विशेषज्ञ हैं।"
+        }
     };
 
     function process() {
@@ -77,34 +87,52 @@
         addMsg(val, 'user');
         inp.value = "";
 
-        // Show Thinking...
         const typing = document.createElement("div");
         typing.className = "typing-dots";
-        typing.innerText = "Searching database...";
+        typing.innerText = "Analyzing query...";
         box.appendChild(typing);
         box.scrollTop = box.scrollHeight;
 
         setTimeout(() => {
             typing.remove();
             let response = "";
-            let found = false;
+            let lowerVal = val.toLowerCase();
 
-            // Search in Knowledge Base
-            for (let key in knowledgeBase) {
-                if (val.toLowerCase().includes(key)) {
-                    response = knowledgeBase[key];
-                    found = true;
-                    break;
+            // Special Case: Hindi Request
+            if (lowerVal.includes("hindi") || lowerVal.includes("हिंदी")) {
+                response = "मैं आपकी बात समझ गया हूँ। अब मैं आपको हिंदी में जानकारी दे रहा हूँ।";
+                for (let key in knowledgeBase) {
+                    if (lastEnglishResponse.includes(key) || lowerVal.includes(key)) {
+                        response = knowledgeBase[key].hi;
+                    }
                 }
+                if(response.includes("समझ गया")) response = "कृपया अपना सवाल पूछें, मैं हिंदी में जवाब देने के लिए तैयार हूँ।";
+            } 
+            // Personal Info Check
+            else if (lowerVal.includes("aatif") || lowerVal.includes("admin") || lowerVal.includes("developer")) {
+                response = (lowerVal.match(/[अ-ह]/)) ? knowledgeBase.aatif.hi : knowledgeBase.aatif.en;
             }
-
-            if (!found) {
-                response = `I have analyzed your query about "${val}". According to my high-speed data retrieval system, this topic is currently being updated in my educational database. Please ask related to Education, Technology or Islamic Studies for a detailed answer.`;
+            // Other Knowledge Base
+            else {
+                let found = false;
+                for (let key in knowledgeBase) {
+                    if (lowerVal.includes(key)) {
+                        response = (lowerVal.match(/[अ-ह]/)) ? knowledgeBase[key].hi : knowledgeBase[key].en;
+                        lastEnglishResponse = key; 
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    response = (lowerVal.match(/[अ-ह]/)) ? 
+                    `मैंने आपके सवाल "${val}" का विश्लेषण किया है। यह जानकारी वर्तमान में अपडेट की जा रही है।` : 
+                    `I have analyzed your query about "${val}". This topic is currently being updated in my educational database.`;
+                }
             }
 
             addMsg(response, 'ai');
             speak(response);
-        }, 1500);
+        }, 1200);
     }
 
     function addMsg(t, c) {
@@ -119,7 +147,8 @@
     function speak(t) {
         window.speechSynthesis.cancel();
         let s = new SpeechSynthesisUtterance(t);
-        s.lang = 'hi-IN';
+        // Automatically detect language for voice
+        s.lang = (t.match(/[अ-ह]/)) ? 'hi-IN' : 'en-US';
         window.speechSynthesis.speak(s);
     }
 </script>
