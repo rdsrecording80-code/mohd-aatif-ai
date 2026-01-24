@@ -9,7 +9,7 @@
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body, html { margin: 0; padding: 0; background: var(--bg); color: #e8eaed; height: 100%; overflow: hidden; }
 
-        /* Header */
+        /* Professional Header */
         .header { 
             display: flex; align-items: center; padding: 12px 20px; 
             background: rgba(30, 31, 32, 0.98); border-bottom: 1px solid #3c4043; 
@@ -18,51 +18,42 @@
         .header img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; margin-right: 15px; }
         .header b { font-size: 14px; color: var(--gold); letter-spacing: 1px; }
 
-        /* Chat Window */
-        #chatBox { height: 100vh; overflow-y: auto; padding: 90px 15px 170px; display: flex; flex-direction: column; gap: 18px; }
-        .msg { max-width: 85%; padding: 14px 18px; border-radius: 20px; font-size: 15px; line-height: 1.6; animation: fadeIn 0.3s ease; }
+        /* Chat Display */
+        #chatBox { height: 100vh; overflow-y: auto; padding: 90px 15px 170px; display: flex; flex-direction: column; gap: 15px; }
+        .msg { max-width: 85%; padding: 12px 18px; border-radius: 18px; font-size: 15px; line-height: 1.5; animation: slideIn 0.3s ease; }
         .ai { background: #202124; border: 1px solid #3c4043; align-self: flex-start; border-bottom-left-radius: 4px; }
         .user { background: var(--accent); color: #000; font-weight: 600; align-self: flex-end; border-bottom-right-radius: 4px; }
 
-        /* Input Area Fix */
+        /* Input Area */
         .input-area { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 15px; z-index: 1001; }
-        .pill { background: #2d2e31; border: 1px solid #5f6368; border-radius: 35px; display: flex; padding: 6px 22px; align-items: center; }
+        .pill { background: #2d2e31; border: 1px solid #5f6368; border-radius: 35px; display: flex; padding: 5px 22px; align-items: center; }
         input { flex: 1; background: transparent; border: none; color: white; padding: 12px 0; outline: none; font-size: 16px; }
         .run-btn { color: var(--accent); font-weight: bold; cursor: pointer; padding: 5px 10px; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <div class="header">
     <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="Aatif">
-    <div><b>Mohd Aatif AI Studio</b><br><span style="font-size:9px; color:var(--accent);">Smart Education & Professional System</span></div>
+    <div><b>Mohd Aatif AI Studio</b><br><span style="font-size:9px; color:var(--accent);">High Performance Intelligence</span></div>
 </div>
 
 <div id="chatBox">
-    <div class="msg ai">Assalamu Alaikum! Main Mohd Aatif dwara banaya gaya professional AI hoon. Poochiye, main aapki kaise madad kar sakta hoon?</div>
+    <div class="msg ai">Assalamu Alaikum! How can I help you?</div>
 </div>
 
 <div class="input-area">
     <div class="pill">
-        <input type="text" id="userInput" placeholder="Ask anything..." onkeypress="if(event.key=='Enter') execute()">
-        <div class="run-btn" onclick="execute()">RUN</div>
+        <input type="text" id="userInput" placeholder="Ask your query..." onkeypress="if(event.key=='Enter') process()">
+        <div class="run-btn" onclick="process()">RUN</div>
     </div>
 </div>
 
 <script>
-    // System data in Hindi for Voice
-    const responses = {
-        "aatif": "Mohd Aatif is a high-professional developer. Unhone mujhe smart education aur advanced software research ke liye design kiya hai.",
-        "quran": "The Holy Quran is the word of Allah. Isse humein zindagi guzarna ka sahi rasta milta hai.",
-        "naat": "Naat Sharif Huzoor Sallallahu Alaihi Wasallam ki tareef mein padhi jati hai. Yeh rukh ko sukoon deti hai.",
-        "default": "Aapka sawal bahut important hai. Master Aatif dwara banaya gaya yeh system iska solution nikaal raha hai."
-    };
-
-    function execute() {
+    function process() {
         const i = document.getElementById("userInput");
-        const b = document.getElementById("chatBox");
         const val = i.value.trim();
         if(!val) return;
 
@@ -71,26 +62,30 @@
 
         setTimeout(() => {
             let low = val.toLowerCase();
-            let textRes = "";
-            let voiceRes = "";
+            let text = ""; // Screen par dikhne wala English text
+            let voice = ""; // Bolne wali Hindi voice
 
-            if (low.includes("aatif") || low.includes("creator")) {
-                textRes = "Master Mohd Aatif designed me for High-Quality Professional Education.";
-                voiceRes = "Mujhe Mohammad Aatif ne high quality professional education ke liye design kiya hai.";
+            // Smart Responses
+            if (low.includes("aatif") || low.includes("developer")) {
+                text = "Mohd Aatif designed me for High-Quality Education.";
+                voice = "Mujhe Mohammad Aatif ne high quality education ke liye design kiya hai.";
             } else if (low.includes("quran") || low.includes("kuran")) {
-                textRes = "The Quran provides guidance for all humanity.";
-                voiceRes = "Quran shareef poori insaniyat ke liye hidayat ki kitaab hai.";
+                text = "The Holy Quran is the ultimate guidance for mankind.";
+                voice = "Quran shareef poori insaniyat ke liye hidayat ki kitaab hai.";
             } else if (low.includes("naat")) {
-                textRes = "Naat Sharif is a beautiful way to show love for the Prophet (PBUH).";
-                voiceRes = "Naat shareef padhna aur sun-na dil ko bahut sukoon deta hai.";
+                text = "Naat Sharif brings peace to the soul.";
+                voice = "Naat shareef sun-na aur padhna rooh ko sukoon deta hai.";
+            } else if (low.includes("paper") || low.includes("study")) {
+                text = "I am retrieving professional study data for you.";
+                voice = "Main aapke liye professional parhayi ka data nikaal raha hoon.";
             } else {
-                textRes = `I am processing your query: "${val}". Please wait...`;
-                voiceRes = `Master Aatif ke system ne aapka sawal samajh liya hai. Main iska jawab jaldi hi bataunga.`;
+                text = "Analyzing your query for a professional answer.";
+                voice = "Main aapke sawal ka sahi jawab dhoond raha hoon, thoda intezar karein.";
             }
 
-            addMsg(textRes, 'ai');
-            speakHindi(voiceRes);
-        }, 1000);
+            addMsg(text, 'ai');
+            speak(voice);
+        }, 800);
     }
 
     function addMsg(t, c) {
@@ -102,11 +97,11 @@
         b.scrollTop = b.scrollHeight;
     }
 
-    function speakHindi(t) {
+    function speak(t) {
         window.speechSynthesis.cancel();
         let s = new SpeechSynthesisUtterance(t);
-        s.lang = 'hi-IN'; // Force Hindi Voice
-        s.rate = 0.9;
+        s.lang = 'hi-IN'; // Hamesha Hindi mein bolega
+        s.rate = 1.0;
         window.speechSynthesis.speak(s);
     }
 </script>
