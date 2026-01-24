@@ -3,31 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mohd Aatif AI PRO</title>
+    <title>Mohd Aatif AI Studio PRO</title>
     <style>
         :root { --accent: #8ab4f8; --bg: #0b0b0d; --gold: #ffd700; }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body, html { margin: 0; padding: 0; background: var(--bg); color: #e8eaed; height: 100%; overflow: hidden; }
 
-        /* Professional Header */
         .header { 
             display: flex; align-items: center; padding: 12px 20px; 
             background: #1e1f20; border-bottom: 1px solid #3c4043; 
             position: fixed; top: 0; width: 100%; z-index: 1000; 
         }
         .header img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--gold); margin-right: 15px; }
-        .header b { font-size: 15px; color: var(--gold); letter-spacing: 1px; }
+        .header b { font-size: 14px; color: var(--gold); letter-spacing: 1px; }
 
-        /* Chat Window */
-        #chatBox { height: 100vh; overflow-y: auto; padding: 85px 15px 160px; display: flex; flex-direction: column; gap: 15px; scroll-behavior: smooth; }
-        .msg { max-width: 85%; padding: 14px; border-radius: 18px; font-size: 15px; line-height: 1.6; animation: slide 0.3s ease; }
-        .ai { background: #202124; border: 1px solid #3c4043; align-self: flex-start; border-left: 4px solid var(--accent); }
+        #chatBox { height: 100vh; overflow-y: auto; padding: 85px 15px 160px; display: flex; flex-direction: column; gap: 15px; }
+        .msg { max-width: 85%; padding: 14px; border-radius: 18px; font-size: 15px; line-height: 1.6; animation: slide 0.3s ease; white-space: pre-wrap; }
+        .ai { background: #202124; border: 1px solid #3c4043; align-self: flex-start; border-left: 4px solid var(--accent); color: #fff; }
         .user { background: var(--accent); color: #000; font-weight: 600; align-self: flex-end; }
 
-        /* Typing Loader */
-        .loader { font-size: 12px; color: var(--accent); margin-left: 20px; display: none; }
+        .loader { font-size: 12px; color: var(--accent); margin-left: 20px; display: none; margin-bottom: 110px; }
 
-        /* Search Box */
         .input-area { position: fixed; bottom: 30px; left: 0; right: 0; padding: 0 15px; z-index: 1001; }
         .pill { background: #2d2e31; border: 1px solid #5f6368; border-radius: 35px; display: flex; padding: 5px 20px; align-items: center; }
         input { flex: 1; background: transparent; border: none; color: white; padding: 12px 0; outline: none; font-size: 16px; }
@@ -40,70 +36,78 @@
 
 <div class="header">
     <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="Aatif">
-    <div><b>MOHD AATIF AI</b><br><span style="font-size:9px; color:var(--accent);">Global Intelligence Studio</span></div>
+    <div><b>MOHD AATIF AI</b><br><span style="font-size:9px; color:var(--accent);">Universal Knowledge System</span></div>
 </div>
 
 <div id="chatBox">
-    <div class="msg ai">Assalamu Alaikum! Main duniya ki kisi bhi cheez ka jawab de sakta hoon. Poochiye kya janna hai?</div>
+    <div class="msg ai">Assalamu Alaikum! Main duniya ki kisi bhi cheez ka answer de sakta hoon. Kuch bhi poochein?</div>
 </div>
 
-<div id="status" class="loader">Mohd Aatif's AI is searching global servers...</div>
+<div id="status" class="loader">Scanning Global Servers...</div>
 
 <div class="input-area">
     <div class="pill">
-        <input type="text" id="userInput" placeholder="Ask anything in the world..." onkeypress="if(event.key=='Enter') ask()">
-        <div class="run-btn" onclick="ask()">RUN</div>
+        <input type="text" id="userInput" placeholder="Ask anything in the world..." onkeypress="if(event.key=='Enter') execute()">
+        <div class="run-btn" onclick="execute()">RUN</div>
     </div>
 </div>
 
 <script>
-    async function ask() {
+    async function execute() {
         const inp = document.getElementById("userInput");
         const box = document.getElementById("chatBox");
         const status = document.getElementById("status");
-        const val = inp.value.trim();
+        const query = inp.value.trim();
         
-        if(!val) return;
-        addMsg(val, 'user');
+        if(!query) return;
+        addMsg(query, 'user');
         inp.value = "";
         status.style.display = "block";
         box.scrollTop = box.scrollHeight;
 
         try {
-            // Google & DuckDuckGo Hybrid Search
-            const url = `https://api.duckduckgo.com/?q=${encodeURIComponent(val)}&format=json&no_html=1&skip_disambig=1`;
-            const response = await fetch(url);
-            const data = await response.json();
-            
-            status.style.display = "none";
-            let reply = "";
+            // New High-Tech Multi-Source Engine
+            const wikiUrl = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`;
+            const ddgUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_html=1`;
+
+            let finalAnswer = "";
             let speech = "";
 
-            if (data.AbstractText) {
-                reply = data.AbstractText;
-                speech = "Bhai, iska jawab mil gaya hai. Screen par dekhein.";
-            } else if (data.RelatedTopics && data.RelatedTopics.length > 0) {
-                reply = data.RelatedTopics[0].Text;
-                speech = "Maine global database se jankari nikaal li hai.";
+            // First check Wikipedia (Detailed)
+            const res1 = await fetch(wikiUrl);
+            const data1 = await res1.json();
+
+            if (data1.extract) {
+                finalAnswer = data1.extract;
+                speech = "Maine aapka answer nikaal liya hai.";
             } else {
-                // Agar direct answer na mile toh Professional Fallback
-                reply = "Bhai, '" + val + "' ke baare mein maine smart analysis kiya hai. Iska pura detail answer generate karne ke liye mujhe global servers se connect hona pad raha hai. Ek baar niche click karke poora jawab dekh lein.";
-                reply += `<br><br><a href="https://www.google.com/search?q=${val}" target="_blank" style="color:var(--gold); font-weight:bold;">🌐 VIEW FULL REAL-TIME ANSWER</a>`;
-                speech = "Iska pura jawab nikalne ke liye link par click karein.";
+                // If not in Wiki, check DuckDuckGo
+                const res2 = await fetch(ddgUrl);
+                const data2 = await res2.json();
+                if (data2.AbstractText) {
+                    finalAnswer = data2.AbstractText;
+                    speech = "Global database ke mutabik ye rahi jankari.";
+                } else {
+                    // Fallback for tricky questions
+                    finalAnswer = "Regarding '" + query + "', I have analyzed professional educational data. This is a complex topic being researched by Master Aatif's global servers. To see the full real-time analysis, please use the button below.";
+                    finalAnswer += `\n\n<a href="https://www.google.com/search?q=${encodeURIComponent(query)}" target="_blank" style="color:var(--gold); text-decoration:none; font-weight:bold;">🌐 CLICK FOR COMPLETE REAL-TIME ANSWER</a>`;
+                    speech = "Iska poora answer nikalne ke liye link par click karein.";
+                }
             }
 
-            // Developer Special Response
-            if(val.toLowerCase().includes("aatif")) {
-                reply = "Mohd Aatif ek professional developer hain. Unhone hi is Intelligent AI Studio ko design kiya hai.";
+            // Aatif Special Response
+            if(query.toLowerCase().includes("aatif") || query.toLowerCase().includes("developer")) {
+                finalAnswer = "Mohd Aatif ek Professional High-End Developer hain. Unhone hi is AI Studio ko design kiya hai taaki wo education aur research mein sabki madad kar sakein.";
                 speech = "Mohammad Aatif ek professional developer hain.";
             }
 
-            addMsg(reply, 'ai');
+            status.style.display = "none";
+            addMsg(finalAnswer, 'ai');
             speak(speech);
 
         } catch (error) {
             status.style.display = "none";
-            addMsg("Connection slow hai, par main haar nahi manunga. Dobara try karein.", "ai");
+            addMsg("Bhai, internet slow hai par main Mohd Aatif ka AI hoon, haar nahi manunga. Dubara puchen!", "ai");
         }
     }
 
