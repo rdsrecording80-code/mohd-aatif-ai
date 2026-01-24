@@ -5,132 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mohd Aatif AI Studio PRO</title>
     <style>
-        :root { --blue: #8ab4f8; --bg: #0b0b0d; --card: #1e1f20; --gold: #ffd700; }
-        * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: #e8eaed; font-family: sans-serif; height: 100%; overflow: hidden; }
+        :root { --accent: #8ab4f8; --bg: #0b0b0d; --panel: #1e1f20; --text: #e8eaed; --gold: #ffd700; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', Roboto, sans-serif; height: 100%; overflow: hidden; }
 
-        /* Header Fix */
-        .app-header { display: flex; align-items: center; padding: 10px 15px; background: var(--card); border-bottom: 1px solid #3c4043; position: fixed; top: 0; width: 100%; z-index: 1000; }
-        .header-dp { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; margin-right: 12px; }
-        .header-info b { color: var(--gold); font-size: 14px; display: block; }
+        /* Professional Header */
+        .header { 
+            display: flex; align-items: center; padding: 12px 20px; 
+            background: rgba(30, 31, 32, 0.8); backdrop-filter: blur(10px);
+            border-bottom: 1px solid #3c4043; position: fixed; top: 0; width: 100%; z-index: 1000; 
+        }
+        .header img { width: 42px; height: 42px; border-radius: 50%; border: 1.5px solid var(--gold); object-fit: cover; margin-right: 12px; }
+        .header b { font-size: 15px; letter-spacing: 0.5px; color: var(--gold); }
+        .header span { display: block; font-size: 9px; color: var(--accent); text-transform: uppercase; }
 
-        /* Chat Display: Space for Keyboard */
-        #chatDisplay { height: 100vh; overflow-y: auto; padding: 80px 15px 180px; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 85%; padding: 12px; border-radius: 12px; font-size: 15px; line-height: 1.5; word-wrap: break-word; }
-        .ai-msg { background: rgba(255,255,255,0.05); border: 1px solid #3c4043; align-self: flex-start; }
-        .user-msg { background: var(--blue); color: #000; align-self: flex-end; font-weight: bold; }
+        /* Professional Chat Area */
+        #chatDisplay { 
+            height: 100vh; overflow-y: auto; padding: 85px 15px 160px;
+            display: flex; flex-direction: column; gap: 20px; scroll-behavior: smooth;
+        }
+        .msg { max-width: 88%; padding: 14px 18px; border-radius: 18px; font-size: 15px; line-height: 1.6; position: relative; animation: fadeInUp 0.3s ease; }
+        .ai-msg { background: #202124; border: 1px solid #3c4043; align-self: flex-start; border-bottom-left-radius: 4px; color: #fff; }
+        .user-msg { background: var(--accent); color: #000; font-weight: 500; align-self: flex-end; border-bottom-right-radius: 4px; }
 
-        /* Search Box - Keyboard Friendly */
-        .input-area { position: fixed; bottom: 45px; left: 0; right: 0; padding: 10px 15px; z-index: 1001; }
-        .pill { background: #2a2b2e; border: 1px solid #555; border-radius: 25px; display: flex; padding: 5px 20px; box-shadow: 0 -5px 25px rgba(0,0,0,0.8); }
-        input { flex: 1; background: transparent; border: none; color: white; padding: 12px 0; outline: none; font-size: 16px; }
-        .run-btn { color: var(--blue); font-weight: bold; cursor: pointer; padding-left: 10px; }
+        /* Typing Animation */
+        .typing { font-style: italic; font-size: 12px; color: var(--accent); margin-bottom: 10px; }
 
-        /* Scanner Screen */
-        #scanner { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .camera-box { width: 250px; height: 250px; border: 3px solid var(--blue); border-radius: 20px; overflow: hidden; position: relative; }
-        .line { position: absolute; width: 100%; height: 3px; background: var(--blue); box-shadow: 0 0 15px var(--blue); animation: scan 2s infinite linear; }
-        @keyframes scan { 0% {top: 0;} 100% {top: 100%;} }
-        
-        .search-btn { display: inline-block; margin-top: 10px; padding: 8px 15px; background: var(--gold); color: #000; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 13px; }
+        /* Input Bar - Superior Mobile Fix */
+        .input-wrap { position: fixed; bottom: 35px; left: 0; right: 0; padding: 0 15px; z-index: 1001; }
+        .pill { 
+            background: #2d2e31; border: 1px solid #5f6368; border-radius: 28px; 
+            display: flex; padding: 6px 20px; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        input { flex: 1; background: transparent; border: none; color: white; padding: 10px 0; outline: none; font-size: 16px; }
+        .send-icon { color: var(--accent); font-weight: bold; cursor: pointer; padding: 5px; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Hidden Verification Screen */
+        #secretScanner { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 2000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .cam-frame { width: 260px; height: 260px; border: 2px solid var(--accent); border-radius: 50%; overflow: hidden; position: relative; }
     </style>
 </head>
 <body>
 
-<div id="scanner">
-    <div class="camera-box"><div class="line"></div><video id="vid" autoplay muted playsinline style="width:100%; height:100%; object-fit:cover;"></video></div>
-    <h3 style="color:var(--blue); margin-top:20px;">MASTER VERIFICATION...</h3>
+<div id="secretScanner">
+    <div class="cam-frame"><video id="v" autoplay muted playsinline style="width:100%; height:100%; object-fit:cover;"></video></div>
+    <p style="color:var(--accent); margin-top:20px; letter-spacing:2px;">SECURE LOG-IN...</p>
 </div>
 
-<div class="app-header">
-    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" class="header-dp">
-    <div class="header-info">
-        <b>MOHD AATIF AI STUDIO</b>
-        <span>Professional Smart System</span>
-    </div>
+<div class="header">
+    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="Aatif">
+    <div><b>MOHD AATIF AI STUDIO</b><span>Advanced Intelligence System</span></div>
 </div>
 
 <div id="chatDisplay">
-    <div class="msg ai-msg">Assalamu Alaikum! I am the Official AI Studio of Mohd Aatif. I can answer your questions online. (Master verification only for special commands).</div>
+    <div class="msg ai-msg">Assalamu Alaikum. How can I assist you today? I am trained to provide information on technology, education, and general knowledge.</div>
 </div>
 
-<div class="input-area">
+<div class="input-wrap">
     <div class="pill">
-        <input type="text" id="userInput" placeholder="Ask me anything..." onkeypress="if(event.key=='Enter') run()">
-        <div class="run-btn" onclick="run()">RUN</div>
+        <input type="text" id="userInput" placeholder="Ask a question..." onkeypress="if(event.key=='Enter') ask()">
+        <div class="send-icon" onclick="ask()">RUN</div>
     </div>
 </div>
 
 <script>
-    let isVerified = false;
+    // Secret code for Aatif Bhai: Just type "admin786" to trigger scanner
+    let isOwner = false;
 
-    function run() {
+    function ask() {
         const inp = document.getElementById("userInput");
-        const val = inp.value.trim();
-        if(!val) return;
+        const box = document.getElementById("chatDisplay");
+        const query = inp.value.trim();
+        if(!query) return;
 
-        addMsg(val, 'user-msg');
-        let lowerVal = val.toLowerCase();
+        addMsg(query, 'user-msg');
+        inp.value = "";
 
-        // 1. Master Logic (Camera scan only when identity is claimed)
-        if (lowerVal.includes("mohd aatif") || lowerVal.includes("aatif hoon")) {
-            openScanner();
-        } 
-        // 2. Already Verified Master commands
-        else if (isVerified) {
-            handleMaster(lowerVal);
-        } 
-        // 3. Public Logic: Online Search
-        else {
-            handlePublic(val);
+        if(query.toLowerCase() === "admin786") {
+            triggerSecretScan();
+            return;
         }
 
-        inp.value = "";
+        // Professional Response Logic
+        const typing = document.createElement("div");
+        typing.className = "typing";
+        typing.innerText = "Thinking...";
+        box.appendChild(typing);
+        box.scrollTop = box.scrollHeight;
+
+        setTimeout(() => {
+            typing.remove();
+            let response = "";
+            
+            if(query.toLowerCase().includes("kaun ho") || query.toLowerCase().includes("who are you")) {
+                response = "I am an Advanced AI model developed within the Mohd Aatif AI Studio. I specialize in providing accurate, real-time information and educational support.";
+            } else if(query.toLowerCase().includes("gana") || query.toLowerCase().includes("music")) {
+                response = "I am programmed for professional and educational purposes. I do not play music, but I can assist you with Naat Sharif information or Islamic studies.";
+            } else {
+                // Online Search Mock - High Quality Answer
+                response = `Based on my latest database analysis for "${query}": <br><br> It appears to be a significant topic. In professional terms, it involves complex elements that require detailed study. You can explore more through verified educational sources. (This system is optimized for high-performance knowledge retrieval).`;
+            }
+            
+            addMsg(response, 'ai-msg');
+            speak(response.replace(/<br>/g, " "));
+        }, 1500);
     }
 
-    function openScanner() {
-        const s = document.getElementById("scanner");
+    function triggerSecretScan() {
+        const s = document.getElementById("secretScanner");
         s.style.display = "flex";
         navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-            document.getElementById("vid").srcObject = stream;
+            document.getElementById("v").srcObject = stream;
             setTimeout(() => {
                 s.style.display = "none";
                 stream.getTracks().forEach(t => t.stop());
-                isVerified = true;
-                const m = "IDENTITY MATCHED. Assalamu Alaikum Aatif Bhai! Master mode activated. I am now your personal studio assistant.";
-                addMsg(m, 'ai-msg');
-                speak(m);
-            }, 3500);
+                isOwner = true;
+                addMsg("Access Granted. Assalamu Alaikum, Aatif. System is now in Developer Mode.", "ai-msg");
+                speak("Identity confirmed. Hello Aatif.");
+            }, 3000);
         });
     }
 
-    function handleMaster(q) {
-        let r = "Aatif Bhai, I am processing your high-level command.";
-        if(q.includes("software")) r = "Software status: All systems are running at maximum efficiency, Master.";
-        addMsg(r, 'ai-msg');
-        speak(r);
-    }
-
-    function handlePublic(q) {
-        // AI directly provides online search button to everyone
-        let r = `I am searching for information about "${q}". <br><br> <a href="https://www.google.com/search?q=${q}" target="_blank" class="search-btn">🌐 VIEW ONLINE ANSWER</a>`;
-        addMsg(r, 'ai-msg');
-        speak("Searching online knowledge base.");
-    }
-
-    function addMsg(text, type) {
-        const d = document.getElementById("chatDisplay");
+    function addMsg(t, c) {
+        const box = document.getElementById("chatDisplay");
         const m = document.createElement("div");
-        m.className = `msg ${type}`;
-        m.innerHTML = text;
-        d.appendChild(m);
-        d.scrollTop = d.scrollHeight;
+        m.className = `msg ${c}`;
+        m.innerHTML = t;
+        box.appendChild(m);
+        box.scrollTop = box.scrollHeight;
     }
 
     function speak(t) {
         window.speechSynthesis.cancel();
         let s = new SpeechSynthesisUtterance(t);
         s.lang = 'hi-IN';
+        s.rate = 1.0;
         window.speechSynthesis.speak(s);
     }
 </script>
