@@ -1,109 +1,99 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohd Aatif | AI Studio</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root { --blue: #00a2ff; --dark: #080808; --card: #151515; }
-        body { margin: 0; background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; text-align: center; overflow-x: hidden; }
-        
-        /* Navigation */
-        nav { background: #000; padding: 15px; border-bottom: 2px solid var(--blue); position: sticky; top: 0; z-index: 100; display: flex; justify-content: center; gap: 30px; }
-        nav a { color: white; text-decoration: none; font-weight: bold; font-size: 15px; text-transform: uppercase; }
-
-        /* Header / Home */
-        .home-sec { padding: 80px 20px; background: linear-gradient(to bottom, #000, #111); }
-        .profile-img { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--blue); box-shadow: 0 0 30px rgba(0, 162, 255, 0.4); object-fit: cover; }
-        h1 { font-size: 35px; margin: 15px 0; letter-spacing: 2px; text-shadow: 2px 2px #000; }
-        .status { color: var(--blue); font-weight: bold; font-size: 14px; background: rgba(0,162,255,0.1); padding: 5px 15px; border-radius: 20px; display: inline-block; }
-
-        /* About & YouTube */
-        .about-sec { padding: 60px 20px; }
-        .about-card { max-width: 800px; margin: auto; background: var(--card); padding: 40px; border-radius: 30px; border: 1px solid #333; text-align: left; }
-        .about-card h2 { color: var(--blue); border-bottom: 2px solid #333; padding-bottom: 10px; }
-        .about-card p { line-height: 1.8; color: #ccc; font-size: 16px; }
-        .yt-btn { display: flex; align-items: center; justify-content: center; gap: 10px; background: #ff0000; color: white; padding: 15px; border-radius: 40px; text-decoration: none; font-weight: bold; margin-top: 30px; transition: 0.3s; }
-        .yt-btn:hover { background: #cc0000; transform: scale(1.05); }
-
-        /* Internal Chat Engine */
-        .ai-sec { padding: 60px 20px; }
-        .chat-container { width: 100%; max-width: 600px; margin: auto; background: #000; border: 2px solid var(--blue); border-radius: 25px; overflow: hidden; display: flex; flex-direction: column; height: 500px; }
-        #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .msg { padding: 12px 20px; border-radius: 20px; font-size: 15px; line-height: 1.5; max-width: 85%; }
-        .bot { background: #222; color: var(--blue); align-self: flex-start; border-bottom-left-radius: 2px; }
-        .user { background: var(--blue); color: black; font-weight: bold; align-self: flex-end; border-bottom-right-radius: 2px; }
-        
-        .input-bar { background: #111; padding: 15px; display: flex; gap: 10px; border-top: 1px solid #333; }
-        input { flex: 1; background: #222; border: none; color: white; padding: 12px 20px; border-radius: 30px; outline: none; }
-        button { background: var(--blue); border: none; padding: 10px 25px; border-radius: 30px; font-weight: bold; cursor: pointer; color: black; }
-
-        footer { padding: 40px; font-size: 12px; color: #555; background: #000; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mohd Aatif Smart AI</title>
+<style>
+:root {
+  --bg: #131314;
+  --side: #1e1f20;
+  --border: #ffd700;
+  --blue: #8ab4f8;
+}
+body, html {
+  margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; height: 100vh; background: var(--bg); color: #e3e3e3;
+  display: flex; justify-content: center; align-items: center;
+}
+.wrapper {
+  border: 4px solid var(--border); border-radius: 20px;
+  width: 95%; max-width: 800px; height: 90%; display: flex; flex-direction: column;
+  overflow: hidden; background: #1a1a1b;
+}
+.top-nav {
+  display: flex; align-items: center; justify-content: space-between; padding: 15px 20px;
+  border-bottom: 2px solid var(--border);
+}
+.top-nav b { color: var(--blue); font-size: 20px; }
+.top-nav img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border); }
+#chatBox {
+  flex: 1; padding: 20px; overflow-y: auto; scroll-behavior: smooth;
+}
+.msg { margin-bottom: 20px; font-size: 16px; line-height: 1.5; }
+.label { font-size: 12px; color: var(--blue); font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
+.input-area { padding: 15px 20px; border-top: 2px solid var(--border); display: flex; }
+.input-area input {
+  flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid var(--border);
+  background: #1e1f20; color: white; font-size: 16px; outline: none;
+}
+.input-area button {
+  margin-left: 10px; padding: 10px 20px; border: none; border-radius: 25px;
+  background: var(--blue); color: #000; font-weight: bold; cursor: pointer;
+}
+</style>
 </head>
 <body>
 
-<nav>
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#ai">AI Studio</a>
-</nav>
-
-<section id="home" class="home-sec">
-    <img src="https://avatars.githubusercontent.com/u/190013350?v=4" class="profile-img" alt="Mohd Aatif">
-    <h1>MOHD AATIF</h1>
-    <div class="status">PROFESSIONAL AI STUDIO</div>
-</section>
-
-<section id="about" class="about-sec">
-    <div class="about-card">
-        <h2>About Me & This Platform</h2>
-        <p>Main <b>Mohd Aatif</b> hoon, ek professional developer aur AI enthusiast. Maine ye platform isliye banaya hai taaki main technology aur coding ki power ko duniya ke saamne la saku.</p>
-        <p>Yahan diya gaya AI Engine meri coding aur Google ke intelligence ka ek mix hai, jo aapko har sawal ka professional jawab dene ke liye taiyar hai. Technology updates ke liye mere YouTube channel par zaroor judein.</p>
-        
-        <a href="https://www.youtube.com/channel/6" target="_blank" class="yt-btn">
-            <i class="fab fa-youtube"></i> SUBSCRIBE ON YOUTUBE
-        </a>
+<div class="wrapper">
+  <div class="top-nav">
+    <b>Mohd Aatif Smart AI</b>
+    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="DP">
+  </div>
+  <div id="chatBox">
+    <div class="msg">
+      <div class="label">System Ready</div>
+      Welcome! I am Mohd Aatif Smart AI. Ask me anything.
     </div>
-</section>
-
-<section id="ai" class="ai-sec">
-    <h2 style="color: var(--blue); margin-bottom: 20px;">Aatif AI Smart Engine</h2>
-    <div class="chat-container">
-        <div id="chat-window">
-            <div class="msg bot">Assalamu Alaikum Aatif bhai! Main aapka asli AI Engine hoon. Kuch bhi poochein, main yahi jawab dunga.</div>
-        </div>
-        <div class="input-bar">
-            <input type="text" id="userInput" placeholder="Sawal yahan likhein..." onkeypress="if(event.key=='Enter') startAI()">
-            <button onclick="startAI()">RUN AI</button>
-        </div>
-    </div>
-</section>
-
-<footer>
-    © 2024 Mohd Aatif Official Studio | All Rights Reserved
-</footer>
+  </div>
+  <div class="input-area">
+    <input type="text" id="uInp" placeholder="Type your question..." onkeypress="if(event.key==='Enter') talk()">
+    <button onclick="talk()">Send</button>
+  </div>
+</div>
 
 <script>
-    function startAI() {
-        const input = document.getElementById('userInput');
-        const window = document.getElementById('chat-window');
-        const val = input.value.trim();
-        if(!val) return;
+async function talk() {
+  const input = document.getElementById('uInp');
+  const chatBox = document.getElementById('chatBox');
+  const question = input.value.trim();
+  if(!question) return;
 
-        window.innerHTML += `<div class="msg user">${val}</div>`;
-        input.value = "";
-        window.scrollTop = window.scrollHeight;
+  // User message
+  chatBox.innerHTML += `<div style="text-align:right;"><span class="msg" style="background:#333537;padding:10px 15px;border-radius:20px;">${question}</span></div>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+  input.value = '';
 
-        setTimeout(() => {
-            let reply = "Aatif bhai, main aapke sawal '" + val + "' par kaam kar raha hoon. Google AI results yahan jald hi load honge!";
-            if(val.toLowerCase().includes("kaun ho")) reply = "Main Mohd Aatif ka professional AI assistant hoon.";
-            
-            window.innerHTML += `<div class="msg bot">${reply}</div>`;
-            window.scrollTop = window.scrollHeight;
-        }, 800);
-    }
+  // Call backend API
+  try {
+    const response = await fetch('/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question })
+    });
+    const data = await response.json();
+
+    chatBox.innerHTML += `<div class="msg"><div class="label">Response</div>${data.answer}</div>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Optional: Speak in Hindi
+    const utter = new SpeechSynthesisUtterance(data.answer_hindi);
+    utter.lang = 'hi-IN';
+    window.speechSynthesis.speak(utter);
+
+  } catch(err) {
+    chatBox.innerHTML += `<div class="msg"><div class="label">Error</div>Something went wrong!</div>`;
+  }
+}
 </script>
 
 </body>
