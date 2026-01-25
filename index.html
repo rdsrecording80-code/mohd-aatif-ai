@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,38 +8,39 @@
     <style>
         :root { --main: #8ab4f8; --dark: #0b0d0f; --card: #1e1f20; --gold: #ffd700; }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; scroll-behavior: smooth; }
-        body { margin: 0; background: var(--dark); color: white; }
+        body { margin: 0; background: var(--dark); color: white; text-align: center; }
 
         nav {
             position: fixed; top: 0; width: 100%; background: rgba(30, 31, 32, 0.95);
             display: flex; justify-content: center; gap: 20px; padding: 15px;
-            z-index: 1000; border-bottom: 1px solid #333; backdrop-filter: blur(10px);
+            z-index: 1000; border-bottom: 1px solid #333;
         }
         nav a { color: white; text-decoration: none; font-weight: bold; font-size: 14px; text-transform: uppercase; }
 
-        section { padding: 100px 20px 60px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        section { padding: 100px 20px 60px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* --- HOME --- */
+        /* --- HOME SECTION --- */
         #home { background: radial-gradient(circle, #1e1f20 0%, #0b0d0f 100%); }
-        .profile-main { width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--gold); margin-bottom: 20px; box-shadow: 0 0 30px rgba(255, 215, 0, 0.3); object-fit: cover; }
+        .profile-main { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--gold); margin-bottom: 20px; object-fit: cover; }
         h1 { font-size: 2.5rem; margin: 10px 0; color: var(--gold); }
-        .sub-heading { color: var(--main); font-weight: bold; margin-bottom: 25px; }
+        .sub-text { color: var(--main); font-weight: bold; margin-bottom: 30px; }
 
-        /* --- ABOUT --- */
+        /* --- ABOUT SECTION (Clean & No Extra Links) --- */
         #about { background: #0e1012; }
-        .about-card { max-width: 700px; background: var(--card); padding: 40px; border-radius: 20px; border: 1px solid #333; line-height: 1.8; }
-        .yt-link { display: inline-flex; align-items: center; gap: 10px; background: #FF0000; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 20px; }
+        .about-card { max-width: 650px; background: var(--card); padding: 35px; border-radius: 20px; border: 1px solid #333; line-height: 1.8; }
+        .yt-btn { display: inline-flex; align-items: center; gap: 10px; background: #FF0000; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 20px; }
 
-        /* --- AI STUDIO (BUTTON STYLE) --- */
+        /* --- AI STUDIO (No More Error Window) --- */
         #ai-studio { background: var(--dark); }
-        .ai-box { background: var(--card); padding: 40px; border-radius: 25px; border: 1px solid var(--main); max-width: 500px; width: 100%; }
-        .launch-btn { 
-            background: var(--main); color: black; padding: 18px 45px; 
+        .chat-launch-box { background: var(--card); padding: 40px; border-radius: 25px; border: 1px solid var(--main); max-width: 450px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .main-chat-btn { 
+            background: var(--main); color: #000; padding: 18px 40px; 
             border-radius: 50px; text-decoration: none; font-weight: bold; 
-            display: inline-block; margin-top: 20px; font-size: 1.1rem;
+            font-size: 1.2rem; display: inline-block; margin-top: 25px;
+            box-shadow: 0 5px 15px rgba(138, 180, 248, 0.3);
         }
 
-        footer { text-align: center; padding: 20px; font-size: 11px; color: #444; }
+        footer { padding: 30px; font-size: 12px; color: #555; border-top: 1px solid #222; }
     </style>
 </head>
 <body>
@@ -53,32 +54,36 @@
 <section id="home">
     <img src="https://avatars.githubusercontent.com/u/190013350?v=4" class="profile-main">
     <h1>MOHD AATIF</h1>
-    <div class="sub-heading">Professional Developer & AI Expert</div>
-    <a href="#ai-studio" class="launch-btn" style="padding: 12px 30px; font-size: 1rem;">Launch AI Studio</a>
+    <div class="sub-text">Professional Developer & AI Expert</div>
+    <a href="#ai-studio" class="main-chat-btn" style="padding: 12px 30px; font-size: 1rem;">Open AI Engine</a>
 </section>
 
 <section id="about">
     <div class="about-card">
-        <h2 style="color: var(--gold); margin-bottom: 15px;">About My AI Studio</h2>
-        <p>This professional platform showcases the advanced integration of AI models. Created by Mohd Aatif, this studio provides an intelligent interface for users to get accurate information and creative assistance through a specialized AI engine.</p>
+        <h2 style="color: var(--gold); margin-bottom: 20px;">About This Studio</h2>
+        <p>Welcome to the digital intelligence studio of <b>Mohd Aatif</b>. This platform is designed to provide a professional interface where users can interact with custom AI models. I focus on creating technology that is fast, accurate, and easy to use.</p>
+        <p>For more updates and technology insights, you can connect with me on YouTube.</p>
         
-        <a href="https://youtube.com/@mohdaatif" target="_blank" class="yt-link">
-            <i class="fab fa-youtube"></i> My YouTube Channel
+        <a href="https://www.youtube.com/@MohdAatif" target="_blank" class="yt-btn">
+            <i class="fab fa-youtube"></i> Visit My YouTube
         </a>
     </div>
 </section>
 
 <section id="ai-studio">
-    <div class="ai-box">
-        <i class="fas fa-robot" style="font-size: 50px; color: var(--main); margin-bottom: 20px;"></i>
-        <h2>Aatif AI Engine</h2>
-        <p>Aapka asli AI assistant bilkul tayaar hai. Niche button par click karke chat shuru karein.</p>
-        <a href="https://poe.com/MohdAatif_AI" target="_blank" class="launch-btn">💬 OPEN CHAT NOW</a>
+    <div class="chat-launch-box">
+        <i class="fas fa-robot" style="font-size: 60px; color: var(--main); margin-bottom: 20px;"></i>
+        <h2>Aatif Smart AI Engine</h2>
+        <p>Click the button below to start a secure conversation with the AI.</p>
+        
+        <a href="https://poe.com/MohdAatif_AI" target="_blank" class="main-chat-btn">
+            💬 START CHAT NOW
+        </a>
     </div>
 </section>
 
 <footer>
-    © 2024 Mohd Aatif AI Studio | All Rights Reserved
+    &copy; 2024 Mohd Aatif AI Studio | All Rights Reserved
 </footer>
 
 </body>
