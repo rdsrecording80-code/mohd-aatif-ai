@@ -1,45 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOHD AATIF | GLOBAL INTELLIGENCE STUDIO</title>
+    <title>Mohd Aatif | Global AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { margin: 0; background-color: #000; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; }
-        .header { margin-top: 30px; text-align: center; }
-        .profile-img { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #3498db; }
-        .name { font-weight: bold; font-size: 20px; margin-top: 10px; letter-spacing: 1px; }
-        .sub-text { color: #3498db; font-size: 10px; font-weight: bold; margin-bottom: 30px; }
-        
-        /* Message Bubbles - Bilkul Purane Jaisi */
-        .chat-box { width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; }
-        .bot-msg { background: #1a1a1a; padding: 15px; border-radius: 15px; border-left: 4px solid #3498db; font-size: 14px; }
-        
-        /* Bottom Input Box */
-        .input-bar { position: fixed; bottom: 20px; width: 90%; max-width: 400px; background: #111; border-radius: 25px; display: flex; padding: 12px 20px; border: 1px solid #333; justify-content: space-between; align-items: center; text-decoration: none; }
-        .input-text { color: #888; font-size: 14px; }
-        .run-ai { color: #3498db; font-weight: bold; font-size: 12px; }
+        :root { --bg: #000000; --card: #111111; --accent: #2080ff; --text: #ffffff; }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; transition: 0.3s; }
+        body { margin: 0; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* --- NAVIGATION --- */
+        nav { position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; padding: 20px 40px; z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
+        .logo { font-weight: bold; color: var(--text); text-decoration: none; font-size: 18px; }
+        .nav-links a { margin-left: 20px; color: #888; text-decoration: none; font-size: 14px; }
+        .nav-links a:hover { color: var(--text); }
+
+        /* --- SECTION MANAGER --- */
+        section { min-height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        section.active { display: flex; }
+
+        /* --- HOME SECTION (Perplexity Style) --- */
+        #home-section h1 { font-size: 48px; margin-bottom: 30px; text-align: center; font-weight: 500; }
+        .search-pill { width: 100%; max-width: 700px; background: #191919; border: 1px solid #333; border-radius: 12px; display: flex; align-items: center; padding: 10px 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .search-pill input { flex: 1; background: transparent; border: none; color: white; padding: 15px; font-size: 18px; outline: none; }
+        .search-pill button { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        /* --- AI RESULT SECTION --- */
+        #ai-section { justify-content: flex-start; padding-top: 100px; }
+        .result-container { width: 100%; max-width: 800px; line-height: 1.8; }
+        .user-query { font-size: 32px; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .ai-answer { font-size: 18px; color: #ccc; white-space: pre-wrap; }
+        .back-btn { margin-top: 30px; color: var(--accent); cursor: pointer; text-decoration: underline; }
+
+        /* --- SOCIAL SECTION --- */
+        .social-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%; max-width: 400px; }
+        .social-btn { background: #191919; padding: 20px; border-radius: 12px; text-align: center; text-decoration: none; color: white; border: 1px solid #333; }
+        .social-btn:hover { background: #222; border-color: var(--accent); }
+
+        /* --- VOICE INDICATOR --- */
+        #voice-anim { font-size: 12px; color: var(--accent); margin-bottom: 10px; display: none; }
     </style>
 </head>
-<body>
+<body onclick="enableAudio()">
 
-    <div class="header">
-        <img src="https://avatars.githubusercontent.com/u/190013350?v=4" class="profile-img">
-        <div class="name">MOHD AATIF</div>
-        <div class="sub-text">GLOBAL INTELLIGENCE STUDIO</div>
-    </div>
-
-    <div class="chat-box">
-        <div class="bot-msg">
-            <b>Welcome to Aatif's Studio.</b><br>
-            Assalamu Alaikum! Main ab fully active hoon. Aap mujhse kisi bhi cheez ki fazilat ya world information pooch sakte hain.
+    <nav>
+        <a href="#" class="logo" onclick="showSection('home-section')">MOHD AATIF AI</a>
+        <div class="nav-links">
+            <a href="#" onclick="showSection('home-section')">Home</a>
+            <a href="#" onclick="showSection('social-section')">Contact</a>
         </div>
-    </div>
+    </nav>
 
-    <a href="https://poe.com/MohdAatif_AI" class="input-bar">
-        <span class="input-text">Ask me anything...</span>
-        <span class="run-ai">RUN AI</span>
-    </a>
+    <section id="home-section" class="active">
+        <h1>What do you want to know?</h1>
+        <div class="search-pill">
+            <input type="text" id="mainSearch" placeholder="Ask anything..." onkeypress="if(event.key=='Enter') runGlobalSearch()">
+            <button onclick="runGlobalSearch()">RUN</button>
+        </div>
+        <p style="margin-top:20px; color:#555; font-size: 13px;">Professional Intelligence Studio by Mohd Aatif</p>
+    </section>
 
+    <section id="ai-section">
+        <div class="result-container">
+            <div id="voice-anim"><i class="fas fa-volume-up"></i> Speaking Answer...</div>
+            <div class="user-query" id="displayQuery"></div>
+            <div class="ai-answer" id="displayAnswer"></div>
+            <div class="back-btn" onclick="showSection('home-section')">← Ask another question</div>
+        </div>
+    </section>
+
+    <section id="social-section">
+        <h2 style="margin-bottom:30px;">Connect with Developer</h2>
+        <div class="social-grid">
+            <a href="https://instagram.com/YOUR_ID" class="social-btn"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="https://youtube.com/YOUR_CHANNEL" class="social-btn"><i class="fab fa-youtube"></i> YouTube</a>
+            <a href="https://facebook.com/YOUR_ID" class="social-btn"><i class="fab fa-facebook"></i> Facebook</a>
+            <a href="mailto:aatif@email.com" class="social-btn"><i class="fas fa-envelope"></i> Email</a>
+        </div>
+    </section>
+
+<script>
+    let audioAllowed = false;
+    function enableAudio() { audioAllowed = true; }
+
+    function showSection(id) {
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
+
+    async function runGlobalSearch() {
+        const queryInput = document.getElementById("mainSearch");
+        const query = queryInput.value.trim();
+        if(!query) return;
+
+        // UI Changes
+        document.getElementById("displayQuery").innerText = query;
+        document.getElementById("displayAnswer").innerText = "Analyzing and writing answer...";
+        showSection('ai-section');
+        queryInput.value = "";
+
+        let finalAnswer = "";
+
+        // 1. Calculator Engine
+        if (/^[0-9+\-*/().\s]+$/.test(query) && /[\+\-\*\/]/.test(query)) {
+            try { finalAnswer = "Hisab ka sahi result hai: " + eval(query); } 
+            catch { finalAnswer = "Calculation error. Please check numbers."; }
+        } 
+        // 2. Global Knowledge (Wikipedia)
+        else {
+            try {
+                const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(query)}`);
+                const data = await res.json();
+                finalAnswer = data.extract ? data.extract : "Bhai, iska result live generate karne ke liye deep processing chahiye. Tab tak aap Calculator ya kisi aur topic ka result check karein.";
+            } catch { finalAnswer = "Connection Error. Please try again."; }
+        }
+
+        // Display Result
+        document.getElementById("displayAnswer").innerText = finalAnswer;
+
+        // Voice
+        if(audioAllowed) {
+            document.getElementById("voice-anim").style.display = "block";
+            window.speechSynthesis.cancel();
+            let speech = new SpeechSynthesisUtterance(finalAnswer);
+            speech.lang = 'hi-IN';
+            speech.onend = () => document.getElementById("voice-anim").style.display = "none";
+            window.speechSynthesis.speak(speech);
+        }
+    }
+</script>
 </body>
 </html>
