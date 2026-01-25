@@ -1,90 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohd Aatif | Professional AI Studio</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Mohd Aatif | AI Studio</title>
     <style>
-        :root { --main: #8ab4f8; --dark: #0b0d0f; --card: #1e1f20; --gold: #ffd700; }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; scroll-behavior: smooth; }
-        body { margin: 0; background: var(--dark); color: white; text-align: center; }
-
-        nav {
-            position: fixed; top: 0; width: 100%; background: rgba(30, 31, 32, 0.95);
-            display: flex; justify-content: center; gap: 20px; padding: 15px;
-            z-index: 1000; border-bottom: 1px solid #333;
+        body { margin: 0; background: #000; color: white; font-family: sans-serif; text-align: center; }
+        .header { padding: 40px 20px; background: #111; border-bottom: 2px solid #3498db; }
+        
+        /* PHOTO FIX: Isse aapki photo 100% load hogi */
+        .my-photo { 
+            width: 130px; height: 130px; border-radius: 50%; 
+            border: 3px solid #3498db; object-fit: cover;
+            margin-bottom: 15px;
         }
-        nav a { color: white; text-decoration: none; font-weight: bold; font-size: 14px; text-transform: uppercase; }
+        
+        h1 { margin: 0; font-size: 24px; letter-spacing: 2px; }
+        .sub { color: #3498db; font-size: 12px; font-weight: bold; margin-top: 5px; }
 
-        section { padding: 100px 20px 60px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        /* ABOUT SECTION */
+        .about-box { padding: 30px; max-width: 600px; margin: auto; line-height: 1.6; color: #ccc; }
+        .yt-link { color: #ff0000; text-decoration: none; font-weight: bold; border: 1px solid #ff0000; padding: 10px 20px; border-radius: 20px; display: inline-block; margin-top: 10px; }
 
-        /* --- HOME SECTION --- */
-        #home { background: radial-gradient(circle, #1e1f20 0%, #0b0d0f 100%); }
-        .profile-main { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--gold); margin-bottom: 20px; object-fit: cover; }
-        h1 { font-size: 2.5rem; margin: 10px 0; color: var(--gold); }
-        .sub-text { color: var(--main); font-weight: bold; margin-bottom: 30px; }
-
-        /* --- ABOUT SECTION (Clean & No Extra Links) --- */
-        #about { background: #0e1012; }
-        .about-card { max-width: 650px; background: var(--card); padding: 35px; border-radius: 20px; border: 1px solid #333; line-height: 1.8; }
-        .yt-btn { display: inline-flex; align-items: center; gap: 10px; background: #FF0000; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; margin-top: 20px; }
-
-        /* --- AI STUDIO (No More Error Window) --- */
-        #ai-studio { background: var(--dark); }
-        .chat-launch-box { background: var(--card); padding: 40px; border-radius: 25px; border: 1px solid var(--main); max-width: 450px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .main-chat-btn { 
-            background: var(--main); color: #000; padding: 18px 40px; 
-            border-radius: 50px; text-decoration: none; font-weight: bold; 
-            font-size: 1.2rem; display: inline-block; margin-top: 25px;
-            box-shadow: 0 5px 15px rgba(138, 180, 248, 0.3);
-        }
-
-        footer { padding: 30px; font-size: 12px; color: #555; border-top: 1px solid #222; }
+        /* AI CHAT BOX: Koshish hai ki ye aapki site ke andar hi rahe */
+        .chat-area { width: 100%; height: 600px; border: none; background: #fff; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<nav>
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#ai-studio">AI Studio</a>
-</nav>
-
-<section id="home">
-    <img src="https://avatars.githubusercontent.com/u/190013350?v=4" class="profile-main">
-    <h1>MOHD AATIF</h1>
-    <div class="sub-text">Professional Developer & AI Expert</div>
-    <a href="#ai-studio" class="main-chat-btn" style="padding: 12px 30px; font-size: 1rem;">Open AI Engine</a>
-</section>
-
-<section id="about">
-    <div class="about-card">
-        <h2 style="color: var(--gold); margin-bottom: 20px;">About This Studio</h2>
-        <p>Welcome to the digital intelligence studio of <b>Mohd Aatif</b>. This platform is designed to provide a professional interface where users can interact with custom AI models. I focus on creating technology that is fast, accurate, and easy to use.</p>
-        <p>For more updates and technology insights, you can connect with me on YouTube.</p>
-        
-        <a href="https://www.youtube.com/@MohdAatif" target="_blank" class="yt-btn">
-            <i class="fab fa-youtube"></i> Visit My YouTube
-        </a>
+    <div class="header">
+        <img src="https://avatars.githubusercontent.com/u/190013350?v=4" class="my-photo" alt="Mohd Aatif">
+        <h1>MOHD AATIF</h1>
+        <div class="sub">GLOBAL INTELLIGENCE STUDIO</div>
     </div>
-</section>
 
-<section id="ai-studio">
-    <div class="chat-launch-box">
-        <i class="fas fa-robot" style="font-size: 60px; color: var(--main); margin-bottom: 20px;"></i>
-        <h2>Aatif Smart AI Engine</h2>
-        <p>Click the button below to start a secure conversation with the AI.</p>
-        
-        <a href="https://poe.com/MohdAatif_AI" target="_blank" class="main-chat-btn">
-            💬 START CHAT NOW
-        </a>
+    <div class="about-box">
+        <h3>About My AI</h3>
+        <p>Swagat hai! Ye Mohd Aatif ka official AI Studio hai. Maine ye website technology aur intelligence ko milane ke liye banayi hai. Aap yahan mere naye AI Assistant se baat kar sakte hain.</p>
+        <a href="http://youtube.com/@MohdAatif" class="yt-link">Subscribe YouTube</a>
     </div>
-</section>
 
-<footer>
-    &copy; 2024 Mohd Aatif AI Studio | All Rights Reserved
-</footer>
+    <h2 style="color: #3498db;">Aatif AI Smart Engine</h2>
+    
+    <iframe src="https://poe.com/MohdAatif_AI" class="chat-area"></iframe>
+
+    <footer style="padding: 20px; font-size: 10px; color: #444;">© 2024 Mohd Aatif AI Studio</footer>
 
 </body>
 </html>
