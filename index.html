@@ -5,33 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MOHD AATIF | GLOBAL INTELLIGENCE STUDIO</title>
     <style>
-        body { margin: 0; background-color: #000; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
-        .header { margin-top: 20px; text-align: center; flex-shrink: 0; z-index: 10; }
-        .profile-img { width: 90px; height: 90px; border-radius: 50%; border: 2px solid #3498db; margin-bottom: 5px; }
-        .name { font-weight: bold; font-size: 18px; letter-spacing: 1px; }
-        .sub-text { color: #3498db; font-size: 9px; font-weight: bold; margin-bottom: 10px; }
+        body { margin: 0; background-color: #000; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; }
+        .header { margin-top: 30px; text-align: center; }
+        .profile-img { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #3498db; }
+        .name { font-weight: bold; font-size: 20px; margin-top: 10px; letter-spacing: 1px; }
+        .sub-text { color: #3498db; font-size: 10px; font-weight: bold; margin-bottom: 30px; }
         
-        /* Chat Frame */
-        .chat-container { width: 100%; flex-grow: 1; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; background: #000; }
+        /* Message Bubbles - Bilkul Purane Jaisi */
+        .chat-box { width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 15px; }
+        .bot-msg { background: #1a1a1a; padding: 15px; border-radius: 15px; border-left: 4px solid #3498db; font-size: 14px; }
         
-        /* Floating Button for Voice/Full Screen */
-        .open-btn { position: fixed; bottom: 80px; right: 20px; background: #3498db; color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-size: 12px; font-weight: bold; box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
+        /* Bottom Input Box */
+        .input-bar { position: fixed; bottom: 20px; width: 90%; max-width: 400px; background: #111; border-radius: 25px; display: flex; padding: 12px 20px; border: 1px solid #333; justify-content: space-between; align-items: center; text-decoration: none; }
+        .input-text { color: #888; font-size: 14px; }
+        .run-ai { color: #3498db; font-weight: bold; font-size: 12px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <img src="https://avatars.githubusercontent.com/u/190013350?v=4" class="profile-img" alt="Aatif">
+        <img src="https://avatars.githubusercontent.com/u/190013350?v=4" class="profile-img">
         <div class="name">MOHD AATIF</div>
         <div class="sub-text">GLOBAL INTELLIGENCE STUDIO</div>
     </div>
 
-    <div class="chat-container">
-        <iframe src="https://poe.com/MohdAatif_AI?embed=1"></iframe>
+    <div class="chat-box">
+        <div class="bot-msg">
+            <b>Welcome to Aatif's Studio.</b><br>
+            Assalamu Alaikum! Main ab fully active hoon. Aap mujhse kisi bhi cheez ki fazilat ya world information pooch sakte hain.
+        </div>
     </div>
 
-    <a href="https://poe.com/MohdAatif_AI" target="_blank" class="open-btn">OPEN FULL CHAT (With Voice)</a>
+    <a href="https://poe.com/MohdAatif_AI" class="input-bar">
+        <span class="input-text">Ask me anything...</span>
+        <span class="run-ai">RUN AI</span>
+    </a>
 
 </body>
 </html>
