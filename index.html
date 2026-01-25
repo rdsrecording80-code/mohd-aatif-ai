@@ -3,88 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohd Aatif | Smart Studio</title>
+    <title>Mohd Aatif | Asli AI Studio</title>
     <style>
-        :root { --bg: #000; --accent: #2080ff; }
-        body { margin: 0; background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-        header { padding: 30px; text-align: center; border-bottom: 1px solid #111; }
-        .p-img { width: 85px; height: 85px; border-radius: 50%; border: 2px solid var(--accent); margin-bottom: 10px; }
-        #chatBox { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 85%; padding: 15px; border-radius: 18px; line-height: 1.6; font-size: 16px; }
-        .ai { background: #111; border-left: 4px solid var(--accent); align-self: flex-start; }
-        .user { background: var(--accent); color: white; align-self: flex-end; }
-        .input-area { padding: 20px; background: var(--bg); border-top: 1px solid #111; }
-        .pill { background: #161616; border-radius: 30px; display: flex; padding: 5px 20px; border: 1px solid #333; }
-        input { flex: 1; background: transparent; border: none; color: white; padding: 12px; outline: none; font-size: 16px; }
-        button { background: none; border: none; color: var(--accent); font-weight: bold; cursor: pointer; }
+        body, html { margin: 0; padding: 0; height: 100%; background: black; color: white; font-family: sans-serif; overflow: hidden; }
+        header { height: 15%; display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 2px solid #2080ff; background: #000; }
+        .p-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #2080ff; }
+        h1 { font-size: 18px; margin: 5px 0 0; letter-spacing: 1px; }
+        /* Asli AI Window */
+        iframe { width: 100%; height: 85%; border: none; background: white; }
     </style>
 </head>
-<body onclick="startVoice()">
+<body>
 
 <header>
     <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" class="p-img">
-    <h1 style="font-size: 20px; margin: 0;">MOHD AATIF</h1>
-    <p style="font-size: 10px; color: var(--accent); letter-spacing: 2px;">LIVE AI INTELLIGENCE</p>
+    <h1>MOHD AATIF</h1>
+    <div style="font-size: 10px; color: #2080ff; font-weight: bold;">● ASLI AI BRAIN ACTIVE</div>
 </header>
 
-<div id="chatBox">
-    <div class="msg ai"><b>Assalamu Alaikum Aatif Bhai!</b><br>Main connect ho gaya hoon. Ab mujhse koi bhi sawal poochein, main turant jawab doonga.</div>
-</div>
+<iframe src="https://poe.com/Gemini-Pro"></iframe>
 
-<div class="input-area">
-    <div class="pill">
-        <input type="text" id="userInput" placeholder="Kuch bhi poochein..." onkeypress="if(event.key=='Enter') runAatifAI()">
-        <button onclick="runAatifAI()">SEND</button>
-    </div>
-</div>
-
-<script>
-    let canSpeak = false;
-    function startVoice() { canSpeak = true; }
-
-    async function runAatifAI() {
-        const inp = document.getElementById("userInput");
-        const query = inp.value.trim();
-        if(!query) return;
-
-        addChat(query, 'user');
-        inp.value = "";
-        const loader = addChat("Aatif Bhai, main soch raha hoon...", 'ai');
-
-        try {
-            // Isme koi API key block nahi hogi, ye free model use kar raha hai
-            const response = await fetch("https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ inputs: query })
-            });
-
-            const data = await response.json();
-            let result = data.generated_text || "Aatif bhai, main iska jawab dhoond raha hoon, tab tak kuch aur poochein?";
-            
-            // Result ko Hinglish mein convert karne ka chota tareeka
-            loader.innerText = result;
-            
-            if(canSpeak) {
-                window.speechSynthesis.cancel();
-                let s = new SpeechSynthesisUtterance(result);
-                s.lang = 'hi-IN';
-                window.speechSynthesis.speak(s);
-            }
-        } catch (e) {
-            loader.innerText = "Network slow hai Aatif bhai, ek baar dobara try karein.";
-        }
-    }
-
-    function addChat(t, c) {
-        const box = document.getElementById("chatBox");
-        const d = document.createElement("div");
-        d.className = `msg ${c}`;
-        d.innerText = t;
-        box.appendChild(d);
-        box.scrollTop = box.scrollHeight;
-        return d;
-    }
-</script>
 </body>
 </html>
