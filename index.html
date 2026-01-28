@@ -43,6 +43,7 @@ body{
   padding:10px 14px;
   border-radius:12px;
   max-width:75%;
+  word-wrap: break-word;
 }
 .ai{
   background:#222;
@@ -97,13 +98,13 @@ a{
 <body>
 
 <div class="header">
-  <!-- Tumhara DP yahan set kiya -->
+  <!-- DP -->
   <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" class="avatar" alt="Mohd Aatif">
   <span class="title">Mohd Aatif AI</span>
 </div>
 
 <div class="chat" id="chat">
-  <div class="msg ai">👋 Assalamu Alaikum! Main Mohd Aatif AI hoon. Aap result, dua ya education ke sawal pooch sakte hain.</div>
+  <div class="msg ai">👋 Assalamu Alaikum! Main Mohd Aatif AI hoon. Aap kuch bhi type karen, main dhundh kar jawab aur link bata dunga. Dua, Result, Calculator sab included hai.</div>
 </div>
 
 <div class="input-box">
@@ -114,6 +115,20 @@ a{
 <script>
 const chat = document.getElementById("chat");
 
+// List of Islamic Duas
+const duas = {
+  "sone": "Sone ki Dua: Allahumma bismika amutu wa ahya",
+  "uthne": "Uthne ki Dua: Alhamdulillah alladhi ahyana ba'da ma amatana wa ilayhin-nushur",
+  "namaz": "Namaz ki Dua: Subhanaka Allahumma wa bihamdika wa tabaarakasmuka wa ta'ala jadduka wa la ilaha ghayruk",
+  "khane": "Khana khane ki Dua: Bismillah wa 'ala barakatillah",
+  "peene": "Pine ki Dua: Bismillah",
+  "safar": "Safar ki Dua: Allahumma inni a'udhu bika min wa'tha'i as-safar wa kaabatil-manzar wa soo'il-munqalib fil-mali wal-ahli wal-walad",
+  "roza": "Roza rakhne ki Dua: Allahumma inni laka sumtu wa bika aamantu wa 'alayka tawakkaltu wa 'ala rizq-ika-aftartu",
+  "ramzan": "Ramzan ki dua aur mahina: Allahumma balighna Ramadan",
+  "duaa": "Allah se har waqt dua karein, subah, sham, namaz ke baad."
+};
+
+// Speak function
 function speak(text){
   if('speechSynthesis' in window){
     const s = new SpeechSynthesisUtterance(text);
@@ -122,6 +137,7 @@ function speak(text){
   }
 }
 
+// Add AI message
 function addAI(text){
   const div=document.createElement("div");
   div.className="msg ai";
@@ -131,6 +147,7 @@ function addAI(text){
   speak(text);
 }
 
+// Add user message
 function addUser(text){
   const div=document.createElement("div");
   div.className="msg user";
@@ -139,6 +156,7 @@ function addUser(text){
   chat.scrollTop = chat.scrollHeight;
 }
 
+// Send function
 function send(){
   const input=document.getElementById("q");
   const text=input.value.trim();
@@ -148,37 +166,49 @@ function send(){
 
   const t=text.toLowerCase();
 
-  // AI Responses
+  // Islamic Dua responses
+  for(const key in duas){
+    if(t.includes(key)){
+      addAI(duas[key]);
+      return;
+    }
+  }
+
+  // Salam
   if(t.includes("salam")){
     addAI("Wa Alaikum Assalam wa Rahmatullah!");
+    return;
   }
-  else if(t.includes("tum kaun ho")){
-    addAI("Main Mohd Aatif AI hoon, mujhe Mohd Aatif ne develop kiya hai. Main abhi beta version hoon.");
+  // AI Intro
+  if(t.includes("tum kaun ho") || t.includes("kaun ho")){
+    addAI("Main Mohd Aatif AI hoon, aap is par click karke dekh lo, main dhundh kar laata hoon.");
+    return;
   }
-  else if(t.includes("kisne banaya")){
+  if(t.includes("kisne banaya")){
     addAI("Mujhe Mohd Aatif ne software ke zariye develop kiya hai.");
+    return;
   }
-  else if(t.includes("dua")){
-    addAI("Sone ki dua: Allahumma bismika amutu wa ahya.");
-  }
-  else if(t.includes("up board")){
-    addAI(`UP Board official results: <a href='https://upresults.nic.in' target='_blank'>https://upresults.nic.in</a>`);
-  }
-  else if(t.includes("jee")){
-    addAI(`JEE Main results & admit card: <a href='https://jeemain.nta.nic.in' target='_blank'>https://jeemain.nta.nic.in</a>`);
-  }
-  else if(/^[0-9+\-*/(). ]+$/.test(t)){
-    // Calculator
+  // Calculator
+  if(/^[0-9+\-*/(). ]+$/.test(t)){
     try{
       const res=eval(t);
       addAI("Answer: "+res);
     }catch{
       addAI("Calculation samajh nahi aayi.");
     }
+    return;
   }
-  else{
-    addAI(`Is sawaal ke liye search karo: <a href='https://www.google.com/search?q=${encodeURIComponent(text)}' target='_blank'>Google Search</a>`);
+  // Results
+  if(t.includes("up board")){
+    addAI(`UP Board official results: <a href='https://upresults.nic.in' target='_blank'>https://upresults.nic.in</a>`);
+    return;
   }
+  if(t.includes("jee")){
+    addAI(`JEE Main results & admit card: <a href='https://jeemain.nta.nic.in' target='_blank'>https://jeemain.nta.nic.in</a>`);
+    return;
+  }
+  // Default - Google search
+  addAI(`Is sawaal ke liye search karo: <a href='https://www.google.com/search?q=${encodeURIComponent(text)}' target='_blank'>Google Search</a>`);
 }
 </script>
 </body>
