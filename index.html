@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mohd Aatif AI Advanced</title>
+<title>Mohd Aatif AI</title>
+
 <style>
 body{
   margin:0;
@@ -18,11 +19,11 @@ body{
   padding:12px 16px;
   background:#111;
   border-bottom:1px solid #222;
-  position: relative;
+  position:relative;
 }
 .avatar{
-  width:50px;
-  height:50px;
+  width:48px;
+  height:48px;
   border-radius:50%;
   object-fit:cover;
   border:2px solid #ffd700;
@@ -35,7 +36,7 @@ body{
 .menu{
   position:absolute;
   right:16px;
-  font-size:24px;
+  font-size:22px;
   cursor:pointer;
   color:#ffd700;
 }
@@ -43,11 +44,11 @@ body{
   display:none;
   position:absolute;
   right:16px;
-  top:50px;
+  top:55px;
   background:#222;
   border:1px solid #444;
   border-radius:8px;
-  padding:10px;
+  padding:8px;
   max-height:200px;
   overflow-y:auto;
   width:200px;
@@ -65,7 +66,7 @@ body{
   padding:10px 14px;
   border-radius:12px;
   max-width:75%;
-  word-wrap: break-word;
+  word-wrap:break-word;
 }
 .ai{
   background:#222;
@@ -92,7 +93,7 @@ input{
 }
 button{
   margin-left:8px;
-  padding:10px 15px;
+  padding:10px 16px;
   border:none;
   border-radius:20px;
   background:#ffd700;
@@ -101,25 +102,16 @@ button{
 }
 a{
   color:#ffd700;
-  word-break: break-word;
+  word-break:break-word;
 }
 @media(max-width:480px){
-  .chat{
-    height:55vh;
-  }
-  .avatar{
-    width:40px;
-    height:40px;
-  }
-  .title{
-    font-size:16px;
-  }
-  .menu-content{
-    width:160px;
-  }
+  .chat{height:55vh;}
+  .avatar{width:40px;height:40px;}
+  .title{font-size:16px;}
 }
 </style>
 </head>
+
 <body>
 
 <div class="header">
@@ -130,142 +122,102 @@ a{
 </div>
 
 <div class="chat" id="chat">
-  <div class="msg ai">👋 Assalamu Alaikum! Main Mohd Aatif AI hoon. Aap kuch bhi type karein, main dhundh kar jawab, link aur Dua bata dunga.</div>
+  <div class="msg ai">
+    Hello, I am <b>Mohd Aatif AI</b>.<br>
+    You can ask me anything.
+  </div>
 </div>
 
 <div class="input-box">
-  <input type="text" id="q" placeholder="Type a message..." onkeypress="if(event.key==='Enter') send()">
+  <input type="text" id="q" placeholder="Type your question…" onkeypress="if(event.key==='Enter')send()">
   <button onclick="send()">Send</button>
 </div>
 
 <script>
-const chat = document.getElementById("chat");
-const historyBox = document.getElementById("history");
-let history = [];
+const chat=document.getElementById("chat");
+const historyBox=document.getElementById("history");
+let history=[];
 
-// Islamic Duas (Extended Collection)
-const duas = {
-  "sone": "Sone ki Dua: Allahumma bismika amutu wa ahya",
-  "uthne": "Uthne ki Dua: Alhamdulillah alladhi ahyana ba'da ma amatana wa ilayhin-nushur",
-  "namaz": "Namaz ki Dua: Subhanaka Allahumma wa bihamdika wa tabaarakasmuka wa ta'ala jadduka wa la ilaha ghayruk",
-  "khane": "Khana khane ki Dua: Bismillah wa 'ala barakatillah",
-  "peene": "Pine ki Dua: Bismillah",
-  "safar": "Safar ki Dua: Allahumma inni a'udhu bika min wa'tha'i as-safar wa kaabatil-manzar wa soo'il-munqalib fil-mali wal-ahli wal-walad",
-  "roza": "Roza rakhne ki Dua: Allahumma inni laka sumtu wa bika aamantu wa 'alayka tawakkaltu wa 'ala rizq-ika-aftartu",
-  "ramzan": "Ramzan ki dua aur mahina: Allahumma balighna Ramadan",
-  "quran": "Quran padhne ki Dua: Allahumma inni asta'eenuka ala tilawatil Qur'an",
-  "duaa": "Har waqt dua karein: subah, sham, namaz ke baad."
+const duas={
+  "sone":"Sone ki Dua: Allahumma bismika amutu wa ahya",
+  "uthne":"Uthne ki Dua: Alhamdulillah alladhi ahyana ba'da ma amatana",
+  "khane":"Khana khane ki Dua: Bismillah wa 'ala barakatillah",
+  "peene":"Pine ki Dua: Bismillah",
+  "safar":"Safar ki Dua: Subhanalladhi sakhkhara lana haza",
+  "roza":"Roza ki Dua: Allahumma inni laka sumtu",
+  "iftar":"Roza kholne ki Dua: Allahumma laka sumtu",
+  "ramzan":"Ramzan ki Dua: Allahumma balighna Ramadan",
+  "namaz":"Namaz ki Dua: Subhanaka Allahumma"
 };
 
-// Speech function
 function speak(text){
-  if('speechSynthesis' in window){
-    const s = new SpeechSynthesisUtterance(text);
+  if('speechSynthesis'in window){
+    const s=new SpeechSynthesisUtterance(text);
     s.lang="hi-IN";
     speechSynthesis.speak(s);
   }
 }
 
-// Add AI message
 function addAI(text){
-  const div=document.createElement("div");
-  div.className="msg ai";
-  div.innerHTML = `<div>${text}</div>`;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-  speak(text);
+  const d=document.createElement("div");
+  d.className="msg ai";
+  d.innerHTML=text;
+  chat.appendChild(d);
+  chat.scrollTop=chat.scrollHeight;
+  speak(text.replace(/<[^>]*>/g,""));
 }
 
-// Add user message
 function addUser(text){
-  const div=document.createElement("div");
-  div.className="msg user";
-  div.innerHTML = `<div>${text}</div>`;
-  chat.appendChild(div);
-  chat.scrollTop = chat.scrollHeight;
-  // Save in history
+  const d=document.createElement("div");
+  d.className="msg user";
+  d.textContent=text;
+  chat.appendChild(d);
+  chat.scrollTop=chat.scrollHeight;
   history.push(text);
   updateHistory();
 }
 
-// Update history menu
 function updateHistory(){
-  historyBox.innerHTML = "";
-  history.slice(-10).reverse().forEach(q=>{
-    const p = document.createElement("p");
+  historyBox.innerHTML="";
+  history.slice(-10).reverse().forEach(h=>{
+    const p=document.createElement("p");
     p.style.padding="5px";
     p.style.borderBottom="1px solid #444";
-    p.textContent=q;
+    p.textContent=h;
     historyBox.appendChild(p);
   });
 }
 
 function toggleMenu(){
-  historyBox.style.display = historyBox.style.display==="block"?"none":"block";
+  historyBox.style.display=historyBox.style.display==="block"?"none":"block";
 }
 
-// Send function
 function send(){
-  const input=document.getElementById("q");
-  const text=input.value.trim();
-  if(!text) return;
+  const i=document.getElementById("q");
+  const text=i.value.trim();
+  if(!text)return;
   addUser(text);
-  input.value="";
+  i.value="";
   const t=text.toLowerCase();
 
-  // Check Dua
-  for(const key in duas){
-    if(t.includes(key)){
-      addAI(duas[key]);
-      return;
-    }
+  for(let k in duas){
+    if(t.includes(k)){ addAI(duas[k]); return; }
   }
 
-  // Salam
-  if(t.includes("salam")){
-    addAI("Wa Alaikum Assalam wa Rahmatullah!");
+  if(t.includes("kaun ho")){
+    addAI("Main Mohd Aatif AI hoon — ek smart assistant jo links, dua, calculator aur search me madad karta hai.");
     return;
   }
 
-  // Mohd Aatif info
-  if(t.includes("mohd aatif")){
-    addAI("Main Mohd Aatif AI hoon, aap is par click karke dekh lo, main dhundh kar laata hoon. Developer: Mohd Aatif. Beta version hai, advanced features aate rahenge.");
-    return;
-  }
-
-  if(t.includes("tum kaun ho") || t.includes("kaun ho")){
-    addAI("Main Mohd Aatif AI hoon, aap is par click karke dekh lo, main dhundh kar laata hoon.");
-    return;
-  }
-  if(t.includes("kisne banaya")){
-    addAI("Mujhe Mohd Aatif ne software ke zariye develop kiya hai.");
-    return;
-  }
-
-  // Calculator
   if(/^[0-9+\-*/(). ]+$/.test(t)){
-    try{
-      const res=eval(t);
-      addAI("Answer: "+res);
-    }catch{
-      addAI("Calculation samajh nahi aayi.");
-    }
+    try{ addAI("Answer: "+eval(t)); }
+    catch{ addAI("Calculation samajh nahi aayi."); }
     return;
   }
 
-  // Results
-  if(t.includes("up board")){
-    addAI(`UP Board official results: <a href='https://upresults.nic.in' target='_blank'>https://upresults.nic.in</a>`);
-    return;
-  }
-  if(t.includes("jee")){
-    addAI(`JEE Main results & admit card: <a href='https://jeemain.nta.nic.in' target='_blank'>https://jeemain.nta.nic.in</a>`);
-    return;
-  }
-
-  // Default - Google search
-  addAI(`Is sawaal ke liye search karo: <a href='https://www.google.com/search?q=${encodeURIComponent(text)}' target='_blank'>Google Search</a>`);
+  addAI(`Search result: <a href="https://www.google.com/search?q=${encodeURIComponent(text)}" target="_blank">Click here</a>`);
 }
 </script>
+
 </body>
 </html>
