@@ -1,98 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mohd Aatif Smart AI</title>
+<title>Mohd Aatif AI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-:root {
-  --bg: #131314;
-  --side: #1e1f20;
-  --border: #ffd700;
-  --blue: #8ab4f8;
-}
-body, html {
-  margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; height: 100vh; background: var(--bg); color: #e3e3e3;
-  display: flex; justify-content: center; align-items: center;
-}
-.wrapper {
-  border: 4px solid var(--border); border-radius: 20px;
-  width: 95%; max-width: 800px; height: 90%; display: flex; flex-direction: column;
-  overflow: hidden; background: #1a1a1b;
-}
-.top-nav {
-  display: flex; align-items: center; justify-content: space-between; padding: 15px 20px;
-  border-bottom: 2px solid var(--border);
-}
-.top-nav b { color: var(--blue); font-size: 20px; }
-.top-nav img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border); }
-#chatBox {
-  flex: 1; padding: 20px; overflow-y: auto; scroll-behavior: smooth;
-}
-.msg { margin-bottom: 20px; font-size: 16px; line-height: 1.5; }
-.label { font-size: 12px; color: var(--blue); font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
-.input-area { padding: 15px 20px; border-top: 2px solid var(--border); display: flex; }
-.input-area input {
-  flex: 1; padding: 10px 15px; border-radius: 25px; border: 1px solid var(--border);
-  background: #1e1f20; color: white; font-size: 16px; outline: none;
-}
-.input-area button {
-  margin-left: 10px; padding: 10px 20px; border: none; border-radius: 25px;
-  background: var(--blue); color: #000; font-weight: bold; cursor: pointer;
-}
+body{margin:0;font-family:Arial;background:#f1f3f4;}
+#chat{max-width:420px;margin:auto;height:100vh;display:flex;flex-direction:column;background:white}
+.header{background:#0b57d0;color:white;padding:12px;display:flex;align-items:center}
+.header img{width:40px;height:40px;border-radius:50%;margin-right:10px}
+.msgs{flex:1;padding:10px;overflow-y:auto}
+.msg{padding:10px;margin-bottom:8px;border-radius:10px;max-width:80%}
+.user{background:#e3f2fd;margin-left:auto}
+.ai{background:#f1f3f4}
+.input{display:flex;padding:10px;border-top:1px solid #ccc}
+input{flex:1;padding:8px;border-radius:20px;border:1px solid #ccc}
+button{margin-left:6px;padding:8px 14px;border:none;border-radius:20px;background:#0b57d0;color:white}
 </style>
 </head>
 <body>
 
-<div class="wrapper">
-  <div class="top-nav">
-    <b>Mohd Aatif Smart AI</b>
-    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="DP">
-  </div>
-  <div id="chatBox">
-    <div class="msg">
-      <div class="label">System Ready</div>
-      Welcome! I am Mohd Aatif Smart AI. Ask me anything.
+<div id="chat">
+  <div class="header">
+    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
+    <div>
+      <b>Mohd Aatif AI</b><br>
+      <small>Beta Version</small>
     </div>
   </div>
-  <div class="input-area">
-    <input type="text" id="uInp" placeholder="Type your question..." onkeypress="if(event.key==='Enter') talk()">
-    <button onclick="talk()">Send</button>
+
+  <div class="msgs" id="msgs">
+    <div class="msg ai">
+      Assalamu Alaikum!  
+      Main <b>Mohd Aatif AI</b> hoon.  
+      Result, dua, information — jo poochna ho poochhiye.
+    </div>
+  </div>
+
+  <div class="input">
+    <input id="q" placeholder="Yahan type karein...">
+    <button onclick="send()">Send</button>
   </div>
 </div>
 
 <script>
-async function talk() {
-  const input = document.getElementById('uInp');
-  const chatBox = document.getElementById('chatBox');
-  const question = input.value.trim();
-  if(!question) return;
-
-  // User message
-  chatBox.innerHTML += `<div style="text-align:right;"><span class="msg" style="background:#333537;padding:10px 15px;border-radius:20px;">${question}</span></div>`;
-  chatBox.scrollTop = chatBox.scrollHeight;
-  input.value = '';
-
-  // Call backend API
-  try {
-    const response = await fetch('/ask', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question })
-    });
-    const data = await response.json();
-
-    chatBox.innerHTML += `<div class="msg"><div class="label">Response</div>${data.answer}</div>`;
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    // Optional: Speak in Hindi
-    const utter = new SpeechSynthesisUtterance(data.answer_hindi);
-    utter.lang = 'hi-IN';
-    window.speechSynthesis.speak(utter);
-
-  } catch(err) {
-    chatBox.innerHTML += `<div class="msg"><div class="label">Error</div>Something went wrong!</div>`;
-  }
+function add(t,c){
+ let d=document.createElement("div");
+ d.className="msg "+c;
+ d.innerHTML=t;
+ msgs.appendChild(d);
+ msgs.scrollTop=msgs.scrollHeight;
+}
+function send(){
+ let v=q.value.trim().toLowerCase();
+ if(!v)return;
+ add(q.value,"user");
+ q.value="";
+ setTimeout(()=>reply(v),400);
+}
+function reply(v){
+ if(v.includes("salam"))
+  add("Wa Alaikum Assalam 🤲","ai");
+ else if(v.includes("kaun"))
+  add("Main Mohd Aatif AI hoon. Mujhe Mohd Aatif ne develop kiya hai. Abhi beta version me hoon.","ai");
+ else if(v.includes("result"))
+  add("UP Board: <a href='https://upresults.nic.in' target='_blank'>upresults.nic.in</a><br>CBSE: <a href='https://results.cbse.nic.in' target='_blank'>results.cbse.nic.in</a><br>JEE: <a href='https://jeemain.nta.nic.in' target='_blank'>jeemain.nta.nic.in</a>","ai");
+ else if(v.includes("dua"))
+  add("Sone ki dua: Allahumma bismika amutu wa ahya","ai");
+ else
+  add("Is sawal ke liye main official website ka link de sakta hoon.","ai");
 }
 </script>
 
