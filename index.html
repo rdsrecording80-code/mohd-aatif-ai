@@ -1,63 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mohd Aatif Smart AI</title>
+<style>
+body{margin:0;background:#0b0b0b;color:#fff;font-family:Arial}
+.app{border:4px solid #ffd700;border-radius:15px;margin:10px;height:95vh;display:flex;flex-direction:column}
+.header{padding:15px;border-bottom:1px solid #ffd700;display:flex;align-items:center;gap:10px}
+.header img{width:40px;height:40px;border-radius:50%;border:2px solid #ffd700}
+.chat{flex:1;overflow-y:auto;padding:15px}
+.ai,.user{max-width:80%;padding:10px 15px;border-radius:15px;margin-bottom:10px}
+.ai{background:#1c1c1c;border-left:4px solid #ffd700}
+.user{background:#2b2b2b;margin-left:auto}
+.input{display:flex;padding:10px;border-top:1px solid #ffd700}
+input{flex:1;padding:12px;border-radius:20px;border:none;outline:none}
+button{margin-left:10px;padding:12px 20px;border:none;border-radius:20px;background:#4da3ff;color:#fff}
+</style>
+</head>
+
+<body>
+<div class="app">
+  <div class="header">
+    <img src="profile.jpg">
+    <div>
+      <b>Mohd Aatif Smart AI</b><br>
+      <small>System Ready</small>
+    </div>
+  </div>
+
+  <div id="chat" class="chat"></div>
+
+  <div class="input">
+    <input id="q" placeholder="Type your question...">
+    <button onclick="send()">Send</button>
+  </div>
+</div>
+
 <script>
+function send(){
+ let q=document.getElementById("q").value.trim();
+ if(!q) return;
+
+ addMsg(q,"user");
+ document.getElementById("q").value="";
+
+ setTimeout(()=>{
+   addMsg(brain(q),"ai");
+ },500);
+}
+
+function addMsg(text,type){
+ let d=document.createElement("div");
+ d.className=type;
+ d.innerHTML=text;
+ document.getElementById("chat").appendChild(d);
+ document.getElementById("chat").scrollTop=99999;
+}
+
 function brain(q){
  q=q.toLowerCase();
 
- // Salam
- if(q.includes("salam")||q.includes("assalam")||q.includes("hello"))
-  return "Wa Alaikum Assalam 🤲 Main Mohd Aatif Smart AI hoon. Aap kya poochna chahenge?";
-
- // Identity
- if(q.includes("kaun ho")||q.includes("who are you"))
-  return "Main Mohd Aatif Smart AI hoon. Mujhe Mohd Aatif ne develop kiya hai. Abhi main beta version me hoon, aane wale waqt me aur powerful banunga.";
-
- if(q.includes("kisne banaya")||q.includes("creator"))
-  return "Mujhe Mohd Aatif ne software technology se develop kiya hai, taaki students aur logon ki madad ho sake.";
-
- // About Mohd Aatif
- if(q.includes("mohd aatif"))
-  return "Mohd Aatif ek content creator aur educator hain, jinhone education aur AI ko logon tak pahunchane ke liye mujhe banaya.";
-
- // Quran & Dua
- if(q.includes("quran"))
-  return "📖 Quran padhne ke liye official site: https://quran.com";
-
- if(q.includes("dua")||q.includes("sone"))
-  return "📿 Sone ki dua: Allahumma bismika amutu wa ahya";
-
- if(q.includes("namaz"))
-  return "🕌 Namaz timing ke liye: https://www.islamicfinder.org";
-
- // Results
- if(q.includes("up board"))
-  return "🎓 UP Board Result: https://upresults.nic.in";
-
- if(q.includes("cbse"))
-  return "🎓 CBSE Result: https://results.cbse.nic.in";
-
- if(q.includes("jee"))
-  return "🎓 JEE Main Result: https://jeemain.nta.nic.in";
-
- if(q.includes("neet"))
-  return "🎓 NEET Result: https://neet.nta.nic.in";
-
+ if(q.includes("quran")) return "📖 Main Quran Tilawat aur tafseer me madad kar sakta hoon.";
+ if(q.includes("jee")) return "📘 JEE Main ke important questions chahiye? Batao subject.";
  if(q.includes("result"))
-  return `
-  🔹 UP Board: https://upresults.nic.in<br>
-  🔹 CBSE: https://results.cbse.nic.in<br>
-  🔹 JEE Main: https://jeemain.nta.nic.in<br>
-  🔹 NEET: https://neet.nta.nic.in
-  `;
+   return `🔍 Official result yahan dekhein:<br>
+   <a href="https://www.google.com/search?q=${q}" target="_blank">Click Here</a>`;
 
- // Default smart fallback
- return "Is sawal ke liye main official aur trusted website ka link de sakta hoon. Bataiye kaunsa exam ya topic?";
-}
-
-function send(){
- let i=document.getElementById("input");
- let m=i.value.trim();
- if(!m) return;
- add(m,"user");
- i.value="";
- setTimeout(()=>add(brain(m),"ai"),400);
+ return `🤖 Is sawal ka exact jawab online milega:<br>
+ <a href="https://www.google.com/search?q=${q}" target="_blank">Search on Internet</a>`;
 }
 </script>
+</body>
+</html>
