@@ -4,17 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mohd Aatif AI</title>
+
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#0b0b0d;color:#fff}
+body{margin:0;font-family:Arial;background:#0b0b0d;color:#fff;display:flex;flex-direction:column;height:100vh}
 .header{display:flex;align-items:center;gap:10px;padding:12px;background:#111;border-bottom:1px solid #222}
 .avatar{width:42px;height:42px;border-radius:50%;border:2px solid gold}
 .title{color:gold;font-size:17px;font-weight:bold}
-.chat{height:65vh;overflow-y:auto;padding:15px;display:flex;flex-direction:column}
+.chat{flex:1;overflow-y:auto;padding:15px}
 .msg{padding:10px 14px;border-radius:12px;margin-bottom:8px;max-width:75%;word-wrap:break-word}
-.ai{background:#222;border-left:3px solid gold;align-self:flex-start}
-.user{background:#8ab4f8;color:#000;align-self:flex-end}
+.ai{background:#222;border-left:3px solid gold}
+.user{background:#8ab4f8;color:#000;margin-left:auto}
 .input{display:flex;padding:10px;background:#111}
-input{flex:1;padding:10px;border-radius:20px;border:none;outline:none}
+input{flex:1;padding:10px;border-radius:20px;border:none;background:#222;color:#fff}
 button{margin-left:8px;padding:10px 16px;border:none;border-radius:20px;background:gold;font-weight:bold;cursor:pointer}
 .footer{text-align:center;font-size:13px;padding:10px;border-top:1px solid #222}
 a{color:gold;text-decoration:none}
@@ -29,7 +30,7 @@ a{color:gold;text-decoration:none}
 </div>
 
 <div class="chat" id="chat">
-<div class="msg ai">👋 Hello! Main <b>Mohd Aatif AI</b> hoon. Aap mujhse Islamic Duas, general knowledge, calculator aur useful links pooch sakte hain.</div>
+<div class="msg ai">👋 Assalamu Alaikum! Main <b>Mohd Aatif AI</b> hoon. Aap kuch bhi pooch sakte hain.</div>
 </div>
 
 <div class="input">
@@ -38,28 +39,15 @@ a{color:gold;text-decoration:none}
 </div>
 
 <div class="footer">
-<a href="about.html">About</a> | 
-<a href="privacy.html">Privacy</a> | 
+<a href="about.html">About</a> |
+<a href="privacy.html">Privacy</a> |
 <a href="contact.html">Contact</a>
 </div>
 
 <script>
 const chat=document.getElementById("chat");
 
-// Complete Islamic Duas
-const duas={
-"sone":"Sone ki Dua: Allahumma bismika amutu wa ahya",
-"uthne":"Uthne ki Dua: Alhamdulillah alladhi ahyana ba'da ma amatana",
-"namaz":"Namaz ki Dua: Subhanaka Allahumma wa bihamdika wa tabaarakasmuka wa ta'ala jadduka wa la ilaha ghayruk",
-"khana":"Khana khane ki Dua: Bismillah wa ala barakatillah",
-"peena":"Pine ki Dua: Bismillah",
-"safar":"Safar ki Dua: Allahumma inni a'udhu bika min wa'tha'i as-safar wa kaabatil-manzar",
-"roza":"Roza ki Dua: Allahumma inni laka sumtu wa bika aamantu wa 'alayka tawakkaltu",
-"ramzan":"Ramzan ka mahina barkat wala hai. Allah hum sabko naseeb kare",
-"quran":"Quran padhne ki Dua: Allahumma inni asta'eenuka ala tilawatil Qur'an",
-"dua":"Har waqt dua karein: subah, sham, namaz ke baad."
-};
-
+// AI ka main function
 function add(type,text){
  let d=document.createElement("div");
  d.className="msg "+type;
@@ -73,6 +61,7 @@ function add(type,text){
  }
 }
 
+// Chat bhejne ka function
 function send(){
  let q=document.getElementById("q");
  let t=q.value.trim();
@@ -81,34 +70,17 @@ function send(){
  q.value="";
  let l=t.toLowerCase();
 
- // Salam
- if(l.includes("salam")) add("ai","Wa Alaikum Assalam wa Rahmatullah!");
- 
- // Mohd Aatif info
- else if(l.includes("mohd aatif") || l.includes("tum kaun ho") || l.includes("kaun ho") || l.includes("kisne banaya")){
-   add("ai","Main <b>Mohd Aatif AI</b> hoon, ek advanced AI assistant website. Developer: Mohd Aatif. Islamic Duas, general knowledge, calculator aur useful links provide karta hoon.");
+ // Predefined answers
+ if(l.includes("salam") || l.includes("assalam")) add("ai","Wa Alaikum Assalam wa Rahmatullah");
+ else if(l.includes("sone")) add("ai","Sone ki Dua: Allahumma bismika amutu wa ahya");
+ else if(l.includes("uthne") || l.includes("uthna")) add("ai","Uthne ki Dua: Alhamdulillah alladhi ahyana ba'da ma amatana");
+ else if(l.includes("khana") || l.includes("khaana")) add("ai","Khana khane ki Dua: Bismillah wa ala barakatillah");
+ else if(l.includes("ramzan")) add("ai","Ramzan ek barkat wala mahina hai. Allah humein Ramzan naseeb kare.");
+ else if(l.includes("profession") || l.includes("aapka kaam")) add("ai","Main Mohd Aatif AI hoon, ek advanced AI assistant aur website developer. Islamic Duas, general knowledge, aur calculator provide karta hoon.");
+ else if(l.includes("aapka naam") || l.includes("naam")) add("ai","Mera naam Mohd Aatif AI hai.");
+ else if(/^[0-9+\-*/(). ]+$/.test(l)){ // Calculator
+   try{add("ai","Answer: "+eval(l))}catch{add("ai","Calculation galat hai")}
  }
- 
- // Duas
- else{
-   let found=false;
-   for(let key in duas){
-     if(l.includes(key)){add("ai",duas[key]); found=true; break;}
-   }
-   if(found) return;
- }
-
- // Calculator
- if(/^[0-9+\-*/(). ]+$/.test(l)){
-   try{add("ai","Answer: "+eval(l))}catch{add("ai","Calculation galat hai");}
-   return;
- }
-
- // Results links
- if(l.includes("up board")) add("ai","UP Board results: <a href='https://upresults.nic.in' target='_blank'>https://upresults.nic.in</a>");
- else if(l.includes("jee")) add("ai","JEE Main: <a href='https://jeemain.nta.nic.in' target='_blank'>https://jeemain.nta.nic.in</a>");
- 
- // Default Google search
  else add("ai",`Is topic par search karein: <a target="_blank" href="https://www.google.com/search?q=${encodeURIComponent(t)}">Google</a>`);
 }
 </script>
