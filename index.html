@@ -1,76 +1,63 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Mohd Aatif AI</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body{margin:0;font-family:Arial;background:#f1f3f4;}
-#chat{max-width:420px;margin:auto;height:100vh;display:flex;flex-direction:column;background:white}
-.header{background:#0b57d0;color:white;padding:12px;display:flex;align-items:center}
-.header img{width:40px;height:40px;border-radius:50%;margin-right:10px}
-.msgs{flex:1;padding:10px;overflow-y:auto}
-.msg{padding:10px;margin-bottom:8px;border-radius:10px;max-width:80%}
-.user{background:#e3f2fd;margin-left:auto}
-.ai{background:#f1f3f4}
-.input{display:flex;padding:10px;border-top:1px solid #ccc}
-input{flex:1;padding:8px;border-radius:20px;border:1px solid #ccc}
-button{margin-left:6px;padding:8px 14px;border:none;border-radius:20px;background:#0b57d0;color:white}
-</style>
-</head>
-<body>
-
-<div id="chat">
-  <div class="header">
-    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
-    <div>
-      <b>Mohd Aatif AI</b><br>
-      <small>Beta Version</small>
-    </div>
-  </div>
-
-  <div class="msgs" id="msgs">
-    <div class="msg ai">
-      Assalamu Alaikum!  
-      Main <b>Mohd Aatif AI</b> hoon.  
-      Result, dua, information — jo poochna ho poochhiye.
-    </div>
-  </div>
-
-  <div class="input">
-    <input id="q" placeholder="Yahan type karein...">
-    <button onclick="send()">Send</button>
-  </div>
-</div>
-
 <script>
-function add(t,c){
- let d=document.createElement("div");
- d.className="msg "+c;
- d.innerHTML=t;
- msgs.appendChild(d);
- msgs.scrollTop=msgs.scrollHeight;
+function brain(q){
+ q=q.toLowerCase();
+
+ // Salam
+ if(q.includes("salam")||q.includes("assalam")||q.includes("hello"))
+  return "Wa Alaikum Assalam 🤲 Main Mohd Aatif Smart AI hoon. Aap kya poochna chahenge?";
+
+ // Identity
+ if(q.includes("kaun ho")||q.includes("who are you"))
+  return "Main Mohd Aatif Smart AI hoon. Mujhe Mohd Aatif ne develop kiya hai. Abhi main beta version me hoon, aane wale waqt me aur powerful banunga.";
+
+ if(q.includes("kisne banaya")||q.includes("creator"))
+  return "Mujhe Mohd Aatif ne software technology se develop kiya hai, taaki students aur logon ki madad ho sake.";
+
+ // About Mohd Aatif
+ if(q.includes("mohd aatif"))
+  return "Mohd Aatif ek content creator aur educator hain, jinhone education aur AI ko logon tak pahunchane ke liye mujhe banaya.";
+
+ // Quran & Dua
+ if(q.includes("quran"))
+  return "📖 Quran padhne ke liye official site: https://quran.com";
+
+ if(q.includes("dua")||q.includes("sone"))
+  return "📿 Sone ki dua: Allahumma bismika amutu wa ahya";
+
+ if(q.includes("namaz"))
+  return "🕌 Namaz timing ke liye: https://www.islamicfinder.org";
+
+ // Results
+ if(q.includes("up board"))
+  return "🎓 UP Board Result: https://upresults.nic.in";
+
+ if(q.includes("cbse"))
+  return "🎓 CBSE Result: https://results.cbse.nic.in";
+
+ if(q.includes("jee"))
+  return "🎓 JEE Main Result: https://jeemain.nta.nic.in";
+
+ if(q.includes("neet"))
+  return "🎓 NEET Result: https://neet.nta.nic.in";
+
+ if(q.includes("result"))
+  return `
+  🔹 UP Board: https://upresults.nic.in<br>
+  🔹 CBSE: https://results.cbse.nic.in<br>
+  🔹 JEE Main: https://jeemain.nta.nic.in<br>
+  🔹 NEET: https://neet.nta.nic.in
+  `;
+
+ // Default smart fallback
+ return "Is sawal ke liye main official aur trusted website ka link de sakta hoon. Bataiye kaunsa exam ya topic?";
 }
+
 function send(){
- let v=q.value.trim().toLowerCase();
- if(!v)return;
- add(q.value,"user");
- q.value="";
- setTimeout(()=>reply(v),400);
-}
-function reply(v){
- if(v.includes("salam"))
-  add("Wa Alaikum Assalam 🤲","ai");
- else if(v.includes("kaun"))
-  add("Main Mohd Aatif AI hoon. Mujhe Mohd Aatif ne develop kiya hai. Abhi beta version me hoon.","ai");
- else if(v.includes("result"))
-  add("UP Board: <a href='https://upresults.nic.in' target='_blank'>upresults.nic.in</a><br>CBSE: <a href='https://results.cbse.nic.in' target='_blank'>results.cbse.nic.in</a><br>JEE: <a href='https://jeemain.nta.nic.in' target='_blank'>jeemain.nta.nic.in</a>","ai");
- else if(v.includes("dua"))
-  add("Sone ki dua: Allahumma bismika amutu wa ahya","ai");
- else
-  add("Is sawal ke liye main official website ka link de sakta hoon.","ai");
+ let i=document.getElementById("input");
+ let m=i.value.trim();
+ if(!m) return;
+ add(m,"user");
+ i.value="";
+ setTimeout(()=>add(brain(m),"ai"),400);
 }
 </script>
-
-</body>
-</html>
