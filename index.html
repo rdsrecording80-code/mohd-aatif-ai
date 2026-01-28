@@ -1,35 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mohd Aatif Smart AI</title>
+
 <style>
-body{margin:0;background:#0b0b0b;color:#fff;font-family:Arial}
-.app{border:4px solid #ffd700;border-radius:15px;margin:10px;height:95vh;display:flex;flex-direction:column}
-.header{padding:15px;border-bottom:1px solid #ffd700;display:flex;align-items:center;gap:10px}
-.header img{width:40px;height:40px;border-radius:50%;border:2px solid #ffd700}
-.chat{flex:1;overflow-y:auto;padding:15px}
-.ai,.user{max-width:80%;padding:10px 15px;border-radius:15px;margin-bottom:10px}
-.ai{background:#1c1c1c;border-left:4px solid #ffd700}
-.user{background:#2b2b2b;margin-left:auto}
-.input{display:flex;padding:10px;border-top:1px solid #ffd700}
-input{flex:1;padding:12px;border-radius:20px;border:none;outline:none}
-button{margin-left:10px;padding:12px 20px;border:none;border-radius:20px;background:#4da3ff;color:#fff}
+body{
+  margin:0;
+  background:#000;
+  font-family:Arial, sans-serif;
+  color:#fff;
+}
+.app{
+  max-width:420px;
+  margin:auto;
+  height:100vh;
+  border:4px solid gold;
+  border-radius:20px;
+  display:flex;
+  flex-direction:column;
+  background:#111;
+}
+.header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  border-bottom:1px solid gold;
+}
+.header img{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:2px solid gold;
+}
+.header b{color:#6fb7ff}
+.header small{color:#aaa}
+
+.chat{
+  flex:1;
+  overflow-y:auto;
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.msg{
+  max-width:85%;
+  padding:10px;
+  border-radius:12px;
+  font-size:14px;
+}
+.user{
+  align-self:flex-end;
+  background:#2a2a2a;
+}
+.bot{
+  align-self:flex-start;
+  background:#1b1b1b;
+  border-left:3px solid gold;
+}
+
+.input{
+  display:flex;
+  padding:10px;
+  gap:8px;
+  border-top:1px solid gold;
+}
+input{
+  flex:1;
+  padding:10px;
+  border-radius:20px;
+  border:1px solid gold;
+  background:#000;
+  color:#fff;
+}
+button{
+  padding:10px 16px;
+  border:none;
+  border-radius:20px;
+  background:#6fb7ff;
+  color:#000;
+  font-weight:bold;
+}
+a{color:#6fb7ff}
 </style>
 </head>
 
 <body>
+
 <div class="app">
   <div class="header">
-    <img src="profile.jpg">
+    <img src="dp.jpg">
     <div>
       <b>Mohd Aatif Smart AI</b><br>
       <small>System Ready</small>
     </div>
   </div>
 
-  <div id="chat" class="chat"></div>
+  <div class="chat" id="chat">
+    <div class="msg bot">
+      👋 Assalamu Alaikum<br>
+      Main <b>Mohd Aatif Smart AI</b hoon.  
+      Mujhse kuch bhi poochhiye.
+    </div>
+  </div>
 
   <div class="input">
     <input id="q" placeholder="Type your question...">
@@ -38,38 +114,75 @@ button{margin-left:10px;padding:12px 20px;border:none;border-radius:20px;backgro
 </div>
 
 <script>
+function speak(text){
+  if(!('speechSynthesis' in window)) return;
+  let u = new SpeechSynthesisUtterance(text);
+  u.lang="hi-IN";
+  u.rate=0.95;
+  speechSynthesis.cancel();
+  speechSynthesis.speak(u);
+}
+
+function botReply(text){
+  const chat=document.getElementById("chat");
+  let d=document.createElement("div");
+  d.className="msg bot";
+  d.innerHTML=text;
+  chat.appendChild(d);
+  chat.scrollTop=chat.scrollHeight;
+  speak(d.innerText);
+}
+
 function send(){
- let q=document.getElementById("q").value.trim();
- if(!q) return;
+  let q=document.getElementById("q");
+  let text=q.value.trim();
+  if(!text) return;
+  q.value="";
 
- addMsg(q,"user");
- document.getElementById("q").value="";
+  let chat=document.getElementById("chat");
+  let u=document.createElement("div");
+  u.className="msg user";
+  u.innerText=text;
+  chat.appendChild(u);
 
- setTimeout(()=>{
-   addMsg(brain(q),"ai");
- },500);
-}
+  let t=text.toLowerCase();
 
-function addMsg(text,type){
- let d=document.createElement("div");
- d.className=type;
- d.innerHTML=text;
- document.getElementById("chat").appendChild(d);
- document.getElementById("chat").scrollTop=99999;
-}
+  setTimeout(()=>{
+    // Salam
+    if(t.includes("salam")||t.includes("assalam")){
+      botReply("Wa Alaikum Assalam 😊");
+    }
 
-function brain(q){
- q=q.toLowerCase();
+    // Intro
+    else if(t.includes("kaun ho")||t.includes("who are you")){
+      botReply("Main <b>Mohd Aatif Smart AI</b hoon. Mujhe Mohd Aatif ne develop kiya hai. Abhi main beta version me hoon.");
+    }
 
- if(q.includes("quran")) return "📖 Main Quran Tilawat aur tafseer me madad kar sakta hoon.";
- if(q.includes("jee")) return "📘 JEE Main ke important questions chahiye? Batao subject.";
- if(q.includes("result"))
-   return `🔍 Official result yahan dekhein:<br>
-   <a href="https://www.google.com/search?q=${q}" target="_blank">Click Here</a>`;
+    // Quran
+    else if(t.includes("quran")){
+      botReply("📖 Quran insan ko hidayat deta hai, dil ko sukoon aur zindagi ko sahi raasta dikhata hai.");
+    }
 
- return `🤖 Is sawal ka exact jawab online milega:<br>
- <a href="https://www.google.com/search?q=${q}" target="_blank">Search on Internet</a>`;
+    // JEE
+    else if(t.includes("jee")){
+      botReply("📘 JEE Main ke liye Physics, Chemistry, Maths ka strong base zaroori hai. Subject batao?");
+    }
+
+    // Result
+    else if(t.includes("result")){
+      let link="https://www.google.com/search?q="+encodeURIComponent(text);
+      botReply("Exact result online milega 👉 <a href='"+link+"' target='_blank'>Search on Internet</a>");
+    }
+
+    // Default
+    else{
+      let link="https://www.google.com/search?q="+encodeURIComponent(text);
+      botReply("Is sawal ka exact jawab online milega 👉 <a href='"+link+"' target='_blank'>Search on Internet</a>");
+    }
+
+  },500);
 }
 </script>
+
 </body>
 </html>
