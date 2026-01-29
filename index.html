@@ -15,7 +15,7 @@ background:#111;border-bottom:2px solid gold;padding:10px}
 .logo h2{color:gold;margin-left:8px;font-size:18px}
 .btn{background:none;border:1px solid gold;color:gold;padding:5px 10px;border-radius:20px;margin-left:5px}
 
-#chat{height:62vh;overflow:auto;padding:10px}
+#chat{height:55vh;overflow:auto;padding:10px}
 .user{background:#4a7bd0;padding:10px;margin:6px;border-radius:10px}
 .bot{background:#222;padding:10px;margin:6px;border-left:4px solid gold;border-radius:10px}
 
@@ -29,9 +29,8 @@ footer a{color:gold;text-decoration:none;margin:0 6px;cursor:pointer}
 .popup{
 display:none;position:fixed;bottom:0;left:0;width:100%;
 background:#111;border-top:2px solid gold;padding:20px;
-height:70%;overflow:auto;z-index:5}
+height:60%;overflow:auto;z-index:5}
 .close{color:red;float:right;font-size:20px;cursor:pointer}
-.arabic{font-size:22px;direction:rtl;text-align:right}
 </style>
 </head>
 
@@ -57,52 +56,15 @@ height:70%;overflow:auto;z-index:5}
 </div>
 
 <footer>
-<a onclick="openPop('about')">About</a> |
-<a onclick="openPop('privacy')">Privacy</a> |
-<a onclick="openPop('contact')">Contact</a> |
-<a onclick="openPop('dua')">Dua</a>
+<a onclick="openPop()">About</a>
 </footer>
 
 <!-- ABOUT -->
 <div id="about" class="popup">
 <span class="close" onclick="closePop()">✖</span>
 <h3>About Mohd Aatif</h3>
-<p>Mohd Aatif ek creative digital creator aur poet hain.  
-Ye platform education, Islamic guidance aur technology ke liye banaya gaya hai.</p>
-</div>
-
-<!-- PRIVACY -->
-<div id="privacy" class="popup">
-<span class="close" onclick="closePop()">✖</span>
-<h3>Privacy Policy</h3>
-<p>Koi personal data store nahi hota.  
-Chat sirf aapke phone me save hoti hai.</p>
-</div>
-
-<!-- CONTACT -->
-<div id="contact" class="popup">
-<span class="close" onclick="closePop()">✖</span>
-<h3>Contact</h3>
-<p>Email: draatifdratif@gmail.com</p>
-</div>
-
-<!-- DUA -->
-<div id="dua" class="popup">
-<span class="close" onclick="closePop()">✖</span>
-<h3>Masnoon Duaen</h3>
-
-<p><b>Sone ki Dua</b></p>
-<p class="arabic">اللَّهُمَّ بِاسْمِكَ أَمُوتُ وَأَحْيَا</p>
-
-<p><b>Uthne ki Dua</b></p>
-<p class="arabic">الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا</p>
-
-<p><b>Khana Shuru</b></p>
-<p class="arabic">بِسْمِ اللَّهِ</p>
-
-<p><b>Wazu ke Baad</b></p>
-<p class="arabic">أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ اللَّهُ</p>
-
+<p>Ye AI app Islamic guidance, education aur daily help ke liye banayi gayi hai.  
+Saari chats aapke phone me hi save hoti hain.</p>
 </div>
 
 <script>
@@ -144,9 +106,34 @@ function answer(q){
 let a="";
 
 if(q.includes("salam")) a="Wa Alaikum Assalam 🌙";
-else if(q.includes("namaz")) a="Namaz sukoon deti hai.";
-else if(q.includes("jee")) a='<a href="https://jeemain.nta.nic.in/" target="_blank">JEE Main Open</a>';
-else if(q.includes("up board")) a='<a href="https://upmsp.edu.in/" target="_blank">UP Board Open</a>';
+
+else if(q.includes("khana dua"))
+a="Bismillah hirrahman nirraheem.";
+
+else if(q.includes("khana baad"))
+a="Alhamdulillahillazi at'amana.";
+
+else if(q.includes("sone ki dua"))
+a="Allahumma bismika amutu wa ahya.";
+
+else if(q.includes("uthne ki dua"))
+a="Alhamdulillahillazi ahyana ba’da ma amatana.";
+
+else if(q.includes("wazu baad"))
+a="Ashhadu alla ilaha illallah.";
+
+else if(q.includes("ghar dua"))
+a="Allahumma inni as’aluka khairal maulij.";
+
+else if(q.includes("safar dua"))
+a="Subhanallazi sakhkhara lana haza.";
+
+else if(q.includes("roza"))
+a="Allahumma inni laka sumtu.";
+
+else if(q.includes("jee"))
+a='<a href="https://jeemain.nta.nic.in/" target="_blank">JEE Result Open</a>';
+
 else{
 a='<a href="https://www.google.com/search?q='+encodeURIComponent(q)+'" target="_blank">Google Search</a>';
 }
@@ -159,12 +146,8 @@ function saveHistory(){localStorage.setItem("chat",chat.innerHTML);}
 function loadHistory(){chat.innerHTML=localStorage.getItem("chat")||"";}
 function clearHistory(){localStorage.removeItem("chat");chat.innerHTML="";}
 
-function openPop(id){
-document.getElementById(id).style.display="block";
-}
-function closePop(){
-document.querySelectorAll(".popup").forEach(p=>p.style.display="none");
-}
+function openPop(){about.style.display="block";}
+function closePop(){about.style.display="none";}
 
 loadHistory();
 </script>
