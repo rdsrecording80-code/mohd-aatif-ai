@@ -10,7 +10,7 @@ body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
 header img{width:50px;height:50px;border-radius:50%;border:2px solid gold;margin-right:10px;}
 h1{color:gold;font-size:22px;flex:1;}
-#chat{height:55vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
+#chat{height:60vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
 .user{background:#1e88e5;align-self:flex-end;}
 .bot{background:#333;border-left:4px solid gold;}
@@ -52,9 +52,11 @@ a{color:#00e5ff;}
 
 <!-- GAME BOX -->
 <div id="gameBox" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99;text-align:center;color:white;">
-<h2 style="color:gold;">Catch The Ball 🎯</h2>
-<canvas id="gameCanvas" width="300" height="400"
-style="background:#111;border:3px solid gold;border-radius:12px;"></canvas>
+<h2 style="color:gold;">Catch The Star 🌟</h2>
+
+<canvas id="gameCanvas" width="320" height="450"
+style="background:#000;border:3px solid gold;border-radius:15px;"></canvas>
+
 <p id="scoreText">Score: 0</p>
 <button onclick="startGame()">Start</button>
 <button onclick="closeGame()">Back</button>
@@ -63,13 +65,13 @@ style="background:#111;border:3px solid gold;border-radius:12px;"></canvas>
 <!-- PAGES -->
 <div id="about" class="page">
 <h2>About</h2>
-<p>Mohd Aatif AI is a smart assistant that provides duas and help in simple language.</p>
+<p>Mohd Aatif AI smart assistant hai jo duas aur help deta hai.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
 <div id="privacy" class="page">
 <h2>Privacy</h2>
-<p>No personal data stored. Only chat backup in browser.</p>
+<p>Sirf browser me chat backup hota hai.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
@@ -119,14 +121,7 @@ const duas=[
 {key:["khane"],text:"Khane se pehle Bismillah, baad Alhamdulillah."},
 {key:["pani"],text:"Pani peene ki Dua: Bismillah."},
 {key:["ilm","padhai"],text:"Rabbi zidni ilma."},
-{key:["imtihan","exam"],text:"Rabbi yassir wala tuassir."},
-{key:["sehat"],text:"Allahumma inni as'alukal afiyah."},
-{key:["subah"],text:"Allahumma bika asbahna."},
-{key:["shaam"],text:"Allahumma bika amsayna."},
-{key:["maafi"],text:"Astaghfirullah."},
-{key:["rozi"],text:"Allahumma barik lana."},
-{key:["parents"],text:"Rabbir hamhuma kama rabbayani."},
-{key:["jannat"],text:"Allahumma inni as'alukal jannah."}
+{key:["imtihan"],text:"Rabbi yassir wala tuassir."}
 ];
 
 /* ANSWER */
@@ -155,8 +150,8 @@ function answer(q){
 
  if(!found){
   let link="https://www.google.com/search?q="+encodeURIComponent(q);
-  a=`<a href="${link}" target="_blank">Open Search</a><br>Mohd Aatif AI ne dhundh nikala.`;
-  speakText="Search dhundh nikala";
+  a=`<a href="${link}" target="_blank">Open Search</a>`;
+  speakText="Search khol diya";
  }
 
  addMsg("Answer: "+a,"bot");
@@ -164,7 +159,7 @@ function answer(q){
 }
 
 /* BACKUP */
-chat.innerHTML=localStorage.getItem("backup")||"Welcome to Mohd Aatif AI";
+chat.innerHTML=localStorage.getItem("backup")||"Welcome Aatif";
 
 /* CLEAR */
 function clearChat(){
@@ -183,52 +178,69 @@ function closePages(){
  chat.style.display="flex";
 }
 
-/* GAME SCRIPT */
+/* ===== GAME ===== */
 let canvas=document.getElementById("gameCanvas");
 let ctx=canvas.getContext("2d");
-let ballX=150, ballY=0, score=0, speed=2, running=false;
 
-function draw(){
- ctx.clearRect(0,0,300,400);
- ctx.beginPath();
- ctx.arc(ballX,ballY,15,0,Math.PI*2);
- ctx.fillStyle="orange";
- ctx.fill();
- ballY+=speed;
- if(ballY>400){
+let bgImg=new Image();
+bgImg.src="https://i.postimg.cc/8k3K0p7X/space-bg.jpg";
+
+let starImg=new Image();
+starImg.src="https://i.postimg.cc/Z5N9Xz0H/star.png";
+
+let starX=150, starY=0;
+let score=0;
+let speed=2;
+let running=false;
+
+function drawGame(){
+ ctx.drawImage(bgImg,0,0,320,450);
+ ctx.drawImage(starImg,starX,starY,40,40);
+ starY+=speed;
+
+ if(starY>450){
   running=false;
-  alert("Game Over! Score: "+score);
+  alert("Game Over Score: "+score);
  }
 }
 
-function loop(){
+function gameLoop(){
  if(!running) return;
- draw();
- requestAnimationFrame(loop);
+ drawGame();
+ requestAnimationFrame(gameLoop);
 }
 
-canvas.addEventListener("click",e=>{
+canvas.addEventListener("click",function(e){
  if(!running) return;
- let r=canvas.getBoundingClientRect();
- let x=e.clientX-r.left;
- let y=e.clientY-r.top;
- let d=Math.sqrt((x-ballX)**2+(y-ballY)**2);
- if(d<20){
+ let rect=canvas.getBoundingClientRect();
+ let x=e.clientX-rect.left;
+ let y=e.clientY-rect.top;
+
+ if(x>starX && x<starX+40 && y>starY && y<starY+40){
   score++;
   document.getElementById("scoreText").innerText="Score: "+score;
-  ballY=0;
-  ballX=Math.random()*260+20;
+  starY=0;
+  starX=Math.random()*260+20;
   speed+=0.3;
  }
 });
 
 function startGame(){
- score=0; speed=2; ballY=0; running=true;
+ score=0;
+ speed=2;
+ starY=0;
+ running=true;
  document.getElementById("scoreText").innerText="Score: 0";
- loop();
+ gameLoop();
 }
-function openGame(){document.getElementById("gameBox").style.display="block";}
-function closeGame(){running=false;document.getElementById("gameBox").style.display="none";}
+
+function openGame(){
+ document.getElementById("gameBox").style.display="block";
+}
+function closeGame(){
+ running=false;
+ document.getElementById("gameBox").style.display="none";
+}
 </script>
 
 </body>
