@@ -1,166 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mohd Aatif AI</title>
 
 <style>
-body{
- background:#000;
- color:#fff;
- font-family:sans-serif;
- margin:0;
-}
-.header{
- background:#111;
- padding:10px;
- display:flex;
- align-items:center;
- justify-content:space-between;
- border-bottom:2px solid gold;
-}
-.header img{
- width:40px;
- border-radius:50%;
- border:2px solid gold;
-}
-.btn{
- background:black;
- color:gold;
- border:1px solid gold;
- padding:5px 10px;
- border-radius:20px;
- margin-left:5px;
-}
-.chat{padding:10px;height:65vh;overflow:auto;}
-.user{
- background:#5a8dee;
- padding:10px;
- border-radius:15px;
- margin:5px 0;
-}
-.ai{
- background:#222;
- border-left:4px solid gold;
- padding:10px;
- border-radius:15px;
- margin:5px 0;
-}
-.inputBox{
- display:flex;
- padding:10px;
-}
-input{
- flex:1;
- padding:10px;
- border-radius:20px;
- border:none;
-}
-.send{
- background:gold;
- border:none;
- padding:10px 15px;
- border-radius:20px;
- margin-left:5px;
-}
-.footer{
- text-align:center;
- color:gold;
- padding:10px;
-}
-a{color:gold;text-decoration:none;}
+body{margin:0;font-family:sans-serif;background:#000;color:#fff}
+header{
+display:flex;justify-content:space-between;align-items:center;
+background:#111;border-bottom:2px solid gold;padding:10px}
+.logo{display:flex;align-items:center}
+.logo img{width:45px;height:45px;border-radius:50%;border:2px solid gold}
+.logo h2{color:gold;margin-left:8px;font-size:18px}
+.btn{background:none;border:1px solid gold;color:gold;padding:5px 10px;border-radius:20px;margin-left:5px}
+
+#chat{height:62vh;overflow:auto;padding:10px}
+.user{background:#4a7bd0;padding:10px;margin:6px;border-radius:10px}
+.bot{background:#222;padding:10px;margin:6px;border-left:4px solid gold;border-radius:10px}
+
+#inputBox{display:flex;background:#111;padding:10px}
+#input{flex:1;padding:10px;border-radius:20px;border:none}
+#send{background:gold;border:none;padding:10px 20px;border-radius:20px}
+
+footer{text-align:center;padding:15px}
+footer a{color:gold;text-decoration:none;margin:0 6px}
+
+.popup{
+display:none;position:fixed;bottom:0;left:0;width:100%;
+background:#111;border-top:2px solid gold;padding:20px;
+height:60%;overflow:auto}
+.close{color:red;float:right}
 </style>
 </head>
 
 <body>
 
-<div class="header">
- <div style="display:flex;align-items:center;gap:8px;">
-  <img src="https://i.ibb.co/6bQ7QkP/user.png">
-  <b style="color:gold;">Mohd Aatif AI</b>
- </div>
- <div>
-  <button class="btn" onclick="toggleVoice()">🎤</button>
-  <button class="btn" onclick="showHistory()">🕒</button>
- </div>
+<header>
+<div class="logo">
+<img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
+<h2>Mohd Aatif AI</h2>
 </div>
 
-<div class="chat" id="chat"></div>
+<div>
+<button class="btn" onclick="toggleVoice()" id="voiceBtn">🎤 ON</button>
+<button class="btn" onclick="clearHistory()">🕘</button>
+</div>
+</header>
 
-<div class="inputBox">
- <input id="msg" placeholder="Ask anything...">
- <button class="send" onclick="send()">Send</button>
+<div id="chat"></div>
+
+<div id="inputBox">
+<input id="input" placeholder="Ask anything...">
+<button id="send" onclick="send()">Send</button>
 </div>
 
-<div class="footer">
- <a href="#">Home</a> |
- <a href="#">Privacy</a> |
- <a href="#">Contact</a>
+<footer>
+<a onclick="openPop('about')">About</a> |
+<a onclick="openPop('privacy')">Privacy</a> |
+<a onclick="openPop('contact')">Contact</a>
+</footer>
+
+<!-- POPUPS -->
+
+<div id="about" class="popup">
+<span class="close" onclick="closePop()">✖</span>
+<h3>About Mohd Aatif</h3>
+<p>
+Mohd Aatif ek creative digital creator, poet aur AI enthusiast hain.  
+Ye platform education, Islamic guidance, technology aur inspiration dene ke liye banaya gaya hai.  
+Unka goal hai knowledge ko simple aur helpful banana.
+</p>
+</div>
+
+<div id="privacy" class="popup">
+<span class="close" onclick="closePop()">✖</span>
+<h3>Privacy Policy</h3>
+<p>
+Yah website kisi bhi user ka personal data store nahi karti.  
+Chat sirf aapke device me local history me save hoti hai.
+</p>
+</div>
+
+<div id="contact" class="popup">
+<span class="close" onclick="closePop()">✖</span>
+<h3>Contact</h3>
+<p>Email: draatifdratif@gmail.com</p>
 </div>
 
 <script>
 let voiceOn=true;
-let history=[];
-
-function toggleVoice(){voiceOn=!voiceOn;}
+const chat=document.getElementById("chat");
+const input=document.getElementById("input");
 
 function speak(t){
- if(!voiceOn) return;
- let clean=t
- .replace(/https?:\/\/\S+/g,'')
- .replace(/[^\w\s.,!?]/g,'');
- let u=new SpeechSynthesisUtterance(clean);
- u.lang="hi-IN";
- speechSynthesis.cancel();
- speechSynthesis.speak(u);
+if(!voiceOn) return;
+let u=new SpeechSynthesisUtterance(t);
+u.lang="hi-IN";
+speechSynthesis.cancel();
+speechSynthesis.speak(u);
 }
 
-function addMsg(text,type){
- let div=document.createElement("div");
- div.className=type;
- div.innerHTML=text;
- chat.appendChild(div);
- chat.scrollTop=chat.scrollHeight;
+function toggleVoice(){
+voiceOn=!voiceOn;
+voiceBtn.innerText=voiceOn?"🎤 ON":"🎤 OFF";
 }
 
-function answer(q){
- q=q.toLowerCase();
-
- if(q.includes("assalam")||q.includes("salam"))
- return "Wa Alaikum Assalam";
-
- if(q.includes("sone"))
- return "Sone ki dua: Allahumma bismika amutu wa ahya.";
-
- if(q.includes("khane"))
- return "Khane ki dua: Bismillah.";
-
- if(q.includes("namaz"))
- return "Namaz Islam ka doosra farz hai. Roz 5 waqt padhi jati hai.";
-
- if(q.includes("aatif"))
- return "Mohd Aatif ek creative content creator aur digital learner hain.";
-
- return `Mohd Aatif ne search kara — click karke dekh sakte ho:<br>
- <a target="_blank" href="https://www.google.com/search?q=${q}">
- Google Result
- </a>`;
+function addMsg(t,c){
+let d=document.createElement("div");
+d.className=c;
+d.innerText=t;
+chat.appendChild(d);
+chat.scrollTop=chat.scrollHeight;
+saveHistory();
 }
 
 function send(){
- let q=msg.value;
- if(!q) return;
- addMsg(q,"user");
- history.push(q);
- let ans=answer(q);
- addMsg("Answer: "+ans,"ai");
- speak(ans);
- msg.value="";
+let q=input.value.trim();
+if(!q) return;
+input.value="";
+addMsg(q,"user");
+answer(q.toLowerCase());
 }
 
-function showHistory(){
- alert(history.join("\n"));
+function answer(q){
+let a="";
+
+if(q.includes("salam")) a="Wa Alaikum Assalam 🌙";
+else if(q.includes("namaz ki fazilat")) a="Namaz se sukoon aur barkat milti hai.";
+else if(q.includes("sone")) a="Sone ki dua: Allahumma bismika amutu wa ahya.";
+else if(q.includes("wazu")) a="Wazu ke baad: Ashhadu an la ilaha illallah.";
+else if(q.includes("roza")) a="Roza niyat: Wa bisawmi ghadin nawaitu.";
+else if(q.includes("jee")) a="Mohd Aatif ne search kara — click karke dekh sakte ho: https://jeemain.nta.nic.in/";
+else if(q.includes("up board")) a="Mohd Aatif ne search kara — click karke dekh sakte ho: https://upmsp.edu.in/";
+else{
+a="Mohd Aatif ne search kara — click karke dekh sakte ho: https://www.google.com/search?q="+encodeURIComponent(q);
 }
+
+addMsg("Answer: "+a,"bot");
+speak(a);
+}
+
+function saveHistory(){localStorage.setItem("chat",chat.innerHTML);}
+function loadHistory(){chat.innerHTML=localStorage.getItem("chat")||"";}
+function clearHistory(){localStorage.removeItem("chat");chat.innerHTML="";}
+
+function openPop(id){
+document.getElementById(id).style.display="block";
+}
+function closePop(){
+document.querySelectorAll(".popup").forEach(p=>p.style.display="none");
+}
+
+loadHistory();
 </script>
 
 </body>
