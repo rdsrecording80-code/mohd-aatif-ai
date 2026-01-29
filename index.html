@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Mohd Aatif AI</title>
 
 <style>
@@ -12,118 +12,123 @@ body{
   background:#000;
   color:white;
 }
-.header{
+header{
   background:#111;
   padding:10px;
+  border-bottom:2px solid gold;
   display:flex;
   align-items:center;
-  border-bottom:2px solid gold;
 }
-.header img{
-  width:40px;height:40px;border-radius:50%;margin-right:10px;
+header img{
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  border:2px solid gold;
 }
-.header h2{flex:1;color:gold;margin:0;}
-.btn{
-  background:black;
-  border:1px solid gold;
+header h2{
   color:gold;
+  margin-left:10px;
+  flex:1;
+}
+header button{
+  background:black;
+  color:gold;
+  border:1px solid gold;
+  border-radius:20px;
   padding:5px 10px;
   margin-left:5px;
-  border-radius:20px;
-  cursor:pointer;
 }
+
 #chat{
   height:60vh;
-  overflow-y:auto;
+  overflow:auto;
   padding:10px;
 }
-.user,.bot{
+
+.user{
+  background:#2196f3;
   padding:10px;
-  margin:5px 0;
   border-radius:10px;
-  max-width:80%;
+  margin:5px 0;
 }
-.user{background:#1e88e5;align-self:flex-end;}
-.bot{background:#222;border-left:3px solid gold;}
-.inputBar{
+
+.bot{
+  background:#222;
+  padding:10px;
+  border-left:3px solid gold;
+  border-radius:10px;
+  margin:5px 0;
+}
+
+#inputBar{
   display:flex;
   padding:10px;
-  background:#111;
 }
-input{
+#input{
   flex:1;
   padding:10px;
   border-radius:20px;
-  border:none;
 }
-.send{
+#send{
   background:gold;
   border:none;
-  padding:10px 15px;
-  margin-left:5px;
+  padding:10px 20px;
   border-radius:20px;
-  cursor:pointer;
+  margin-left:5px;
 }
-.footer{
+
+footer{
   text-align:center;
-  padding:10px;
   color:gold;
+  padding:10px;
 }
-.footer span{margin:0 10px;cursor:pointer;}
 .page{
   display:none;
   padding:20px;
 }
-.backBtn{
-  background:gold;
-  color:black;
-  border:none;
-  padding:8px;
-  border-radius:10px;
-}
+a{color:violet;}
 </style>
 </head>
 
 <body>
 
-<div class="header">
-<img src="https://i.imgur.com/1X6XK6M.png">
+<header>
+<img src="https://i.imgur.com/6VBx3io.png">
 <h2>Mohd Aatif AI</h2>
-<button class="btn" onclick="toggleVoice()" id="voiceBtn">🎤 ON</button>
-<button class="btn" onclick="loadBackup()">🕘</button>
-<button class="btn" onclick="clearChat()">🗑</button>
-</div>
+<button onclick="toggleVoice()" id="voiceBtn">🎤 ON</button>
+<button onclick="clearChat()">🗑</button>
+</header>
 
 <div id="chat"></div>
 
-<div class="inputBar">
+<div id="inputBar">
 <input id="input" placeholder="Ask anything...">
-<button class="send" onclick="send()">Send</button>
+<button id="send" onclick="send()">Send</button>
 </div>
 
-<div class="footer">
-<span onclick="openPage('about')">About</span> |
-<span onclick="openPage('privacy')">Privacy</span> |
-<span onclick="openPage('contact')">Contact</span>
-</div>
+<footer>
+<a onclick="openPage('about')">About</a> |
+<a onclick="openPage('privacy')">Privacy</a> |
+<a onclick="openPage('contact')">Contact</a>
+</footer>
 
 <!-- PAGES -->
 <div id="about" class="page">
-<button class="backBtn" onclick="closePages()">⬅ Back</button>
-<h2>About</h2>
-<p>Mohd Aatif AI ek smart assistant hai jo dua, links aur help karta hai.</p>
+<h3>About</h3>
+<p>Mohd Aatif AI is a smart assistant that helps with search, links and Islamic Duas.</p>
+<button onclick="closePages()">Back</button>
 </div>
 
 <div id="privacy" class="page">
-<button class="backBtn" onclick="closePages()">⬅ Back</button>
-<h2>Privacy</h2>
-<p>Yeh app koi personal data store nahi karta.</p>
+<h3>Privacy</h3>
+<p>No personal data stored. Local backup only.</p>
+<button onclick="closePages()">Back</button>
 </div>
 
 <div id="contact" class="page">
-<button class="backBtn" onclick="closePages()">⬅ Back</button>
-<h2>Contact</h2>
-<p>Creator: Mohd Aatif</p>
+<h3>Contact</h3>
+<p>Email: draatifdratif@gmail.com</p>
+<button onclick="closePages()">Back</button>
 </div>
 
 <script>
@@ -131,19 +136,19 @@ let voiceOn=true;
 const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 
+/* VOICE */
 function speak(t){
  if(!voiceOn) return;
  let u=new SpeechSynthesisUtterance(t);
  u.lang="hi-IN";
- speechSynthesis.cancel();
  speechSynthesis.speak(u);
 }
-
 function toggleVoice(){
  voiceOn=!voiceOn;
- document.getElementById("voiceBtn").innerText=voiceOn?"🎤 ON":"🎤 OFF";
+ voiceBtn.innerText=voiceOn?"🎤 ON":"🎤 OFF";
 }
 
+/* MESSAGE */
 function addMsg(t,c){
  let d=document.createElement("div");
  d.className=c;
@@ -161,59 +166,71 @@ function send(){
  answer(q.toLowerCase());
 }
 
+/* 50 DUAS */
+const duas=[
+"Allah aapko kamyabi de Ameen",
+"Allah aapko sehat de Ameen",
+"Allah aapko hidayat de Ameen",
+"Allah barkat de Ameen",
+"Allah mushkil asaan kare Ameen",
+"Allah izzat de Ameen",
+"Allah ilm de Ameen",
+"Allah rehmat kare Ameen",
+"Allah ghar me barkat de Ameen",
+"Allah rozi badhaye Ameen",
+"Allah buri nazar se bachaye Ameen",
+"Allah lambi umar de Ameen",
+"Allah khush rakhe Ameen",
+"Allah pareshani door kare Ameen",
+"Allah dua qubool kare Ameen",
+"Allah sabr de Ameen",
+"Allah sukoon de Ameen",
+"Allah noor de Ameen",
+"Allah afiyat de Ameen",
+"Allah maafi de Ameen",
+"Allah rahmat barsaye Ameen",
+"Allah har dukh door kare Ameen",
+"Allah imaan mazboot kare Ameen",
+"Allah nek raste par chalaye Ameen",
+"Allah dil saaf rakhe Ameen",
+"Allah har buri adat se bachaye Ameen",
+"Allah khushiyan de Ameen",
+"Allah rehm kare Ameen",
+"Allah madad kare Ameen",
+"Allah barkat de Ameen",
+"Allah tandurusti de Ameen",
+"Allah har armaan poora kare Ameen",
+"Allah nek saathi de Ameen",
+"Allah sukoon de Ameen",
+"Allah roshni de Ameen",
+"Allah ghar mehfooz rakhe Ameen",
+"Allah hifazat kare Ameen",
+"Allah rahmat kare Ameen",
+"Allah rehnumai kare Ameen",
+"Allah sab theek kare Ameen",
+"Allah izzat badhaye Ameen",
+"Allah pyaar de Ameen",
+"Allah dua sun le Ameen",
+"Allah nek banaye Ameen",
+"Allah raham kare Ameen",
+"Allah har kaam asaan kare Ameen",
+"Allah behtareen naseeb de Ameen",
+"Allah har buri cheez se bachaye Ameen",
+"Allah khair de Ameen",
+"Allah aakhirat behtar kare Ameen"
+];
+
+function randomDua(){
+ return duas[Math.floor(Math.random()*duas.length)];
+}
+
+/* ANSWER */
 function answer(q){
  let a="",s="";
 
  if(q.includes("salam")){
   a="Wa Alaikum Assalam";
-  s="Wa Alaikum Assalam";
+  s=a;
  }
 
  else if(q.includes("dua")){
-  a="Allah aapko kamyabi de. Ameen.";
-  s="Ameen";
- }
-
- else{
-  let link="https://www.google.com/search?q="+encodeURIComponent(q);
-  a=`<a href="${link}" target="_blank">Open Link</a><br>
-  Mohd Aatif AI ne dhundh nikala.<br>
-  Please maine click link diya hai is par click karke dekh sakte ho.`;
-  s="Link dhundh nikala";
- }
-
- addMsg("Answer: "+a,"bot");
- speak(s);
-}
-
-/* BACKUP */
-function saveBackup(){
- localStorage.setItem("aatif_backup",chat.innerHTML);
-}
-function loadBackup(){
- let d=localStorage.getItem("aatif_backup");
- if(d) chat.innerHTML=d;
- else addMsg("Welcome to Mohd Aatif AI","bot");
-}
-function clearChat(){
- if(confirm("Clear Chat?")){
-  localStorage.removeItem("aatif_backup");
-  chat.innerHTML="";
- }
-}
-
-/* PAGES */
-function openPage(id){
- document.querySelectorAll(".page").forEach(p=>p.style.display="none");
- document.getElementById(id).style.display="block";
-}
-function closePages(){
- document.querySelectorAll(".page").forEach(p=>p.style.display="none");
-}
-
-/* START */
-loadBackup();
-</script>
-
-</body>
-</html>
