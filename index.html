@@ -1,80 +1,129 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mohd Aatif AI</title>
 
 <style>
-body{margin:0;font-family:sans-serif;background:#000;color:#fff}
-header{display:flex;justify-content:space-between;align-items:center;background:#111;border-bottom:2px solid gold;padding:10px}
-.logo{display:flex;align-items:center}
-.logo img{width:45px;height:45px;border-radius:50%;border:2px solid gold}
-.logo h2{color:gold;margin-left:8px;font-size:18px}
-.btn{background:none;border:1px solid gold;color:gold;padding:5px 10px;border-radius:20px;margin-left:5px}
-
-#chat{height:50vh;overflow:auto;padding:10px}
-.user{background:#4a7bd0;padding:10px;margin:6px;border-radius:10px}
-.bot{background:#222;padding:10px;margin:6px;border-left:4px solid gold;border-radius:10px}
-
-#inputBox{display:flex;background:#111;padding:10px}
-#input{flex:1;padding:10px;border-radius:20px;border:none}
-#send{background:gold;border:none;padding:10px 20px;border-radius:20px}
-
-footer{text-align:center;padding:15px}
-footer a{color:gold;margin:0 6px;cursor:pointer}
-
-.page{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;padding:20px;overflow:auto}
-.back{color:gold;cursor:pointer;margin-bottom:15px;display:block}
+body{
+  margin:0;
+  font-family:sans-serif;
+  background:#000;
+  color:white;
+}
+.header{
+  background:#111;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  border-bottom:2px solid gold;
+}
+.header img{
+  width:40px;height:40px;border-radius:50%;margin-right:10px;
+}
+.header h2{flex:1;color:gold;margin:0;}
+.btn{
+  background:black;
+  border:1px solid gold;
+  color:gold;
+  padding:5px 10px;
+  margin-left:5px;
+  border-radius:20px;
+  cursor:pointer;
+}
+#chat{
+  height:60vh;
+  overflow-y:auto;
+  padding:10px;
+}
+.user,.bot{
+  padding:10px;
+  margin:5px 0;
+  border-radius:10px;
+  max-width:80%;
+}
+.user{background:#1e88e5;align-self:flex-end;}
+.bot{background:#222;border-left:3px solid gold;}
+.inputBar{
+  display:flex;
+  padding:10px;
+  background:#111;
+}
+input{
+  flex:1;
+  padding:10px;
+  border-radius:20px;
+  border:none;
+}
+.send{
+  background:gold;
+  border:none;
+  padding:10px 15px;
+  margin-left:5px;
+  border-radius:20px;
+  cursor:pointer;
+}
+.footer{
+  text-align:center;
+  padding:10px;
+  color:gold;
+}
+.footer span{margin:0 10px;cursor:pointer;}
+.page{
+  display:none;
+  padding:20px;
+}
+.backBtn{
+  background:gold;
+  color:black;
+  border:none;
+  padding:8px;
+  border-radius:10px;
+}
 </style>
 </head>
 
 <body>
 
-<header>
-<div class="logo">
-<img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
+<div class="header">
+<img src="https://i.imgur.com/1X6XK6M.png">
 <h2>Mohd Aatif AI</h2>
-</div>
-
-<div>
 <button class="btn" onclick="toggleVoice()" id="voiceBtn">🎤 ON</button>
-<button class="btn" onclick="clearHistory()">🕘</button>
+<button class="btn" onclick="loadBackup()">🕘</button>
+<button class="btn" onclick="clearChat()">🗑</button>
 </div>
-</header>
 
 <div id="chat"></div>
 
-<div id="inputBox">
+<div class="inputBar">
 <input id="input" placeholder="Ask anything...">
-<button id="send" onclick="send()">Send</button>
+<button class="send" onclick="send()">Send</button>
 </div>
 
-<footer>
-<a onclick="openPage('about')">About</a> |
-<a onclick="openPage('privacy')">Privacy</a> |
-<a onclick="openPage('contact')">Contact</a>
-</footer>
+<div class="footer">
+<span onclick="openPage('about')">About</span> |
+<span onclick="openPage('privacy')">Privacy</span> |
+<span onclick="openPage('contact')">Contact</span>
+</div>
 
-<!-- ABOUT -->
+<!-- PAGES -->
 <div id="about" class="page">
-<span class="back" onclick="closePages()">⬅ Back</span>
+<button class="backBtn" onclick="closePages()">⬅ Back</button>
 <h2>About</h2>
-<p>Mohd Aatif AI ek Islamic aur Education helper platform hai.</p>
+<p>Mohd Aatif AI ek smart assistant hai jo dua, links aur help karta hai.</p>
 </div>
 
-<!-- PRIVACY -->
 <div id="privacy" class="page">
-<span class="back" onclick="closePages()">⬅ Back</span>
+<button class="backBtn" onclick="closePages()">⬅ Back</button>
 <h2>Privacy</h2>
-<p>Data store nahi hota. Chat sirf device me save hoti hai.</p>
+<p>Yeh app koi personal data store nahi karta.</p>
 </div>
 
-<!-- CONTACT -->
 <div id="contact" class="page">
-<span class="back" onclick="closePages()">⬅ Back</span>
+<button class="backBtn" onclick="closePages()">⬅ Back</button>
 <h2>Contact</h2>
-<p>Email: draatifdratif@gmail.com</p>
+<p>Creator: Mohd Aatif</p>
 </div>
 
 <script>
@@ -83,87 +132,87 @@ const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 
 function speak(t){
-if(!voiceOn) return;
-let u=new SpeechSynthesisUtterance(t);
-u.lang="hi-IN";
-speechSynthesis.cancel();
-speechSynthesis.speak(u);
+ if(!voiceOn) return;
+ let u=new SpeechSynthesisUtterance(t);
+ u.lang="hi-IN";
+ speechSynthesis.cancel();
+ speechSynthesis.speak(u);
 }
 
 function toggleVoice(){
-voiceOn=!voiceOn;
-voiceBtn.innerText=voiceOn?"🎤 ON":"🎤 OFF";
+ voiceOn=!voiceOn;
+ document.getElementById("voiceBtn").innerText=voiceOn?"🎤 ON":"🎤 OFF";
 }
 
 function addMsg(t,c){
-let d=document.createElement("div");
-d.className=c;
-d.innerHTML=t;
-chat.appendChild(d);
-chat.scrollTop=chat.scrollHeight;
-saveHistory();
+ let d=document.createElement("div");
+ d.className=c;
+ d.innerHTML=t;
+ chat.appendChild(d);
+ chat.scrollTop=chat.scrollHeight;
+ saveBackup();
 }
 
 function send(){
-let q=input.value.trim();
-if(!q) return;
-input.value="";
-addMsg(q,"user");
-answer(q.toLowerCase());
+ let q=input.value.trim();
+ if(!q) return;
+ input.value="";
+ addMsg(q,"user");
+ answer(q.toLowerCase());
 }
 
 function answer(q){
-let a=""; let speakText="";
+ let a="",s="";
 
-if(q.includes("salam")){
-a="Wa Alaikum Assalam 🌙";
-speakText="Wa Alaikum Assalam";
+ if(q.includes("salam")){
+  a="Wa Alaikum Assalam";
+  s="Wa Alaikum Assalam";
+ }
+
+ else if(q.includes("dua")){
+  a="Allah aapko kamyabi de. Ameen.";
+  s="Ameen";
+ }
+
+ else{
+  let link="https://www.google.com/search?q="+encodeURIComponent(q);
+  a=`<a href="${link}" target="_blank">Open Link</a><br>
+  Mohd Aatif AI ne dhundh nikala.<br>
+  Please maine click link diya hai is par click karke dekh sakte ho.`;
+  s="Link dhundh nikala";
+ }
+
+ addMsg("Answer: "+a,"bot");
+ speak(s);
 }
 
-else if(q.includes("quran")){
-a='<a href="https://quran.com" target="_blank">Open Quran</a>';
-speakText="Quran open kar raha hoon";
+/* BACKUP */
+function saveBackup(){
+ localStorage.setItem("aatif_backup",chat.innerHTML);
+}
+function loadBackup(){
+ let d=localStorage.getItem("aatif_backup");
+ if(d) chat.innerHTML=d;
+ else addMsg("Welcome to Mohd Aatif AI","bot");
+}
+function clearChat(){
+ if(confirm("Clear Chat?")){
+  localStorage.removeItem("aatif_backup");
+  chat.innerHTML="";
+ }
 }
 
-else if(q.includes("result")){
-a='<a href="https://jeemain.nta.nic.in/" target="_blank">Open Result</a>';
-speakText="Result open kar raha hoon";
-}
-
-else if(q.includes("khana")){
-a="بِسْمِ اللَّهِ";
-speakText="Bismillah";
-}
-
-else if(q.includes("sone")){
-a="اللَّهُمَّ بِاسْمِكَ أَمُوتُ وَأَحْيَا";
-speakText="Allahumma bismika amutu wa ahya";
-}
-
-else{
-let link="https://www.google.com/search?q="+encodeURIComponent(q);
-a='<a href="'+link+'" target="_blank">Open Search</a>';
-speakText="Google search open kar raha hoon";
-}
-
-addMsg("Answer: "+a,"bot");
-speak(speakText);
-}
-
-function saveHistory(){localStorage.setItem("chat",chat.innerHTML);}
-function loadHistory(){chat.innerHTML=localStorage.getItem("chat")||"";}
-function clearHistory(){localStorage.removeItem("chat");chat.innerHTML="";}
-
+/* PAGES */
 function openPage(id){
-document.querySelectorAll(".page").forEach(p=>p.style.display="none");
-document.getElementById(id).style.display="block";
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ document.getElementById(id).style.display="block";
 }
 function closePages(){
-document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
 }
 
-loadHistory();
-addMsg("Welcome to Mohd Aatif AI","bot");
+/* START */
+loadBackup();
 </script>
 
 </body>
