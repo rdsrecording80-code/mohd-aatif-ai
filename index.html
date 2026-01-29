@@ -7,9 +7,10 @@
 
 <style>
 body{margin:0;font-family:Arial;background:#0b0b0d;color:#fff}
-.header{display:flex;align-items:center;gap:10px;padding:12px;background:#111;border-bottom:1px solid #222}
+.header{display:flex;align-items:center;gap:10px;padding:12px;background:#111}
 .avatar{width:42px;height:42px;border-radius:50%;border:2px solid gold}
 .title{color:gold;font-size:17px;font-weight:bold}
+.historyBtn{margin-left:auto;background:#222;color:gold;border:1px solid gold;padding:6px 14px;border-radius:20px}
 .chat{height:60vh;overflow-y:auto;padding:15px}
 .msg{padding:10px 14px;border-radius:12px;margin-bottom:8px;max-width:75%}
 .ai{background:#222;border-left:3px solid gold}
@@ -19,15 +20,6 @@ input{flex:1;padding:10px;border-radius:20px;border:none}
 button{margin-left:8px;padding:10px 16px;border:none;border-radius:20px;background:gold;font-weight:bold}
 .footer{text-align:center;font-size:13px;padding:10px;border-top:1px solid #222}
 a{color:gold;text-decoration:none}
-.historyBtn{
-  background:#222;
-  color:gold;
-  border:1px solid gold;
-  padding:6px 12px;
-  border-radius:20px;
-  margin-left:auto;
-  cursor:pointer;
-}
 </style>
 </head>
 
@@ -36,13 +28,13 @@ a{color:gold;text-decoration:none}
 <div class="header">
 <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" class="avatar">
 <div class="title">Mohd Aatif AI</div>
-<button class="historyBtn" onclick="showHistory()">History</button>
+<button class="historyBtn" onclick="loadHistory()">History</button>
 </div>
 
 <div class="chat" id="chat"></div>
 
 <div class="input">
-<input id="q" placeholder="Type your message..." onkeypress="if(event.key==='Enter')send()">
+<input id="q" placeholder="Yahan likhiye..." onkeypress="if(event.key==='Enter')send()">
 <button onclick="send()">Send</button>
 </div>
 
@@ -53,8 +45,8 @@ a{color:gold;text-decoration:none}
 </div>
 
 <script>
-const chat = document.getElementById("chat");
-let history = JSON.parse(localStorage.getItem("aatifAI")) || [];
+const chat=document.getElementById("chat");
+let history=JSON.parse(localStorage.getItem("aatifAI")) || [];
 
 function add(type,text,save=true){
  let d=document.createElement("div");
@@ -62,17 +54,13 @@ function add(type,text,save=true){
  d.innerHTML=text;
  chat.appendChild(d);
  chat.scrollTop=chat.scrollHeight;
-
  if(save){
-   history.push({type,text});
-   localStorage.setItem("aatifAI",JSON.stringify(history));
+  history.push({type,text});
+  localStorage.setItem("aatifAI",JSON.stringify(history));
  }
 }
 
-function greeting(){
- add("ai","Hello! I am <b>Mohd Aatif AI</b>. I am here to help you with knowledge, guidance, and answers.",false);
-}
-greeting();
+add("ai","Hello! Main <b>Mohd Aatif AI</b> hoon. Aap jo bhi poochna chahein, pooch sakte hain.",false);
 
 function send(){
  let q=document.getElementById("q");
@@ -82,31 +70,41 @@ function send(){
  q.value="";
  let l=t.toLowerCase();
 
- if(l.includes("who are you") || l.includes("kaun ho")){
-   add("ai","I am Mohd Aatif AI, a smart virtual assistant created to provide information, guidance, and meaningful answers in a simple way.");
+ if(l.includes("quran")){
+   add("ai","<b>Answer:</b> Quran Allah ki paak kitaab hai, jo Hazrat Muhammad ﷺ par nazil hui. Ye hidayat aur rehnumai ka zariya hai.");
+ }
+
+ else if(l.includes("dua")){
+   add("ai","<b>Answer:</b> Dua ibadat ka sabse khoobsurat tareeqa hai. Allah se seedha baat karna dua kehlata hai.");
+ }
+
+ else if(l.includes("allah")){
+   add("ai","<b>Answer:</b> Allah ek hai, be-misal hai, aur poori kainaat ka Malik hai.");
  }
 
  else if(l.includes("mohd aatif")){
-   add("ai","Mohd Aatif is a creative individual, content creator, and the mind behind Mohd Aatif AI. This platform is built to educate, inspire, and grow digitally.");
+   add("ai","<b>Answer:</b> Mohd Aatif ek creative thinker aur digital creator hain, jinhone Mohd Aatif AI ko logon ki madad ke liye banaya.");
  }
 
- else if(l.includes("your work") || l.includes("profession")){
-   add("ai","My purpose is to assist users with questions related to education, technology, religion, daily life solutions, and digital growth.");
+ else if(l.includes("kaun ho tum") || l.includes("who are you")){
+   add("ai","<b>Answer:</b> Main Mohd Aatif AI hoon – ek smart assistant jo sawalon ka asaan jawab deta hai.");
  }
 
  else if(/^[0-9+\-*/(). ]+$/.test(l)){
-   try{ add("ai","Answer: "+eval(l)); }
-   catch{ add("ai","Invalid calculation."); }
+   try{ add("ai","<b>Answer:</b> "+eval(l)); }
+   catch{ add("ai","<b>Answer:</b> Calculation galat hai."); }
  }
 
  else{
-   add("ai","I am still learning. Please ask about knowledge, education, technology, or Mohd Aatif AI.");
+   add("ai","<b>Answer:</b> Main is sawal ka simple aur sahi jawab dene ki koshish kar raha hoon. Thoda aur clear likhiye.");
  }
 }
 
-function showHistory(){
+function loadHistory(){
  chat.innerHTML="";
- history.forEach(m=>add(m.type,m.text,false));
+ history.forEach(m=>{
+   add(m.type,m.text,false);
+ });
 }
 </script>
 
