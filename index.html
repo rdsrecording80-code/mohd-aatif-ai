@@ -6,69 +6,41 @@
 <title>Mohd Aatif AI</title>
 
 <style>
-body{
- margin:0;
- background:#000;
- color:#fff;
- font-family:sans-serif;
-}
-
-/* HEADER */
-header{
- display:flex;
- align-items:center;
- padding:10px;
- border-bottom:2px solid gold;
-}
-header img{
- width:50px;height:50px;
- border-radius:50%;
- border:2px solid gold;
- margin-right:10px;
-}
+body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
+header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
+header img{width:50px;height:50px;border-radius:50%;border:2px solid gold;margin-right:10px;}
 h1{color:gold;font-size:22px;flex:1}
 
 /* CHAT */
-#chat{
- height:45vh;
- overflow:auto;
- padding:10px;
- display:flex;
- flex-direction:column;
-}
-.user,.bot{
- margin:5px;
- padding:10px;
- border-radius:10px;
- max-width:80%;
-}
+#chat{height:55vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
+.user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
 .user{background:#1e88e5;align-self:flex-end;}
 .bot{background:#333;border-left:4px solid gold;}
 
 /* INPUT */
 #inputArea{display:flex;padding:10px;background:#111;}
 #input{flex:1;padding:10px;border-radius:20px;border:none;}
-button{
- background:gold;
- border:none;
- padding:10px 15px;
- border-radius:20px;
- margin:5px;
- font-weight:bold;
- box-shadow:0 4px #bfa300;
-}
-button:active{box-shadow:none;transform:translateY(4px);}
+button{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;font-weight:bold}
 
-/* GAME AREA */
-#gameSection{display:none;padding:10px;text-align:center;}
-.card{
- background:#222;
- margin:10px;
- padding:15px;
- border-radius:15px;
- border:2px solid gold;
-}
+/* FOOTER */
+footer{text-align:center;padding:10px;color:gold;}
+.page{display:none;padding:15px;}
 
+/* GAME */
+#gameBox{
+display:none;
+position:fixed;
+top:0;left:0;
+width:100%;height:100%;
+background:#000;
+z-index:99;
+text-align:center;
+}
+#target{
+width:80px;height:80px;
+position:absolute;
+cursor:pointer;
+}
 </style>
 </head>
 
@@ -78,6 +50,7 @@ button:active{box-shadow:none;transform:translateY(4px);}
 <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
 <h1>Mohd Aatif AI</h1>
 <button onclick="toggleVoice()">🎤</button>
+<button onclick="clearChat()">🗑</button>
 </header>
 
 <div id="chat"></div>
@@ -85,28 +58,47 @@ button:active{box-shadow:none;transform:translateY(4px);}
 <div id="inputArea">
 <input id="input" placeholder="Ask Dua or Salam...">
 <button onclick="send()">Send</button>
-<button onclick="openGame()">🎮 Game</button>
+<button onclick="openGame()">🎮</button>
 </div>
 
-<!-- GAME SECTION -->
-<div id="gameSection">
-<h2>Kalma Quiz Game</h2>
+<footer>
+<span onclick="openPage('about')">About</span> |
+<span onclick="openPage('privacy')">Privacy</span> |
+<span onclick="openPage('contact')">Contact</span>
+</footer>
+
+<!-- ABOUT -->
+<div id="about" class="page">
+<h2>About</h2>
+<p>Mohd Aatif AI ek smart assistant hai jo Dua, search aur help karta hai.</p>
+<button onclick="closePages()">Back</button>
+</div>
+
+<!-- PRIVACY -->
+<div id="privacy" class="page">
+<h2>Privacy</h2>
+<p>Data store nahin hota. Sirf chat browser me save hoti hai.</p>
+<button onclick="closePages()">Back</button>
+</div>
+
+<!-- CONTACT -->
+<div id="contact" class="page">
+<h2>Contact</h2>
+<p>Email: draatifdratif@gmail.com</p>
+<button onclick="closePages()">Back</button>
+</div>
+
+<!-- GAME -->
+<div id="gameBox">
+<h2>3D Tap Game</h2>
 <p id="score">Score: 0</p>
-
-<div class="card">
-<p id="question">Question Here</p>
-<button onclick="check(0)" id="opt0"></button>
-<button onclick="check(1)" id="opt1"></button>
-<button onclick="check(2)" id="opt2"></button>
-</div>
-
+<img id="target" src="https://cdn-icons-png.flaticon.com/512/616/616408.png">
+<br><br>
 <button onclick="closeGame()">Back</button>
 </div>
 
 <script>
 let voiceOn=true;
-let score=0;
-
 const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 
@@ -115,6 +107,7 @@ function speak(t){
  if(!voiceOn) return;
  let u=new SpeechSynthesisUtterance(t);
  u.lang="hi-IN";
+ speechSynthesis.cancel();
  speechSynthesis.speak(u);
 }
 function toggleVoice(){voiceOn=!voiceOn;}
@@ -126,6 +119,7 @@ function addMsg(t,c){
  d.innerHTML=t;
  chat.appendChild(d);
  chat.scrollTop=chat.scrollHeight;
+ localStorage.setItem("backup",chat.innerHTML);
 }
 
 function send(){
@@ -139,75 +133,71 @@ function send(){
 /* DUAS */
 const duas=[
 {key:"sone",text:"Allahumma bismika amutu wa ahya."},
-{key:"khane",text:"Bismillah, Alhamdulillah."},
+{key:"khane",text:"Bismillah Alhamdulillah."},
 {key:"ilm",text:"Rabbi zidni ilma."}
 ];
 
 function answer(q){
- let found=false;
-
  if(q.includes("salam")){
  addMsg("Wa Alaikum Assalam","bot");
  speak("Wa Alaikum Assalam");
  return;
  }
-
  for(let d of duas){
-  if(q.includes(d.key)){
-   addMsg(d.text,"bot");
-   speak(d.text);
-   found=true;
-  }
+ if(q.includes(d.key)){
+ addMsg(d.text,"bot");
+ speak(d.text);
+ return;
  }
-
- if(!found){
- addMsg("Search Google 👍","bot");
  }
+ addMsg("Google Search kare 👍","bot");
 }
 
-/* QUIZ DATA */
-const quiz=[
-{
- q:"1st Kalma name?",
- o:["Tayyab","Shahadat","Tawheed"],
- a:2
-},
-{
- q:"Ilm Dua?",
- o:["Rabbi zidni ilma","Bismillah","Subhanallah"],
- a:0
-}
-];
+/* BACKUP */
+chat.innerHTML=localStorage.getItem("backup")||"Welcome to Mohd Aatif AI";
 
-let current=0;
+/* CLEAR */
+function clearChat(){
+ localStorage.removeItem("backup");
+ chat.innerHTML="";
+}
+
+/* PAGES */
+function openPage(id){
+ chat.style.display="none";
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ document.getElementById(id).style.display="block";
+}
+function closePages(){
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ chat.style.display="flex";
+}
+
+/* GAME SYSTEM */
+let score=0;
+const target=document.getElementById("target");
 
 function openGame(){
- document.getElementById("gameSection").style.display="block";
- loadQ();
+ document.getElementById("gameBox").style.display="block";
+ moveTarget();
 }
 function closeGame(){
- document.getElementById("gameSection").style.display="none";
+ document.getElementById("gameBox").style.display="none";
 }
 
-function loadQ(){
- let q=quiz[current];
- document.getElementById("question").innerText=q.q;
- document.getElementById("opt0").innerText=q.o[0];
- document.getElementById("opt1").innerText=q.o[1];
- document.getElementById("opt2").innerText=q.o[2];
+function moveTarget(){
+ let x=Math.random()*80;
+ let y=Math.random()*60;
+ target.style.left=x+"%";
+ target.style.top=y+"%";
 }
 
-function check(i){
- if(i==quiz[current].a){
-  score++;
-  speak("Correct");
- }else{
-  speak("Wrong");
- }
+target.onclick=function(){
+ score++;
  document.getElementById("score").innerText="Score: "+score;
- current=(current+1)%quiz.length;
- loadQ();
-}
+ speak("Good");
+ moveTarget();
+};
 </script>
 
 </body>
