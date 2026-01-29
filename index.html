@@ -6,20 +6,69 @@
 <title>Mohd Aatif AI</title>
 
 <style>
-body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
-header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
-header img{width:50px;height:50px;border-radius:50%;border:2px solid gold;margin-right:10px;}
-h1{color:gold;font-size:22px;flex:1;}
-#chat{height:60vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
-.user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
+body{
+ margin:0;
+ background:#000;
+ color:#fff;
+ font-family:sans-serif;
+}
+
+/* HEADER */
+header{
+ display:flex;
+ align-items:center;
+ padding:10px;
+ border-bottom:2px solid gold;
+}
+header img{
+ width:50px;height:50px;
+ border-radius:50%;
+ border:2px solid gold;
+ margin-right:10px;
+}
+h1{color:gold;font-size:22px;flex:1}
+
+/* CHAT */
+#chat{
+ height:45vh;
+ overflow:auto;
+ padding:10px;
+ display:flex;
+ flex-direction:column;
+}
+.user,.bot{
+ margin:5px;
+ padding:10px;
+ border-radius:10px;
+ max-width:80%;
+}
 .user{background:#1e88e5;align-self:flex-end;}
 .bot{background:#333;border-left:4px solid gold;}
+
+/* INPUT */
 #inputArea{display:flex;padding:10px;background:#111;}
 #input{flex:1;padding:10px;border-radius:20px;border:none;}
-button{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;}
-footer{text-align:center;padding:10px;color:gold;}
-.page{display:none;padding:15px;}
-a{color:#00e5ff;}
+button{
+ background:gold;
+ border:none;
+ padding:10px 15px;
+ border-radius:20px;
+ margin:5px;
+ font-weight:bold;
+ box-shadow:0 4px #bfa300;
+}
+button:active{box-shadow:none;transform:translateY(4px);}
+
+/* GAME AREA */
+#gameSection{display:none;padding:10px;text-align:center;}
+.card{
+ background:#222;
+ margin:10px;
+ padding:15px;
+ border-radius:15px;
+ border:2px solid gold;
+}
+
 </style>
 </head>
 
@@ -29,69 +78,43 @@ a{color:#00e5ff;}
 <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
 <h1>Mohd Aatif AI</h1>
 <button onclick="toggleVoice()">🎤</button>
-<button onclick="clearChat()">🗑</button>
 </header>
 
 <div id="chat"></div>
 
 <div id="inputArea">
-<input id="input" placeholder="Ask anything...">
+<input id="input" placeholder="Ask Dua or Salam...">
 <button onclick="send()">Send</button>
+<button onclick="openGame()">🎮 Game</button>
 </div>
 
-<footer>
-<span onclick="openPage('about')">About</span> |
-<span onclick="openPage('privacy')">Privacy</span> |
-<span onclick="openPage('contact')">Contact</span>
-</footer>
+<!-- GAME SECTION -->
+<div id="gameSection">
+<h2>Kalma Quiz Game</h2>
+<p id="score">Score: 0</p>
 
-<!-- GAME BUTTON -->
-<div style="text-align:center;margin:10px;">
-<button onclick="openGame()">🎮 Play Game</button>
+<div class="card">
+<p id="question">Question Here</p>
+<button onclick="check(0)" id="opt0"></button>
+<button onclick="check(1)" id="opt1"></button>
+<button onclick="check(2)" id="opt2"></button>
 </div>
 
-<!-- GAME BOX -->
-<div id="gameBox" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99;text-align:center;color:white;">
-<h2 style="color:gold;">Catch The Star 🌟</h2>
-
-<canvas id="gameCanvas" width="320" height="450"
-style="background:#000;border:3px solid gold;border-radius:15px;"></canvas>
-
-<p id="scoreText">Score: 0</p>
-<button onclick="startGame()">Start</button>
 <button onclick="closeGame()">Back</button>
-</div>
-
-<!-- PAGES -->
-<div id="about" class="page">
-<h2>About</h2>
-<p>Mohd Aatif AI smart assistant hai jo duas aur help deta hai.</p>
-<button onclick="closePages()">Back</button>
-</div>
-
-<div id="privacy" class="page">
-<h2>Privacy</h2>
-<p>Sirf browser me chat backup hota hai.</p>
-<button onclick="closePages()">Back</button>
-</div>
-
-<div id="contact" class="page">
-<h2>Contact</h2>
-<p>Email: draatifdratif@gmail.com</p>
-<button onclick="closePages()">Back</button>
 </div>
 
 <script>
 let voiceOn=true;
+let score=0;
+
 const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 
 /* VOICE */
 function speak(t){
  if(!voiceOn) return;
- let u=new SpeechSynthesisUtterance(t.replace(/<[^>]*>/g,""));
+ let u=new SpeechSynthesisUtterance(t);
  u.lang="hi-IN";
- speechSynthesis.cancel();
  speechSynthesis.speak(u);
 }
 function toggleVoice(){voiceOn=!voiceOn;}
@@ -103,7 +126,6 @@ function addMsg(t,c){
  d.innerHTML=t;
  chat.appendChild(d);
  chat.scrollTop=chat.scrollHeight;
- localStorage.setItem("backup",chat.innerHTML);
 }
 
 function send(){
@@ -116,130 +138,75 @@ function send(){
 
 /* DUAS */
 const duas=[
-{key:["sone"],text:"Sone ki Dua: Allahumma bismika amutu wa ahya."},
-{key:["uthne"],text:"Uthne ki Dua: Alhamdu lillahil-lazi ahyana."},
-{key:["khane"],text:"Khane se pehle Bismillah, baad Alhamdulillah."},
-{key:["pani"],text:"Pani peene ki Dua: Bismillah."},
-{key:["ilm","padhai"],text:"Rabbi zidni ilma."},
-{key:["imtihan"],text:"Rabbi yassir wala tuassir."}
+{key:"sone",text:"Allahumma bismika amutu wa ahya."},
+{key:"khane",text:"Bismillah, Alhamdulillah."},
+{key:"ilm",text:"Rabbi zidni ilma."}
 ];
 
-/* ANSWER */
 function answer(q){
- let a="", speakText="", found=false;
+ let found=false;
 
  if(q.includes("salam")){
-  a="Wa Alaikum Assalam";
-  speakText=a;
-  found=true;
+ addMsg("Wa Alaikum Assalam","bot");
+ speak("Wa Alaikum Assalam");
+ return;
  }
 
- if(!found){
-  for(let d of duas){
-   for(let k of d.key){
-    if(q.includes(k)){
-     a=d.text;
-     speakText=d.text;
-     found=true;
-     break;
-    }
-   }
-   if(found) break;
+ for(let d of duas){
+  if(q.includes(d.key)){
+   addMsg(d.text,"bot");
+   speak(d.text);
+   found=true;
   }
  }
 
  if(!found){
-  let link="https://www.google.com/search?q="+encodeURIComponent(q);
-  a=`<a href="${link}" target="_blank">Open Search</a>`;
-  speakText="Search khol diya";
- }
-
- addMsg("Answer: "+a,"bot");
- speak(speakText);
-}
-
-/* BACKUP */
-chat.innerHTML=localStorage.getItem("backup")||"Welcome Aatif";
-
-/* CLEAR */
-function clearChat(){
- localStorage.removeItem("backup");
- chat.innerHTML="";
-}
-
-/* PAGES */
-function openPage(id){
- chat.style.display="none";
- document.querySelectorAll(".page").forEach(p=>p.style.display="none");
- document.getElementById(id).style.display="block";
-}
-function closePages(){
- document.querySelectorAll(".page").forEach(p=>p.style.display="none");
- chat.style.display="flex";
-}
-
-/* ===== GAME ===== */
-let canvas=document.getElementById("gameCanvas");
-let ctx=canvas.getContext("2d");
-
-let bgImg=new Image();
-bgImg.src="https://i.postimg.cc/8k3K0p7X/space-bg.jpg";
-
-let starImg=new Image();
-starImg.src="https://i.postimg.cc/Z5N9Xz0H/star.png";
-
-let starX=150, starY=0;
-let score=0;
-let speed=2;
-let running=false;
-
-function drawGame(){
- ctx.drawImage(bgImg,0,0,320,450);
- ctx.drawImage(starImg,starX,starY,40,40);
- starY+=speed;
-
- if(starY>450){
-  running=false;
-  alert("Game Over Score: "+score);
+ addMsg("Search Google 👍","bot");
  }
 }
 
-function gameLoop(){
- if(!running) return;
- drawGame();
- requestAnimationFrame(gameLoop);
+/* QUIZ DATA */
+const quiz=[
+{
+ q:"1st Kalma name?",
+ o:["Tayyab","Shahadat","Tawheed"],
+ a:2
+},
+{
+ q:"Ilm Dua?",
+ o:["Rabbi zidni ilma","Bismillah","Subhanallah"],
+ a:0
 }
+];
 
-canvas.addEventListener("click",function(e){
- if(!running) return;
- let rect=canvas.getBoundingClientRect();
- let x=e.clientX-rect.left;
- let y=e.clientY-rect.top;
-
- if(x>starX && x<starX+40 && y>starY && y<starY+40){
-  score++;
-  document.getElementById("scoreText").innerText="Score: "+score;
-  starY=0;
-  starX=Math.random()*260+20;
-  speed+=0.3;
- }
-});
-
-function startGame(){
- score=0;
- speed=2;
- starY=0;
- running=true;
- document.getElementById("scoreText").innerText="Score: 0";
- gameLoop();
-}
+let current=0;
 
 function openGame(){
- document.getElementById("gameBox").style.display="block";
+ document.getElementById("gameSection").style.display="block";
+ loadQ();
 }
 function closeGame(){
- running=false;
- document.getElementById("gameBox").style.display="none";
+ document.getElementById("gameSection").style.display="none";
+}
+
+function loadQ(){
+ let q=quiz[current];
+ document.getElementById("question").innerText=q.q;
+ document.getElementById("opt0").innerText=q.o[0];
+ document.getElementById("opt1").innerText=q.o[1];
+ document.getElementById("opt2").innerText=q.o[2];
+}
+
+function check(i){
+ if(i==quiz[current].a){
+  score++;
+  speak("Correct");
+ }else{
+  speak("Wrong");
+ }
+ document.getElementById("score").innerText="Score: "+score;
+ current=(current+1)%quiz.length;
+ loadQ();
 }
 </script>
 
