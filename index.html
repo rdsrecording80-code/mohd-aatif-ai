@@ -7,12 +7,11 @@
 
 <style>
 body{margin:0;font-family:sans-serif;background:#000;color:#fff}
-header{
-display:flex;justify-content:space-between;align-items:center;
-background:#111;border-bottom:2px solid gold;padding:10px}
+header{display:flex;justify-content:space-between;align-items:center;background:#111;border-bottom:2px solid gold;padding:10px}
 .logo{display:flex;align-items:center}
 .logo img{width:45px;height:45px;border-radius:50%;border:2px solid gold}
 .logo h2{color:gold;margin-left:8px;font-size:18px}
+
 .btn{background:none;border:1px solid gold;color:gold;padding:5px 10px;border-radius:20px;margin-left:5px}
 
 #chat{height:62vh;overflow:auto;padding:10px}
@@ -24,14 +23,13 @@ background:#111;border-bottom:2px solid gold;padding:10px}
 #send{background:gold;border:none;padding:10px 20px;border-radius:20px}
 
 footer{text-align:center;padding:15px}
-footer a{color:gold;text-decoration:none;margin:0 6px}
+footer a{color:gold;text-decoration:none;margin:0 6px;cursor:pointer}
 
 .popup{
 display:none;position:fixed;bottom:0;left:0;width:100%;
 background:#111;border-top:2px solid gold;padding:20px;
 height:60%;overflow:auto}
-.close{color:red;float:right}
-a.linkbtn{color:gold;font-weight:bold;text-decoration:none}
+.close{color:red;float:right;cursor:pointer}
 </style>
 </head>
 
@@ -52,7 +50,7 @@ a.linkbtn{color:gold;font-weight:bold;text-decoration:none}
 <div id="chat"></div>
 
 <div id="inputBox">
-<input id="input" placeholder="Ask anything...">
+<input id="input" placeholder="Ask anything..." onkeypress="if(event.key==='Enter')send()">
 <button id="send" onclick="send()">Send</button>
 </div>
 
@@ -68,8 +66,9 @@ a.linkbtn{color:gold;font-weight:bold;text-decoration:none}
 <span class="close" onclick="closePop()">✖</span>
 <h3>About Mohd Aatif</h3>
 <p>
-Mohd Aatif ek creative digital creator, poet aur AI enthusiast hain.  
-Ye platform education, Islamic guidance aur technology ke liye banaya gaya hai.
+Mohd Aatif is a creative digital creator, poet and AI enthusiast.  
+This platform is built to provide education, Islamic guidance and technology help.  
+Goal is to make knowledge simple and useful.
 </p>
 </div>
 
@@ -77,8 +76,8 @@ Ye platform education, Islamic guidance aur technology ke liye banaya gaya hai.
 <span class="close" onclick="closePop()">✖</span>
 <h3>Privacy Policy</h3>
 <p>
-Yah website personal data store nahi karti.  
-Chat sirf aapke device me local history me save hoti hai.
+This website does not store personal data.  
+Chat history is saved only on your device.
 </p>
 </div>
 
@@ -95,9 +94,7 @@ const input=document.getElementById("input");
 
 function speak(t){
 if(!voiceOn) return;
-t=t.replace(/https?:\/\/\S+/g,"");
-t=t.replace(/<[^>]*>/g,"");
-let u=new SpeechSynthesisUtterance(t);
+let u=new SpeechSynthesisUtterance(t.replace(/https?:\/\/\S+/g,''));
 u.lang="hi-IN";
 speechSynthesis.cancel();
 speechSynthesis.speak(u);
@@ -128,18 +125,36 @@ answer(q.toLowerCase());
 function answer(q){
 let a="";
 
-if(q.includes("salam")) a="Wa Alaikum Assalam 🌙";
-else if(q.includes("namaz")) a="Namaz se sukoon aur barkat milti hai.";
-else if(q.includes("sone")) a="Sone ki dua: Allahumma bismika amutu wa ahya.";
-else if(q.includes("khane")) a="Khana dua: Bismillah.";
-else if(q.includes("wazu")) a="Wazu ke baad dua: Ashhadu an la ilaha illallah.";
-else if(q.includes("roza")) a="Roza niyat: Wa bisawmi ghadin nawaitu.";
+if(q.includes("salam")||q.includes("assalam"))
+a="Wa Alaikum Assalam 🌙";
+
+else if(q.includes("namaz"))
+a="Namaz sukoon aur barkat ka zariya hai.";
+
+else if(q.includes("sone"))
+a="Sone ki dua: Allahumma bismika amutu wa ahya.";
+
+else if(q.includes("khane ke bad"))
+a="Khana ke baad dua: Alhamdulillahillazi at'amana.";
+
+else if(q.includes("khana"))
+a="Khana ki dua: Bismillah.";
+
+else if(q.includes("wazu"))
+a="Wazu ke baad: Ashhadu an la ilaha illallah.";
+
+else if(q.includes("roza"))
+a="Roza niyat: Wa bisawmi ghadin nawaitu.";
+
 else if(q.includes("jee"))
-a='Mohd Aatif ne search kara — <a class="linkbtn" target="_blank" href="https://jeemain.nta.nic.in/">Open Result</a>';
+a='Mohd Aatif ne search kara — <a href="https://jeemain.nta.nic.in/" target="_blank" style="color:gold;font-weight:bold;">Open Result</a>';
+
 else if(q.includes("up board"))
-a='Mohd Aatif ne search kara — <a class="linkbtn" target="_blank" href="https://upmsp.edu.in/">Open Result</a>';
-else
-a='Mohd Aatif ne search kara — <a class="linkbtn" target="_blank" href="https://www.google.com/search?q='+encodeURIComponent(q)+'">See Search</a>';
+a='Mohd Aatif ne search kara — <a href="https://upmsp.edu.in/" target="_blank" style="color:gold;font-weight:bold;">Open Result</a>';
+
+else{
+a='Mohd Aatif ne search kara — <a href="https://www.google.com/search?q='+encodeURIComponent(q)+'" target="_blank" style="color:gold;font-weight:bold;">See Search</a>';
+}
 
 addMsg("Answer: "+a,"bot");
 speak(a);
