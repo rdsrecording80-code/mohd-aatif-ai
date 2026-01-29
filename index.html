@@ -31,6 +31,7 @@ display:none;position:fixed;bottom:0;left:0;width:100%;
 background:#111;border-top:2px solid gold;padding:20px;
 height:60%;overflow:auto}
 .close{color:red;float:right}
+a.linkbtn{color:gold;font-weight:bold;text-decoration:none}
 </style>
 </head>
 
@@ -68,8 +69,7 @@ height:60%;overflow:auto}
 <h3>About Mohd Aatif</h3>
 <p>
 Mohd Aatif ek creative digital creator, poet aur AI enthusiast hain.  
-Ye platform education, Islamic guidance, technology aur inspiration dene ke liye banaya gaya hai.  
-Unka goal hai knowledge ko simple aur helpful banana.
+Ye platform education, Islamic guidance aur technology ke liye banaya gaya hai.
 </p>
 </div>
 
@@ -77,7 +77,7 @@ Unka goal hai knowledge ko simple aur helpful banana.
 <span class="close" onclick="closePop()">✖</span>
 <h3>Privacy Policy</h3>
 <p>
-Yah website kisi bhi user ka personal data store nahi karti.  
+Yah website personal data store nahi karti.  
 Chat sirf aapke device me local history me save hoti hai.
 </p>
 </div>
@@ -95,6 +95,8 @@ const input=document.getElementById("input");
 
 function speak(t){
 if(!voiceOn) return;
+t=t.replace(/https?:\/\/\S+/g,"");
+t=t.replace(/<[^>]*>/g,"");
 let u=new SpeechSynthesisUtterance(t);
 u.lang="hi-IN";
 speechSynthesis.cancel();
@@ -109,7 +111,7 @@ voiceBtn.innerText=voiceOn?"🎤 ON":"🎤 OFF";
 function addMsg(t,c){
 let d=document.createElement("div");
 d.className=c;
-d.innerText=t;
+d.innerHTML=t;
 chat.appendChild(d);
 chat.scrollTop=chat.scrollHeight;
 saveHistory();
@@ -127,15 +129,17 @@ function answer(q){
 let a="";
 
 if(q.includes("salam")) a="Wa Alaikum Assalam 🌙";
-else if(q.includes("namaz ki fazilat")) a="Namaz se sukoon aur barkat milti hai.";
+else if(q.includes("namaz")) a="Namaz se sukoon aur barkat milti hai.";
 else if(q.includes("sone")) a="Sone ki dua: Allahumma bismika amutu wa ahya.";
-else if(q.includes("wazu")) a="Wazu ke baad: Ashhadu an la ilaha illallah.";
+else if(q.includes("khane")) a="Khana dua: Bismillah.";
+else if(q.includes("wazu")) a="Wazu ke baad dua: Ashhadu an la ilaha illallah.";
 else if(q.includes("roza")) a="Roza niyat: Wa bisawmi ghadin nawaitu.";
-else if(q.includes("jee")) a="Mohd Aatif ne search kara — click karke dekh sakte ho: https://jeemain.nta.nic.in/";
-else if(q.includes("up board")) a="Mohd Aatif ne search kara — click karke dekh sakte ho: https://upmsp.edu.in/";
-else{
-a="Mohd Aatif ne search kara — click karke dekh sakte ho: https://www.google.com/search?q="+encodeURIComponent(q);
-}
+else if(q.includes("jee"))
+a='Mohd Aatif ne search kara — <a class="linkbtn" target="_blank" href="https://jeemain.nta.nic.in/">Open Result</a>';
+else if(q.includes("up board"))
+a='Mohd Aatif ne search kara — <a class="linkbtn" target="_blank" href="https://upmsp.edu.in/">Open Result</a>';
+else
+a='Mohd Aatif ne search kara — <a class="linkbtn" target="_blank" href="https://www.google.com/search?q='+encodeURIComponent(q)+'">See Search</a>';
 
 addMsg("Answer: "+a,"bot");
 speak(a);
@@ -145,12 +149,8 @@ function saveHistory(){localStorage.setItem("chat",chat.innerHTML);}
 function loadHistory(){chat.innerHTML=localStorage.getItem("chat")||"";}
 function clearHistory(){localStorage.removeItem("chat");chat.innerHTML="";}
 
-function openPop(id){
-document.getElementById(id).style.display="block";
-}
-function closePop(){
-document.querySelectorAll(".popup").forEach(p=>p.style.display="none");
-}
+function openPop(id){document.getElementById(id).style.display="block";}
+function closePop(){document.querySelectorAll(".popup").forEach(p=>p.style.display="none");}
 
 loadHistory();
 </script>
