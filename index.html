@@ -2,36 +2,44 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mohd Aatif AI</title>
 
 <style>
 body{margin:0;font-family:sans-serif;background:#000;color:#fff}
 header{
-display:flex;align-items:center;justify-content:space-between;
-padding:10px;border-bottom:2px solid gold;background:#111
-}
-header img{width:45px;height:45px;border-radius:50%;border:2px solid gold}
-h1{color:gold;font-size:20px;margin:0 10px}
-.btn{background:none;border:1px solid gold;color:gold;padding:5px 10px;border-radius:20px}
-#chat{height:60vh;overflow:auto;padding:10px}
-.user{background:#4a7bd0;margin:5px;padding:10px;border-radius:10px}
-.bot{background:#222;margin:5px;padding:10px;border-left:4px solid gold;border-radius:10px}
-#inputBox{display:flex;padding:10px;background:#111}
+display:flex;justify-content:space-between;align-items:center;
+background:#111;border-bottom:2px solid gold;padding:10px}
+.logo{display:flex;align-items:center}
+.logo img{width:45px;height:45px;border-radius:50%;border:2px solid gold}
+.logo h2{color:gold;margin-left:8px;font-size:18px}
+.btn{background:none;border:1px solid gold;color:gold;padding:5px 10px;border-radius:20px;margin-left:5px}
+
+#chat{height:62vh;overflow:auto;padding:10px}
+.user{background:#4a7bd0;padding:10px;margin:6px;border-radius:10px}
+.bot{background:#222;padding:10px;margin:6px;border-left:4px solid gold;border-radius:10px}
+
+#inputBox{display:flex;background:#111;padding:10px}
 #input{flex:1;padding:10px;border-radius:20px;border:none}
 #send{background:gold;border:none;padding:10px 20px;border-radius:20px}
+
 footer{text-align:center;padding:15px}
-a{color:gold;text-decoration:none}
-.page{display:none;padding:20px}
+footer a{color:gold;text-decoration:none;margin:0 6px}
+
+.popup{
+display:none;position:fixed;bottom:0;left:0;width:100%;
+background:#111;border-top:2px solid gold;padding:20px;
+height:60%;overflow:auto}
+.close{color:red;float:right}
 </style>
 </head>
 
 <body>
 
 <header>
-<div style="display:flex;align-items:center">
+<div class="logo">
 <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
-<h1>Mohd Aatif AI</h1>
+<h2>Mohd Aatif AI</h2>
 </div>
 
 <div>
@@ -48,24 +56,35 @@ a{color:gold;text-decoration:none}
 </div>
 
 <footer>
-<a href="#" onclick="showPage('about')">About</a> |
-<a href="#" onclick="showPage('privacy')">Privacy</a> |
-<a href="#" onclick="showPage('contact')">Contact</a>
+<a onclick="openPop('about')">About</a> |
+<a onclick="openPop('privacy')">Privacy</a> |
+<a onclick="openPop('contact')">Contact</a>
 </footer>
 
-<!-- PAGES -->
-<div id="about" class="page">
-<h2>About</h2>
-<p>Mohd Aatif AI is a smart assistant created to provide knowledge, Islamic guidance, education help and digital inspiration.</p>
+<!-- POPUPS -->
+
+<div id="about" class="popup">
+<span class="close" onclick="closePop()">✖</span>
+<h3>About Mohd Aatif</h3>
+<p>
+Mohd Aatif ek creative digital creator, poet aur AI enthusiast hain.  
+Ye platform education, Islamic guidance, technology aur inspiration dene ke liye banaya gaya hai.  
+Unka goal hai knowledge ko simple aur helpful banana.
+</p>
 </div>
 
-<div id="privacy" class="page">
-<h2>Privacy Policy</h2>
-<p>This website does not collect personal data. User chats remain private.</p>
+<div id="privacy" class="popup">
+<span class="close" onclick="closePop()">✖</span>
+<h3>Privacy Policy</h3>
+<p>
+Yah website kisi bhi user ka personal data store nahi karti.  
+Chat sirf aapke device me local history me save hoti hai.
+</p>
 </div>
 
-<div id="contact" class="page">
-<h2>Contact</h2>
+<div id="contact" class="popup">
+<span class="close" onclick="closePop()">✖</span>
+<h3>Contact</h3>
 <p>Email: draatifdratif@gmail.com</p>
 </div>
 
@@ -108,36 +127,29 @@ function answer(q){
 let a="";
 
 if(q.includes("salam")) a="Wa Alaikum Assalam 🌙";
-else if(q.includes("namaz ki fazilat")) a="Namaz se Allah ki qurbat milti hai aur gunah maaf hote hain.";
-else if(q.includes("namaz kaise")) a="Niyat, Qiyam, Ruku, Sajda, Qaida, Salam.";
-else if(q.includes("sone")) a="Sone ki Dua: Allahumma bismika amutu wa ahya.";
-else if(q.includes("khana")) a="Bismillah se shuru karein.";
+else if(q.includes("namaz ki fazilat")) a="Namaz se sukoon aur barkat milti hai.";
+else if(q.includes("sone")) a="Sone ki dua: Allahumma bismika amutu wa ahya.";
 else if(q.includes("wazu")) a="Wazu ke baad: Ashhadu an la ilaha illallah.";
-else if(q.includes("roza")) a="Roza Niyat: Wa bisawmi ghadin nawaitu.";
-else if(q.includes("jee")) a="https://jeemain.nta.nic.in/";
-else if(q.includes("up board")) a="https://upmsp.edu.in/";
+else if(q.includes("roza")) a="Roza niyat: Wa bisawmi ghadin nawaitu.";
+else if(q.includes("jee")) a="Mohd Aatif ne search kara — click karke dekh sakte ho: https://jeemain.nta.nic.in/";
+else if(q.includes("up board")) a="Mohd Aatif ne search kara — click karke dekh sakte ho: https://upmsp.edu.in/";
 else{
-a="Search link: https://www.google.com/search?q="+encodeURIComponent(q);
+a="Mohd Aatif ne search kara — click karke dekh sakte ho: https://www.google.com/search?q="+encodeURIComponent(q);
 }
 
 addMsg("Answer: "+a,"bot");
 speak(a);
 }
 
-function saveHistory(){
-localStorage.setItem("chat",chat.innerHTML);
-}
-function loadHistory(){
-chat.innerHTML=localStorage.getItem("chat")||"";
-}
-function clearHistory(){
-localStorage.removeItem("chat");
-chat.innerHTML="";
-}
+function saveHistory(){localStorage.setItem("chat",chat.innerHTML);}
+function loadHistory(){chat.innerHTML=localStorage.getItem("chat")||"";}
+function clearHistory(){localStorage.removeItem("chat");chat.innerHTML="";}
 
-function showPage(p){
-document.querySelectorAll(".page").forEach(x=>x.style.display="none");
-document.getElementById(p).style.display="block";
+function openPop(id){
+document.getElementById(id).style.display="block";
+}
+function closePop(){
+document.querySelectorAll(".popup").forEach(p=>p.style.display="none");
 }
 
 loadHistory();
