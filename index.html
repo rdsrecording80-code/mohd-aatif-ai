@@ -9,8 +9,8 @@
 body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
 header img{width:50px;height:50px;border-radius:50%;border:2px solid gold;margin-right:10px;}
-h1{color:gold;font-size:22px;}
-#chat{height:60vh;overflow:auto;padding:10px;}
+h1{color:gold;font-size:22px;flex:1;}
+#chat{height:60vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
 .user{background:#1e88e5;align-self:flex-end;}
 .bot{background:#333;border-left:4px solid gold;}
@@ -19,6 +19,7 @@ h1{color:gold;font-size:22px;}
 button{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;}
 footer{text-align:center;padding:10px;color:gold;}
 .page{display:none;padding:15px;}
+a{color:#00e5ff;}
 </style>
 </head>
 
@@ -44,15 +45,16 @@ footer{text-align:center;padding:10px;color:gold;}
 <span onclick="openPage('contact')">Contact</span>
 </footer>
 
+<!-- PAGES -->
 <div id="about" class="page">
 <h2>About</h2>
-<p>Mohd Aatif AI is a smart assistant that provides duas, search links and help.</p>
+<p>Mohd Aatif AI is a smart assistant that provides duas, search links and help in simple language.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
 <div id="privacy" class="page">
 <h2>Privacy</h2>
-<p>No personal data is stored except chat history in your browser.</p>
+<p>No personal data is stored. Only chat backup is saved in your browser.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
@@ -69,122 +71,103 @@ const input=document.getElementById("input");
 
 /* VOICE */
 function speak(t){
-if(!voiceOn) return;
-let u=new SpeechSynthesisUtterance(t);
-u.lang="hi-IN";
-speechSynthesis.cancel();
-speechSynthesis.speak(u);
+ if(!voiceOn) return;
+ let u=new SpeechSynthesisUtterance(t.replace(/<[^>]*>/g,""));
+ u.lang="hi-IN";
+ speechSynthesis.cancel();
+ speechSynthesis.speak(u);
 }
 function toggleVoice(){voiceOn=!voiceOn;}
 
 /* MESSAGE */
 function addMsg(t,c){
-let d=document.createElement("div");
-d.className=c;
-d.innerHTML=t;
-chat.appendChild(d);
-chat.scrollTop=chat.scrollHeight;
-localStorage.setItem("backup",chat.innerHTML);
+ let d=document.createElement("div");
+ d.className=c;
+ d.innerHTML=t;
+ chat.appendChild(d);
+ chat.scrollTop=chat.scrollHeight;
+ localStorage.setItem("backup",chat.innerHTML);
 }
 
 function send(){
-let q=input.value.trim();
-if(!q) return;
-input.value="";
-addMsg(q,"user");
-answer(q.toLowerCase());
+ let q=input.value.trim();
+ if(!q) return;
+ input.value="";
+ addMsg(q,"user");
+ answer(q.toLowerCase());
 }
-/* ===== 50 DUAS DATA ===== */
-const duas = [
-{key:["uthne","jagne"], text:"Uthne ki Dua: Alhamdu lillahil-lazi ahyana ba'da ma amatana wa ilaihin nushur."},
-{key:["sone","sleep"], text:"Sone ki Dua: Allahumma bismika amutu wa ahya."},
-{key:["khane","food"], text:"Khane se pehle: Bismillah. Khane ke baad: Alhamdulillahillazi at'amana wa saqana."},
-{key:["pani","water"], text:"Pani peene ki Dua: Bismillah."},
-{key:["ghar nikal","bahar"], text:"Ghar se nikalne ki Dua: Bismillahi tawakkaltu alallah."},
-{key:["ghar dakhil","andar"], text:"Ghar me dakhil hone ki Dua: Allahumma inni as'aluka khairal mauliji."},
-{key:["safar","travel"], text:"Safar ki Dua: Subhanallazi sakhkhara lana haza."},
-{key:["masjid jane"], text:"Masjid me jane ki Dua: Allahumma iftah li abwaba rahmatik."},
-{key:["masjid nikal"], text:"Masjid se nikalne ki Dua: Allahumma inni as'aluka min fadlik."},
-{key:["wuzu"], text:"Wuzu se pehle: Bismillah."},
-{key:["aaina","mirror"], text:"Aaine ki Dua: Allahumma kama hassanta khalqi fahassin khuluqi."},
-{key:["kapda"], text:"Naya kapda: Allahumma laka alhamdu anta kasautanihi."},
-{key:["chheenk"], text:"Chheenk: Alhamdulillah. Jawab: Yarhamukallah."},
-{key:["gussa"], text:"Gussa aaye: A'uzu billahi minash shaitanir rajim."},
-{key:["bimar"], text:"Bimar ki Dua: Allahumma rabban-nas azhibil ba's."},
-{key:["ilm","padhai"], text:"Ilm ki Dua: Rabbi zidni ilma."},
-{key:["rizq","rozi"], text:"Rizq ki Dua: Allahumma barik lana."},
-{key:["maafi"], text:"Maafi ki Dua: Astaghfirullah."},
-{key:["roza"], text:"Roza rakhne ki Dua: Wa bisawmi ghadinn nawaitu."},
-{key:["iftar"], text:"Iftar ki Dua: Allahumma inni laka sumtu."},
-{key:["barish"], text:"Barish ki Dua: Allahumma sayyiban nafi'an."},
-{key:["darr"], text:"Darr lage: Hasbiyallahu la ilaha illa hu."},
-{key:["karz"], text:"Karz ki Dua: Allahumma ikfini bihalalika."},
-{key:["nind nahi"], text:"Nind na aaye: Allahumma gharratinn nujoom."},
-{key:["bura khwab"], text:"Bura Khwab: A'uzu billah."},
-{key:["achha khwab"], text:"Achha Khwab: Alhamdulillah."},
-{key:["safalta"], text:"Safalta: Allahumma la sahla illa."},
-{key:["imtihan","exam"], text:"Imtihan: Rabbi yassir wala tuassir."},
-{key:["shadi"], text:"Shadi: Barakallahu laka."},
-{key:["baccha"], text:"Bacche ki Dua: Rabbi habli minas saliheen."},
-{key:["ghar barkat"], text:"Ghar Barkat: Allahumma barik hazal bait."},
-{key:["roshni"], text:"Roshni: Allahumma ij'al fi qalbi noora."},
-{key:["sehat"], text:"Sehat: Allahumma inni as'alukal afiyah."},
-{key:["sakoon"], text:"Dil Sakoon: Allahumma anta rabbi."},
-{key:["musibat"], text:"Musibat: Inna lillahi wa inna ilaihi rajiun."},
-{key:["wapsi"], text:"Safar se Wapsi: Ayibuna taibuna."},
-{key:["neki"], text:"Neki: Allahumma a'inni ala zikrika."},
-{key:["jannat"], text:"Jannat: Allahumma inni as'alukal jannah."},
-{key:["jahannum"], text:"Jahannum se Bachao: Allahumma ajirni minan naar."},
-{key:["subah"], text:"Subah: Allahumma bika asbahna."},
-{key:["shaam"], text:"Shaam: Allahumma bika amsayna."},
-{key:["parents"], text:"Parents: Rabbir hamhuma kama rabbayani."},
-{key:["teacher"], text:"Teacher: Allahumma zidhu sharafa."},
-{key:["dost"], text:"Dost: Allahumma ihfazhu."},
-{key:["ummah"], text:"Ummah: Allahummaghfir lil muslimin."},
-{key:["general"], text:"General: Rabbana atina fid dunya hasanah."},
-{key:["ameen"], text:"Ameen Dua: Allahumma taqabbal minna."}
+
+/* DUAS */
+const duas=[
+{key:["sone"],text:"Sone ki Dua: Allahumma bismika amutu wa ahya."},
+{key:["uthne"],text:"Uthne ki Dua: Alhamdu lillahil-lazi ahyana."},
+{key:["khane"],text:"Khane se pehle Bismillah, baad Alhamdulillah."},
+{key:["pani"],text:"Pani peene ki Dua: Bismillah."},
+{key:["ilm","padhai"],text:"Rabbi zidni ilma."},
+{key:["imtihan","exam"],text:"Rabbi yassir wala tuassir."},
+{key:["sehat"],text:"Allahumma inni as'alukal afiyah."},
+{key:["subah"],text:"Allahumma bika asbahna."},
+{key:["shaam"],text:"Allahumma bika amsayna."},
+{key:["maafi"],text:"Astaghfirullah."},
+{key:["rozi","rizq"],text:"Allahumma barik lana."},
+{key:["parents"],text:"Rabbir hamhuma kama rabbayani."},
+{key:["dost"],text:"Allahumma ihfazhu."},
+{key:["jannat"],text:"Allahumma inni as'alukal jannah."},
+{key:["musibat"],text:"Inna lillahi wa inna ilaihi rajiun."}
 ];
 
 /* ANSWER */
 function answer(q){
-let a=""; let found=false;
+ let a="", speakText="", found=false;
 
-if(q.includes("salam")){
-a="Wa Alaikum Assalam";
-found=true;
-}
+ if(q.includes("salam")){
+  a="Wa Alaikum Assalam";
+  speakText=a;
+  found=true;
+ }
 
-for(let d of duas){
-for(let k of d.key){
-if(q.includes(k)){a=d.text;found=true;}
-}
-}
+ if(!found){
+  for(let d of duas){
+   for(let k of d.key){
+    if(q.includes(k)){
+     a=d.text;
+     speakText=d.text;
+     found=true;
+     break;
+    }
+   }
+   if(found) break;
+  }
+ }
 
-if(!found){
-let link="https://www.google.com/search?q="+encodeURIComponent(q);
-a=`<a href="${link}" target="_blank">Open Search</a><br>Mohd Aatif AI ne dhundh nikala.`;
-}
+ if(!found){
+  let link="https://www.google.com/search?q="+encodeURIComponent(q);
+  a=`<a href="${link}" target="_blank">Open Search</a><br>Mohd Aatif AI ne dhundh nikala.`;
+  speakText="Search dhundh nikala";
+ }
 
-addMsg("Answer: "+a,"bot");
-speak(a);
+ addMsg("Answer: "+a,"bot");
+ speak(speakText);
 }
 
 /* BACKUP */
-chat.innerHTML=localStorage.getItem("backup")||"";
+chat.innerHTML=localStorage.getItem("backup")||"Welcome to Mohd Aatif AI";
 
 /* CLEAR */
 function clearChat(){
-localStorage.removeItem("backup");
-chat.innerHTML="";
+ localStorage.removeItem("backup");
+ chat.innerHTML="";
 }
 
 /* PAGES */
 function openPage(id){
-document.querySelectorAll(".page").forEach(p=>p.style.display="none");
-document.getElementById(id).style.display="block";
+ chat.style.display="none";
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ document.getElementById(id).style.display="block";
 }
 function closePages(){
-document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ chat.style.display="flex";
 }
 </script>
 
