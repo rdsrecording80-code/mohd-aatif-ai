@@ -1,54 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mohd Aatif AI</title>
-
-<style>
-body{margin:0;font-family:Arial;background:#0b0b0d;color:#fff}
-.header{display:flex;align-items:center;gap:10px;padding:12px;background:#111}
-.avatar{width:42px;height:42px;border-radius:50%;border:2px solid gold}
-.title{color:gold;font-size:17px;font-weight:bold}
-.historyBtn{margin-left:auto;background:#222;color:gold;border:1px solid gold;padding:6px 14px;border-radius:20px}
-.chat{height:60vh;overflow-y:auto;padding:15px}
-.msg{padding:10px 14px;border-radius:12px;margin-bottom:8px;max-width:75%}
-.ai{background:#222;border-left:3px solid gold}
-.user{background:#8ab4f8;color:#000;margin-left:auto}
-.input{display:flex;padding:10px;background:#111}
-input{flex:1;padding:10px;border-radius:20px;border:none}
-button{margin-left:8px;padding:10px 16px;border:none;border-radius:20px;background:gold;font-weight:bold}
-.footer{text-align:center;font-size:13px;padding:10px;border-top:1px solid #222}
-a{color:gold;text-decoration:none}
-</style>
-</head>
-
-<body>
-
-<div class="header">
-<img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" class="avatar">
-<div class="title">Mohd Aatif AI</div>
-<button class="historyBtn" onclick="loadHistory()">History</button>
-</div>
-
-<div class="chat" id="chat"></div>
-
-<div class="input">
-<input id="q" placeholder="Yahan likhiye..." onkeypress="if(event.key==='Enter')send()">
-<button onclick="send()">Send</button>
-</div>
-
-<div class="footer">
-<a href="about.html">About</a> |
-<a href="privacy.html">Privacy</a> |
-<a href="contact.html">Contact</a>
-</div>
-
 <script>
 const chat=document.getElementById("chat");
-let history=JSON.parse(localStorage.getItem("aatifAI")) || [];
+let history=JSON.parse(localStorage.getItem("aatifAI"))||[];
+let voice=window.speechSynthesis;
 
-function add(type,text,save=true){
+function speak(text){
+  voice.cancel(); // purani awaaz band
+  let u=new SpeechSynthesisUtterance(text);
+  u.lang="hi-IN";
+  u.rate=1;
+  voice.speak(u);
+}
+
+function add(type,text,save=true,say=false){
  let d=document.createElement("div");
  d.className="msg "+type;
  d.innerHTML=text;
@@ -58,55 +21,66 @@ function add(type,text,save=true){
   history.push({type,text});
   localStorage.setItem("aatifAI",JSON.stringify(history));
  }
+ if(say) speak(text.replace(/<[^>]*>/g,""));
 }
 
-add("ai","Hello! Main <b>Mohd Aatif AI</b> hoon. Aap jo bhi poochna chahein, pooch sakte hain.",false);
+add("ai","Hello! Main <b>Mohd Aatif AI</b> hoon. Aap jo bhi poochna chahein, pooch sakte hain.",false,true);
 
 function send(){
  let q=document.getElementById("q");
  let t=q.value.trim();
  if(!t) return;
+ voice.cancel();
  add("user",t);
  q.value="";
  let l=t.toLowerCase();
 
- if(l.includes("quran")){
-   add("ai","<b>Answer:</b> Quran Allah ki paak kitaab hai, jo Hazrat Muhammad ﷺ par nazil hui. Ye hidayat aur rehnumai ka zariya hai.");
+ // ===== BACKUP ANSWERS =====
+
+ if(l.includes("namaz")){
+  add("ai","<b>Answer:</b> Namaz momin ki zindagi ka sabse bada farz hai. Namaz se dil ko sukoon, gunahon se hifazat aur Allah ki qurbat milti hai.",true,true);
+ }
+
+ else if(l.includes("quran")){
+  add("ai","<b>Answer:</b> Quran Allah ki paak kitaab hai jo Hazrat Muhammad ﷺ par nazil hui. Ye hidayat aur rehnumai ka zariya hai.",true,true);
  }
 
  else if(l.includes("dua")){
-   add("ai","<b>Answer:</b> Dua ibadat ka sabse khoobsurat tareeqa hai. Allah se seedha baat karna dua kehlata hai.");
- }
-
- else if(l.includes("allah")){
-   add("ai","<b>Answer:</b> Allah ek hai, be-misal hai, aur poori kainaat ka Malik hai.");
+  add("ai","<b>Answer:</b> Dua Allah se seedhi baat karna hai. Dua se taqdeer bhi badal jaati hai.",true,true);
  }
 
  else if(l.includes("mohd aatif")){
-   add("ai","<b>Answer:</b> Mohd Aatif ek creative thinker aur digital creator hain, jinhone Mohd Aatif AI ko logon ki madad ke liye banaya.");
+  add("ai","<b>Answer:</b> Mohd Aatif ek digital creator aur Mohd Aatif AI ke founder hain.",true,true);
  }
 
- else if(l.includes("kaun ho tum") || l.includes("who are you")){
-   add("ai","<b>Answer:</b> Main Mohd Aatif AI hoon – ek smart assistant jo sawalon ka asaan jawab deta hai.");
+ // ===== ONLINE MODE (RESULT / EXAM) =====
+
+ else if(l.includes("up board 12")){
+  add("ai","<b>Answer:</b> UP Board 12th result online check karein:<br>🔗 <a href='https://upresults.nic.in' target='_blank'>upresults.nic.in</a>",true,true);
  }
 
+ else if(l.includes("jee")){
+  add("ai","<b>Answer:</b> JEE Main result yahan check karein:<br>🔗 <a href='https://jeemain.nta.nic.in' target='_blank'>jeemain.nta.nic.in</a>",true,true);
+ }
+
+ // ===== CALCULATION =====
  else if(/^[0-9+\-*/(). ]+$/.test(l)){
-   try{ add("ai","<b>Answer:</b> "+eval(l)); }
-   catch{ add("ai","<b>Answer:</b> Calculation galat hai."); }
+  try{
+   let r=eval(l);
+   add("ai","<b>Answer:</b> "+r,true,true);
+  }catch{
+   add("ai","<b>Answer:</b> Calculation samajh nahi aayi.",true,true);
+  }
  }
 
+ // ===== UNKNOWN =====
  else{
-   add("ai","<b>Answer:</b> Main is sawal ka simple aur sahi jawab dene ki koshish kar raha hoon. Thoda aur clear likhiye.");
+  add("ai","<b>Answer:</b> Ye sawal backup me nahi hai. Online search ke liye neeche link use karein:<br>🔗 <a href='https://www.google.com/search?q="+encodeURIComponent(t)+"' target='_blank'>Google Search</a>",true,true);
  }
 }
 
 function loadHistory(){
  chat.innerHTML="";
- history.forEach(m=>{
-   add(m.type,m.text,false);
- });
+ history.forEach(m=>add(m.type,m.text,false));
 }
 </script>
-
-</body>
-</html>
