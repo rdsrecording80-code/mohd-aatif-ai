@@ -121,16 +121,48 @@ answer(q.toLowerCase());
 function answer(q){
 let a="";
 
-if(q.includes("salam")) a="Wa Alaikum Assalam 🌙";
-else if(q.includes("khana dua")) a="Bismillah.";
-else if(q.includes("khana baad")) a="Alhamdulillah.";
-else if(q.includes("sone")) a="Allahumma bismika amutu wa ahya.";
-else if(q.includes("uthne")) a="Alhamdulillahillazi ahyana.";
-else if(q.includes("wazu")) a="Ashhadu alla ilaha illallah.";
-else if(q.includes("ghar dua")) a="Allahumma inni as’aluka khairal maulij.";
-else if(q.includes("safar")) a="Subhanallazi sakhkhara lana haza.";
-else if(q.includes("roza")) a="Allahumma inni laka sumtu.";
-else if(q.includes("jee"))
+if(q.includes("salam")) {
+    a = "Wa Alaikum Assalam 🌙 Aapka din barkat wala ho.";
+} 
+else if(q.includes("khana shuru") || q.includes("khana dua")) {
+    a = "Khana shuru karne ki dua: <b>بِسْمِ اللَّهِ وَعَلَى بَرَكَةِ اللَّهِ</b> (Bismillah wa 'ala barakatillah)";
+} 
+else if(q.includes("khana baad") || q.includes("khane ke baad")) {
+    a = "Khana khane ke baad ki dua: <b>الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا وَسَقَانَا وَجَعَلَنَا مُسْلِمِينَ</b>";
+} 
+else if(q.includes("sone") || q.includes("sone ki dua")) {
+    a = "Sone ki dua: <b>اللَّهُمَّ بِاسْمِكَ أَمُوتُ وَأَحْيَا</b> (Allahumma bismika amutu wa ahya)";
+} 
+else if(q.includes("uthne") || q.includes("uthne ki dua")) {
+    a = "So kar uthne ki dua: <b>الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ</b>";
+} 
+else if(q.includes("wazu") || q.includes("wazu ki dua")) {
+    a = "Wazu ke baad ki dua: <b>أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ</b>";
+} 
+else if(q.includes("ghar se nikalne")) {
+    a = "Ghar se nikalne ki dua: <b>بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ</b>";
+} 
+else if(q.includes("ghar dakhil") || q.includes("ghar dua")) {
+    a = "Ghar mein dakhil hone ki dua: <b>اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَ الْمَوْلِجِ وَخَيْرَ الْمَخْرَجِ</b>";
+} 
+else if(q.includes("safar") || q.includes("safar ki dua")) {
+    a = "Safar ki dua: <b>سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ</b>";
+} 
+else if(q.includes("roza niyat") || q.includes("roza rakhne")) {
+    a = "Roza rakhne ki niyat: <b>وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</b>";
+} 
+else if(q.includes("roza iftar") || q.includes("roza kholne")) {
+    a = "Roza iftar karne ki dua: <b>اللَّهُمَّ إِنِّي لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَيْكَ تَوَكَّلْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ</b>";
+} 
+else if(q.includes("masjid dakhil")) {
+    a = "Masjid mein dakhil hone ki dua: <b>اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ</b>";
+} 
+else if(q.includes("masjid se nikalne")) {
+    a = "Masjid se nikalne ki dua: <b>اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ</b>";
+} 
+else if(q.includes("ayna") || q.includes("shisha")) {
+    a = "Aina dekhne ki dua: <b>اللَّهُمَّ أَنْتَ حَسَّنْتَ خَلْقِي فَحَسِّنْ خُلُقِي</b>";
+} 
 a='<a href="https://jeemain.nta.nic.in/" target="_blank">Open JEE Result</a>';
 else
 a='<a href="https://www.google.com/search?q='+encodeURIComponent(q)+'" target="_blank">Open Search</a>';
