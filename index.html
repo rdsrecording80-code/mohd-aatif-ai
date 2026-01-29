@@ -1,24 +1,33 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mohd Aatif AI</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#0b0b0d;color:#fff;display:flex;flex-direction:column;height:100vh}
+body{margin:0;font-family:Arial;background:#0b0b0d;color:#fff}
 .header{display:flex;align-items:center;gap:10px;padding:12px;background:#111;border-bottom:1px solid #222}
 .avatar{width:42px;height:42px;border-radius:50%;border:2px solid gold}
 .title{color:gold;font-size:17px;font-weight:bold}
-.chat{flex:1;overflow-y:auto;padding:15px}
-.msg{padding:10px 14px;border-radius:12px;margin-bottom:8px;max-width:75%;word-wrap:break-word}
+.chat{height:60vh;overflow-y:auto;padding:15px}
+.msg{padding:10px 14px;border-radius:12px;margin-bottom:8px;max-width:75%}
 .ai{background:#222;border-left:3px solid gold}
 .user{background:#8ab4f8;color:#000;margin-left:auto}
 .input{display:flex;padding:10px;background:#111}
-input{flex:1;padding:10px;border-radius:20px;border:none;background:#222;color:#fff}
-button{margin-left:8px;padding:10px 16px;border:none;border-radius:20px;background:gold;font-weight:bold;cursor:pointer}
+input{flex:1;padding:10px;border-radius:20px;border:none}
+button{margin-left:8px;padding:10px 16px;border:none;border-radius:20px;background:gold;font-weight:bold}
 .footer{text-align:center;font-size:13px;padding:10px;border-top:1px solid #222}
 a{color:gold;text-decoration:none}
+.historyBtn{
+  background:#222;
+  color:gold;
+  border:1px solid gold;
+  padding:6px 12px;
+  border-radius:20px;
+  margin-left:auto;
+  cursor:pointer;
+}
 </style>
 </head>
 
@@ -27,14 +36,13 @@ a{color:gold;text-decoration:none}
 <div class="header">
 <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" class="avatar">
 <div class="title">Mohd Aatif AI</div>
+<button class="historyBtn" onclick="showHistory()">History</button>
 </div>
 
-<div class="chat" id="chat">
-<div class="msg ai">👋 Assalamu Alaikum! Main <b>Mohd Aatif AI</b> hoon. Aap kuch bhi pooch sakte hain.</div>
-</div>
+<div class="chat" id="chat"></div>
 
 <div class="input">
-<input id="q" placeholder="Yahan likhiye..." onkeypress="if(event.key==='Enter')send()">
+<input id="q" placeholder="Type your message..." onkeypress="if(event.key==='Enter')send()">
 <button onclick="send()">Send</button>
 </div>
 
@@ -45,23 +53,27 @@ a{color:gold;text-decoration:none}
 </div>
 
 <script>
-const chat=document.getElementById("chat");
+const chat = document.getElementById("chat");
+let history = JSON.parse(localStorage.getItem("aatifAI")) || [];
 
-// AI ka main function
-function add(type,text){
+function add(type,text,save=true){
  let d=document.createElement("div");
  d.className="msg "+type;
  d.innerHTML=text;
  chat.appendChild(d);
  chat.scrollTop=chat.scrollHeight;
- if(type==="ai" && 'speechSynthesis' in window){
-  let s=new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g,""));
-  s.lang="hi-IN";
-  speechSynthesis.speak(s);
+
+ if(save){
+   history.push({type,text});
+   localStorage.setItem("aatifAI",JSON.stringify(history));
  }
 }
 
-// Chat bhejne ka function
+function greeting(){
+ add("ai","Hello! I am <b>Mohd Aatif AI</b>. I am here to help you with knowledge, guidance, and answers.",false);
+}
+greeting();
+
 function send(){
  let q=document.getElementById("q");
  let t=q.value.trim();
@@ -70,18 +82,31 @@ function send(){
  q.value="";
  let l=t.toLowerCase();
 
- // Predefined answers
- if(l.includes("salam") || l.includes("assalam")) add("ai","Wa Alaikum Assalam wa Rahmatullah");
- else if(l.includes("sone")) add("ai","Sone ki Dua: Allahumma bismika amutu wa ahya");
- else if(l.includes("uthne") || l.includes("uthna")) add("ai","Uthne ki Dua: Alhamdulillah alladhi ahyana ba'da ma amatana");
- else if(l.includes("khana") || l.includes("khaana")) add("ai","Khana khane ki Dua: Bismillah wa ala barakatillah");
- else if(l.includes("ramzan")) add("ai","Ramzan ek barkat wala mahina hai. Allah humein Ramzan naseeb kare.");
- else if(l.includes("profession") || l.includes("aapka kaam")) add("ai","Main Mohd Aatif AI hoon, ek advanced AI assistant aur website developer. Islamic Duas, general knowledge, aur calculator provide karta hoon.");
- else if(l.includes("aapka naam") || l.includes("naam")) add("ai","Mera naam Mohd Aatif AI hai.");
- else if(/^[0-9+\-*/(). ]+$/.test(l)){ // Calculator
-   try{add("ai","Answer: "+eval(l))}catch{add("ai","Calculation galat hai")}
+ if(l.includes("who are you") || l.includes("kaun ho")){
+   add("ai","I am Mohd Aatif AI, a smart virtual assistant created to provide information, guidance, and meaningful answers in a simple way.");
  }
- else add("ai",`Is topic par search karein: <a target="_blank" href="https://www.google.com/search?q=${encodeURIComponent(t)}">Google</a>`);
+
+ else if(l.includes("mohd aatif")){
+   add("ai","Mohd Aatif is a creative individual, content creator, and the mind behind Mohd Aatif AI. This platform is built to educate, inspire, and grow digitally.");
+ }
+
+ else if(l.includes("your work") || l.includes("profession")){
+   add("ai","My purpose is to assist users with questions related to education, technology, religion, daily life solutions, and digital growth.");
+ }
+
+ else if(/^[0-9+\-*/(). ]+$/.test(l)){
+   try{ add("ai","Answer: "+eval(l)); }
+   catch{ add("ai","Invalid calculation."); }
+ }
+
+ else{
+   add("ai","I am still learning. Please ask about knowledge, education, technology, or Mohd Aatif AI.");
+ }
+}
+
+function showHistory(){
+ chat.innerHTML="";
+ history.forEach(m=>add(m.type,m.text,false));
 }
 </script>
 
