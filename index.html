@@ -7,15 +7,14 @@
 
 <style>
 body{margin:0;font-family:sans-serif;background:#000;color:#fff}
-header{
-display:flex;justify-content:space-between;align-items:center;
+header{display:flex;justify-content:space-between;align-items:center;
 background:#111;border-bottom:2px solid gold;padding:10px}
 .logo{display:flex;align-items:center}
 .logo img{width:45px;height:45px;border-radius:50%;border:2px solid gold}
 .logo h2{color:gold;margin-left:8px;font-size:18px}
 .btn{background:none;border:1px solid gold;color:gold;padding:5px 10px;border-radius:20px;margin-left:5px}
 
-#chat{height:55vh;overflow:auto;padding:10px}
+#chat{height:52vh;overflow:auto;padding:10px}
 .user{background:#4a7bd0;padding:10px;margin:6px;border-radius:10px}
 .bot{background:#222;padding:10px;margin:6px;border-left:4px solid gold;border-radius:10px}
 
@@ -24,13 +23,12 @@ background:#111;border-bottom:2px solid gold;padding:10px}
 #send{background:gold;border:none;padding:10px 20px;border-radius:20px}
 
 footer{text-align:center;padding:15px}
-footer a{color:gold;text-decoration:none;margin:0 6px;cursor:pointer}
+footer a{color:gold;margin:0 6px;cursor:pointer}
 
-.popup{
-display:none;position:fixed;bottom:0;left:0;width:100%;
-background:#111;border-top:2px solid gold;padding:20px;
-height:60%;overflow:auto;z-index:5}
-.close{color:red;float:right;font-size:20px;cursor:pointer}
+.page{
+display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+background:#000;color:#fff;padding:20px;overflow:auto;z-index:10}
+.back{color:gold;cursor:pointer;margin-bottom:15px;display:block}
 </style>
 </head>
 
@@ -48,6 +46,7 @@ height:60%;overflow:auto;z-index:5}
 </div>
 </header>
 
+<!-- CHAT -->
 <div id="chat"></div>
 
 <div id="inputBox">
@@ -56,15 +55,32 @@ height:60%;overflow:auto;z-index:5}
 </div>
 
 <footer>
-<a onclick="openPop()">About</a>
+<a onclick="openPage('about')">About</a> |
+<a onclick="openPage('privacy')">Privacy</a> |
+<a onclick="openPage('contact')">Contact</a>
 </footer>
 
 <!-- ABOUT -->
-<div id="about" class="popup">
-<span class="close" onclick="closePop()">✖</span>
-<h3>About Mohd Aatif</h3>
-<p>Ye AI app Islamic guidance, education aur daily help ke liye banayi gayi hai.  
-Saari chats aapke phone me hi save hoti hain.</p>
+<div id="about" class="page">
+<span class="back" onclick="closePages()">⬅ Back Home</span>
+<h2>About</h2>
+<p>Mohd Aatif AI ek Islamic aur Education help platform hai.  
+Yah daily dua, namaz aur knowledge ke liye banaya gaya hai.</p>
+</div>
+
+<!-- PRIVACY -->
+<div id="privacy" class="page">
+<span class="back" onclick="closePages()">⬅ Back Home</span>
+<h2>Privacy</h2>
+<p>Koi personal data store nahi hota.  
+Chat sirf aapke device me save hoti hai.</p>
+</div>
+
+<!-- CONTACT -->
+<div id="contact" class="page">
+<span class="back" onclick="closePages()">⬅ Back Home</span>
+<h2>Contact</h2>
+<p>Email: draatifdratif@gmail.com</p>
 </div>
 
 <script>
@@ -106,37 +122,18 @@ function answer(q){
 let a="";
 
 if(q.includes("salam")) a="Wa Alaikum Assalam 🌙";
-
-else if(q.includes("khana dua"))
-a="Bismillah hirrahman nirraheem.";
-
-else if(q.includes("khana baad"))
-a="Alhamdulillahillazi at'amana.";
-
-else if(q.includes("sone ki dua"))
-a="Allahumma bismika amutu wa ahya.";
-
-else if(q.includes("uthne ki dua"))
-a="Alhamdulillahillazi ahyana ba’da ma amatana.";
-
-else if(q.includes("wazu baad"))
-a="Ashhadu alla ilaha illallah.";
-
-else if(q.includes("ghar dua"))
-a="Allahumma inni as’aluka khairal maulij.";
-
-else if(q.includes("safar dua"))
-a="Subhanallazi sakhkhara lana haza.";
-
-else if(q.includes("roza"))
-a="Allahumma inni laka sumtu.";
-
+else if(q.includes("khana dua")) a="Bismillah.";
+else if(q.includes("khana baad")) a="Alhamdulillah.";
+else if(q.includes("sone")) a="Allahumma bismika amutu wa ahya.";
+else if(q.includes("uthne")) a="Alhamdulillahillazi ahyana.";
+else if(q.includes("wazu")) a="Ashhadu alla ilaha illallah.";
+else if(q.includes("ghar dua")) a="Allahumma inni as’aluka khairal maulij.";
+else if(q.includes("safar")) a="Subhanallazi sakhkhara lana haza.";
+else if(q.includes("roza")) a="Allahumma inni laka sumtu.";
 else if(q.includes("jee"))
-a='<a href="https://jeemain.nta.nic.in/" target="_blank">JEE Result Open</a>';
-
-else{
-a='<a href="https://www.google.com/search?q='+encodeURIComponent(q)+'" target="_blank">Google Search</a>';
-}
+a='<a href="https://jeemain.nta.nic.in/" target="_blank">Open JEE Result</a>';
+else
+a='<a href="https://www.google.com/search?q='+encodeURIComponent(q)+'" target="_blank">Open Search</a>';
 
 addMsg("Answer: "+a,"bot");
 speak("Answer diya gaya");
@@ -146,8 +143,14 @@ function saveHistory(){localStorage.setItem("chat",chat.innerHTML);}
 function loadHistory(){chat.innerHTML=localStorage.getItem("chat")||"";}
 function clearHistory(){localStorage.removeItem("chat");chat.innerHTML="";}
 
-function openPop(){about.style.display="block";}
-function closePop(){about.style.display="none";}
+function openPage(id){
+document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+document.getElementById(id).style.display="block";
+}
+
+function closePages(){
+document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+}
 
 loadHistory();
 </script>
