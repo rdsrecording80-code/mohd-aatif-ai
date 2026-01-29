@@ -63,8 +63,7 @@ background:#000;color:#fff;padding:20px;overflow:auto;z-index:10}
 <div id="about" class="page">
 <span class="back" onclick="closePages()">⬅ Back Home</span>
 <h2>About</h2>
-<p>Mohd Aatif AI ek Islamic aur Education help platform hai.  
-Yah dua, namaz aur knowledge ke liye banaya gaya hai.</p>
+<p>Mohd Aatif AI ek Islamic aur Education help platform hai.</p>
 </div>
 
 <!-- PRIVACY -->
@@ -120,20 +119,17 @@ function answer(q){
 let a="";
 
 if(q.includes("salam")) a="Wa Alaikum Assalam 🌙";
-else if(q.includes("khana shuru")) a="بِسْمِ اللَّهِ";
-else if(q.includes("khana baad")) a="الْحَمْدُ لِلَّهِ";
+else if(q.includes("khana")) a="بِسْمِ اللَّهِ وَعَلَى بَرَكَةِ اللَّهِ";
+else if(q.includes("baad")) a="الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا";
 else if(q.includes("sone")) a="اللَّهُمَّ بِاسْمِكَ أَمُوتُ وَأَحْيَا";
 else if(q.includes("uthne")) a="الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا";
 else if(q.includes("wazu")) a="أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ اللَّهُ";
-else if(q.includes("safar")) a="سُبْحَانَ الَّذِي سَخَّرَ لَنَا";
-else if(q.includes("roza")) a="اللَّهُمَّ إِنِّي لَكَ صُمْتُ";
-else if(q.includes("jee"))
-a='<a href="https://jeemain.nta.nic.in/" target="_blank">Open JEE Result</a>';
-else
-a='<a href="https://www.google.com/search?q='+encodeURIComponent(q)+'" target="_blank">Open Search</a>';
+else if(q.includes("ghar")) a="بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ";
+else if(q.includes("safar")) a="سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا";
+else a="Search karne ke liye Google open kare.";
 
 addMsg("Answer: "+a,"bot");
-speak("Answer diya gaya");
+speak(a);
 }
 
 function saveHistory(){localStorage.setItem("chat",chat.innerHTML);}
@@ -144,12 +140,16 @@ function openPage(id){
 document.querySelectorAll(".page").forEach(p=>p.style.display="none");
 document.getElementById(id).style.display="block";
 }
-
 function closePages(){
 document.querySelectorAll(".page").forEach(p=>p.style.display="none");
 }
 
+window.onload=function(){
 loadHistory();
+if(!localStorage.getItem("chat")){
+addMsg("Welcome to Mohd Aatif AI 🤖","bot");
+}
+}
 </script>
 
 </body>
