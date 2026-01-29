@@ -10,7 +10,7 @@ body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
 header img{width:50px;height:50px;border-radius:50%;border:2px solid gold;margin-right:10px;}
 h1{color:gold;font-size:22px;flex:1;}
-#chat{height:60vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
+#chat{height:55vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
 .user{background:#1e88e5;align-self:flex-end;}
 .bot{background:#333;border-left:4px solid gold;}
@@ -51,24 +51,25 @@ a{color:#00e5ff;}
 </div>
 
 <!-- GAME BOX -->
-<div id="gameBox" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:white;z-index:99;text-align:center;">
-<h2>Mini Tap Game</h2>
-<p id="score">Score: 0</p>
-<button onclick="tap()">TAP ME</button>
-<br><br>
+<div id="gameBox" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99;text-align:center;color:white;">
+<h2 style="color:gold;">Catch The Ball 🎯</h2>
+<canvas id="gameCanvas" width="300" height="400"
+style="background:#111;border:3px solid gold;border-radius:12px;"></canvas>
+<p id="scoreText">Score: 0</p>
+<button onclick="startGame()">Start</button>
 <button onclick="closeGame()">Back</button>
 </div>
 
 <!-- PAGES -->
 <div id="about" class="page">
 <h2>About</h2>
-<p>Mohd Aatif AI is a smart assistant that provides duas, search links and help in simple language.</p>
+<p>Mohd Aatif AI is a smart assistant that provides duas and help in simple language.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
 <div id="privacy" class="page">
 <h2>Privacy</h2>
-<p>No personal data is stored. Only chat backup is saved in your browser.</p>
+<p>No personal data stored. Only chat backup in browser.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
@@ -123,11 +124,9 @@ const duas=[
 {key:["subah"],text:"Allahumma bika asbahna."},
 {key:["shaam"],text:"Allahumma bika amsayna."},
 {key:["maafi"],text:"Astaghfirullah."},
-{key:["rozi","rizq"],text:"Allahumma barik lana."},
+{key:["rozi"],text:"Allahumma barik lana."},
 {key:["parents"],text:"Rabbir hamhuma kama rabbayani."},
-{key:["dost"],text:"Allahumma ihfazhu."},
-{key:["jannat"],text:"Allahumma inni as'alukal jannah."},
-{key:["musibat"],text:"Inna lillahi wa inna ilaihi rajiun."}
+{key:["jannat"],text:"Allahumma inni as'alukal jannah."}
 ];
 
 /* ANSWER */
@@ -185,17 +184,51 @@ function closePages(){
 }
 
 /* GAME SCRIPT */
-let score=0;
-function openGame(){
- document.getElementById("gameBox").style.display="block";
+let canvas=document.getElementById("gameCanvas");
+let ctx=canvas.getContext("2d");
+let ballX=150, ballY=0, score=0, speed=2, running=false;
+
+function draw(){
+ ctx.clearRect(0,0,300,400);
+ ctx.beginPath();
+ ctx.arc(ballX,ballY,15,0,Math.PI*2);
+ ctx.fillStyle="orange";
+ ctx.fill();
+ ballY+=speed;
+ if(ballY>400){
+  running=false;
+  alert("Game Over! Score: "+score);
+ }
 }
-function closeGame(){
- document.getElementById("gameBox").style.display="none";
+
+function loop(){
+ if(!running) return;
+ draw();
+ requestAnimationFrame(loop);
 }
-function tap(){
- score++;
- document.getElementById("score").innerText="Score: "+score;
+
+canvas.addEventListener("click",e=>{
+ if(!running) return;
+ let r=canvas.getBoundingClientRect();
+ let x=e.clientX-r.left;
+ let y=e.clientY-r.top;
+ let d=Math.sqrt((x-ballX)**2+(y-ballY)**2);
+ if(d<20){
+  score++;
+  document.getElementById("scoreText").innerText="Score: "+score;
+  ballY=0;
+  ballX=Math.random()*260+20;
+  speed+=0.3;
+ }
+});
+
+function startGame(){
+ score=0; speed=2; ballY=0; running=true;
+ document.getElementById("scoreText").innerText="Score: 0";
+ loop();
 }
+function openGame(){document.getElementById("gameBox").style.display="block";}
+function closeGame(){running=false;document.getElementById("gameBox").style.display="none";}
 </script>
 
 </body>
