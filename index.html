@@ -45,6 +45,20 @@ a{color:#00e5ff;}
 <span onclick="openPage('contact')">Contact</span>
 </footer>
 
+<!-- GAME BUTTON -->
+<div style="text-align:center;margin:10px;">
+<button onclick="openGame()">🎮 Play Game</button>
+</div>
+
+<!-- GAME BOX -->
+<div id="gameBox" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:white;z-index:99;text-align:center;">
+<h2>Mini Tap Game</h2>
+<p id="score">Score: 0</p>
+<button onclick="tap()">TAP ME</button>
+<br><br>
+<button onclick="closeGame()">Back</button>
+</div>
+
 <!-- PAGES -->
 <div id="about" class="page">
 <h2>About</h2>
@@ -168,6 +182,19 @@ function openPage(id){
 function closePages(){
  document.querySelectorAll(".page").forEach(p=>p.style.display="none");
  chat.style.display="flex";
+}
+
+/* GAME SCRIPT */
+let score=0;
+function openGame(){
+ document.getElementById("gameBox").style.display="block";
+}
+function closeGame(){
+ document.getElementById("gameBox").style.display="none";
+}
+function tap(){
+ score++;
+ document.getElementById("score").innerText="Score: "+score;
 }
 </script>
 
