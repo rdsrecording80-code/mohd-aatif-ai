@@ -1,257 +1,149 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Mohd Aatif AI</title>
-
-<!-- CDN for jsPDF (PDF Generator) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <style>
 body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
 header img{width:50px;height:50px;border-radius:50%;border:2px solid gold;margin-right:10px;}
 h1{color:gold;font-size:22px;flex:1;}
-#chat{height:50vh;overflow:auto;padding:10px;display:flex;flex-direction:column;background:#111;}
+#chat{height:50vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
 .user{background:#1e88e5;align-self:flex-end;}
 .bot{background:#333;border-left:4px solid gold;}
 #inputArea{display:flex;padding:10px;background:#111;}
 #input{flex:1;padding:10px;border-radius:20px;border:none;}
-button{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;cursor:pointer;}
+button{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;}
 footer{text-align:center;padding:10px;color:gold;}
+.page{display:none;padding:15px;}
 a{color:#00e5ff;}
-.menu{position:fixed;bottom:10px;right:10px;}
-.menu button{display:block;margin:5px;width:60px;}
-.page{display:none;padding:15px;background:#000;height:calc(100vh - 60px);overflow:auto;}
-.tab-content{margin-top:10px;}
+#toolsMenu button{margin:5px;}
+#gameBox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#111;color:white;z-index:99;text-align:center;overflow:auto;}
 </style>
 </head>
-<body>
-
-<header>
+<body><header>
 <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
 <h1>Mohd Aatif AI</h1>
 <button onclick="toggleVoice()">🎤</button>
 <button onclick="clearChat()">🗑</button>
-</header>
-
-<div id="chat">Welcome to Mohd Aatif AI</div>
-
+</header><div id="chat">Welcome to Mohd Aatif AI</div>
 <div id="inputArea">
 <input id="input" placeholder="Ask anything...">
 <button onclick="send()">Send</button>
-<button onclick="toggleMenu()">☰</button>
+</div><footer>
+<span onclick="openPage('about')">About</span> |
+<span onclick="openPage('privacy')">Privacy</span> |
+<span onclick="openPage('contact')">Contact</span>
+</footer><!-- TOOLS MENU --><div id="toolsMenu" style="text-align:center;margin:10px;">
+<button onclick="openTool('calculator')">Calculator</button>
+<button onclick="openTool('pdf')">PDF Maker</button>
+<button onclick="openTool('notes')">Notes</button>
+<button onclick="openTool('namaz')">Namaz Timing</button>
+<button onclick="openGame()">🎮 Play Game</button>
+</div><!-- GAME BOX --><div id="gameBox">
+<h2>Mini 3D Tap Game</h2>
+<p id="score">Score: 0</p>
+<div id="gameArea" style="width:300px;height:400px;margin:auto;background:#222;border:2px solid gold;position:relative;">
+<!-- Falling Objects simulated with JS -->
 </div>
-
-<!-- Tools Menu -->
-<div id="toolsMenu" class="menu" style="display:none;">
-<button onclick="openCamera()">📷</button>
-<button onclick="openCalculator()">🧮</button>
-<button onclick="openNotes()">📝</button>
-<button onclick="openPDF()">📄</button>
-<button onclick="openGame()">🎮</button>
-</div>
-
-<!-- Tool Pages -->
-<div id="cameraPage" class="page">
-<h2>Camera</h2>
-<video id="cameraFeed" autoplay style="width:100%;max-width:400px;border:2px solid gold;"></video>
-<br><button onclick="closePage('cameraPage')">Back</button>
-</div>
-
-<div id="calculatorPage" class="page">
+<button onclick="closeGame()">Back</button>
+</div><!-- TOOLS PAGES --><div id="calculator" class="page">
 <h2>Calculator</h2>
-<input type="text" id="calcInput" placeholder="0" style="width:80%;padding:10px;font-size:18px;">
-<div style="margin-top:10px;">
-<button onclick="calcAppend('1')">1</button>
-<button onclick="calcAppend('2')">2</button>
-<button onclick="calcAppend('3')">3</button>
-<button onclick="calcAppend('+')">+</button><br>
-<button onclick="calcAppend('4')">4</button>
-<button onclick="calcAppend('5')">5</button>
-<button onclick="calcAppend('6')">6</button>
-<button onclick="calcAppend('-')">-</button><br>
-<button onclick="calcAppend('7')">7</button>
-<button onclick="calcAppend('8')">8</button>
-<button onclick="calcAppend('9')">9</button>
-<button onclick="calcAppend('*')">*</button><br>
-<button onclick="calcAppend('0')">0</button>
-<button onclick="calcClear()">C</button>
-<button onclick="calcResult()">=</button>
-<button onclick="calcAppend('/')">/</button>
-</div>
-<br><button onclick="closePage('calculatorPage')">Back</button>
-</div>
-
-<div id="notesPage" class="page">
+<input type="text" id="calcInput" placeholder="0">
+<button onclick="calcEval()">=</button>
+<button onclick="document.getElementById('calcInput').value=''">C</button>
+<button onclick="closeTool('calculator')">Back</button>
+</div><div id="pdf" class="page">
+<h2>PDF Maker</h2>
+<textarea id="pdfText" rows="5" placeholder="Enter text..."></textarea>
+<button onclick="makePDF()">Generate PDF</button>
+<button onclick="closeTool('pdf')">Back</button>
+</div><div id="notes" class="page">
 <h2>Notes</h2>
-<textarea id="notesArea" style="width:100%;height:200px;background:#111;color:#fff;"></textarea><br>
+<textarea id="notesText" rows="5" placeholder="Write notes..."></textarea>
 <button onclick="saveNotes()">Save</button>
 <button onclick="loadNotes()">Load</button>
-<button onclick="closePage('notesPage')">Back</button>
-</div>
-
-<div id="pdfPage" class="page">
-<h2>PDF Maker</h2>
-<textarea id="pdfText" style="width:100%;height:200px;background:#111;color:#fff;"></textarea><br>
-<button onclick="downloadPDF()">Download PDF</button>
-<button onclick="closePage('pdfPage')">Back</button>
-</div>
-
-<div id="gamePage" class="page">
-<h2>Mini Tap Game</h2>
-<p id="score">Score: 0</p>
-<button onclick="tap()">TAP ME</button><br><br>
-<button onclick="closePage('gamePage')">Back</button>
-</div>
-
-<!-- Pages -->
-<div id="about" class="page">
+<button onclick="closeTool('notes')">Back</button>
+</div><div id="namaz" class="page">
+<h2>Namaz Timing</h2>
+<p>Fajr: 05:00 AM</p>
+<p>Dhuhr: 12:30 PM</p>
+<p>Asr: 04:00 PM</p>
+<p>Maghrib: 06:45 PM</p>
+<p>Isha: 08:15 PM</p>
+<button onclick="closeTool('namaz')">Back</button>
+</div><!-- INFO PAGES --><div id="about" class="page">
 <h2>About</h2>
-<p>Mohd Aatif AI is a smart assistant created by Mohd Aatif, a developer and creator. It can chat, calculate, make PDFs, take notes, show camera, and play mini games.</p>
-<button onclick="closePage('about')">Back</button>
-</div>
-
-<div id="privacy" class="page">
+<p>Mohd Aatif AI is a smart assistant, created by Mohd Aatif. It provides duas, search links, tools like calculator, PDF maker, notes, namaz timing, and mini-games. AI intelligent version coming soon!</p>
+<button onclick="closePages()">Back</button>
+</div><div id="privacy" class="page">
 <h2>Privacy</h2>
-<p>No personal data is stored. Only chat history may be saved in your browser.</p>
-<button onclick="closePage('privacy')">Back</button>
-</div>
-
-<div id="contact" class="page">
+<p>No personal data is stored except chat backup in your browser.</p>
+<button onclick="closePages()">Back</button>
+</div><div id="contact" class="page">
 <h2>Contact</h2>
 <p>Email: draatifdratif@gmail.com</p>
-<button onclick="closePage('contact')">Back</button>
-</div>
-
-<script>
+<button onclick="closePages()">Back</button>
+</div><script>
 let voiceOn=true;
-const chat=document.getElementById("chat");
-const input=document.getElementById("input");
+const chat=document.getElementById('chat');
+const input=document.getElementById('input');
 
 /* VOICE */
-function speak(t){
- if(!voiceOn) return;
- let u=new SpeechSynthesisUtterance(t.replace(/<[^>]*>/g,""));
- u.lang="hi-IN";
- speechSynthesis.cancel();
- speechSynthesis.speak(u);
-}
+function speak(t){if(!voiceOn)return;let u=new SpeechSynthesisUtterance(t.replace(/<[^>]*>/g,''));u.lang='hi-IN';speechSynthesis.cancel();speechSynthesis.speak(u);}
 function toggleVoice(){voiceOn=!voiceOn;}
 
-/* CHAT */
-function addMsg(t,c){
- let d=document.createElement("div");
- d.className=c;
- d.innerHTML=t;
- chat.appendChild(d);
- chat.scrollTop=chat.scrollHeight;
- localStorage.setItem("backup",chat.innerHTML);
-}
+/* MESSAGE */
+function addMsg(t,c){let d=document.createElement('div');d.className=c;d.innerHTML=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;localStorage.setItem('backup',chat.innerHTML);}
+function send(){let q=input.value.trim();if(!q)return;input.value='';addMsg(q,'user');answer(q.toLowerCase());}
 
-function send(){
- let q=input.value.trim();
- if(!q) return;
- input.value="";
- addMsg(q,"user");
- answer(q.toLowerCase());
-}
-
-/* DUAS + PERSONAL */
-const respostas=[
-{key:["mohd aatif kaun hai"], text:"Mohd Aatif ek creator aur developer hain. Unhone mujhe banaya hai."},
-{key:["tumhen kisne banaya"], text:"Mohd Aatif ne mujhe develop kiya hai."},
-{key:["sone"], text:"Sone ki Dua: Allahumma bismika amutu wa ahya."},
-{key:["uthne"], text:"Uthne ki Dua: Alhamdu lillahil-lazi ahyana."},
-{key:["khane"], text:"Khane se pehle Bismillah, baad Alhamdulillah."},
-{key:["pani"], text:"Pani peene ki Dua: Bismillah."},
-{key:["ilm","padhai"], text:"Rabbi zidni ilma."},
-{key:["imtihan","exam"], text:"Rabbi yassir wala tuassir."},
-{key:["sehat"], text:"Allahumma inni as'alukal afiyah."}
+/* DUAS + Mohd Aatif info */
+const duas=[
+{key:['sone'],text:'Sone ki Dua: Allahumma bismika amutu wa ahya.'},
+{key:['uthne'],text:'Uthne ki Dua: Alhamdu lillahil-lazi ahyana.'},
+{key:['khane'],text:'Khane se pehle Bismillah, baad Alhamdulillah.'},
+{key:['pani'],text:'Pani peene ki Dua: Bismillah.'},
+{key:['ilm','padhai'],text:'Rabbi zidni ilma.'},
+{key:['imtihan','exam'],text:'Rabbi yassir wala tuassir.'},
+{key:['sehat'],text:'Allahumma inni as'alukal afiyah.'},
+{key:['subah'],text:'Allahumma bika asbahna.'},
+{key:['shaam'],text:'Allahumma bika amsayna.'},
+{key:['maafi'],text:'Astaghfirullah.'},
+{key:['rozi','rizq'],text:'Allahumma barik lana.'},
+{key:['parents'],text:'Rabbir hamhuma kama rabbayani.'},
+{key:['dost'],text:'Allahumma ihfazhu.'},
+{key:['jannat'],text:'Allahumma inni as'alukal jannah.'},
+{key:['musibat'],text:'Inna lillahi wa inna ilaihi rajiun.'},
+{key:['aatif'],text:'Mohd Aatif is the creator of this AI assistant, software developed and managed by him. AI intelligent version coming soon!'}
 ];
 
 function answer(q){
- let a="", found=false;
- for(let r of respostas){
-  for(let k of r.key){
-   if(q.includes(k)){
-    a=r.text;
-    found=true;
-    break;
-   }
-  }
-  if(found) break;
- }
- if(!found){
-  let link="https://www.google.com/search?q="+encodeURIComponent(q);
-  a=`<a href="${link}" target="_blank">Open Search</a>`;
- }
- addMsg("Answer: "+a,"bot");
- speak(a);
+let a='',found=false;
+for(let d of duas){for(let k of d.key){if(q.includes(k)){a=d.text;found=true;break;}}if(found)break;}
+if(!found){let link='https://www.google.com/search?q='+encodeURIComponent(q);a=`<a href="${link}" target="_blank">Open Search</a><br>Mohd Aatif AI ne dhundh nikala.`;}
+addMsg('Answer: '+a,'bot');
+speak(a);
 }
 
 /* BACKUP */
-chat.innerHTML=localStorage.getItem("backup")||"Welcome to Mohd Aatif AI";
+chat.innerHTML=localStorage.getItem('backup')||'Welcome to Mohd Aatif AI';
 
 /* CLEAR */
-function clearChat(){
- localStorage.removeItem("backup");
- chat.innerHTML="";
-}
+function clearChat(){localStorage.removeItem('backup');chat.innerHTML='';}
 
-/* MENU TOOLS */
-function toggleMenu(){
- let m=document.getElementById("toolsMenu");
- m.style.display = m.style.display==='block'?'none':'block';
-}
+/* PAGES */
+function openPage(id){chat.style.display='none';document.querySelectorAll('.page').forEach(p=>p.style.display='none');document.getElementById(id).style.display='block';}
+function closePages(){document.querySelectorAll('.page').forEach(p=>p.style.display='none');chat.style.display='flex';}
 
-/* PAGE HANDLING */
-function closePage(id){
- document.getElementById(id).style.display='none';
- chat.style.display='flex';
-}
+/* TOOLS */
+function openTool(id){chat.style.display='none';document.querySelectorAll('.page').forEach(p=>p.style.display='none');document.getElementById(id).style.display='block';}
+function closeTool(id){document.getElementById(id).style.display='none';chat.style.display='flex';}
 
-/* CAMERA */
-function openCamera(){
- document.getElementById("cameraPage").style.display='block';
- chat.style.display='none';
- navigator.mediaDevices.getUserMedia({video:true})
- .then(stream=>{document.getElementById("cameraFeed").srcObject=stream;})
- .catch(()=>alert("Camera access denied!"));
-}
+function calcEval(){let val=document.getElementById('calcInput').value;try{document.getElementById('calcInput').value=eval(val);}catch(e){alert('Invalid input');}}
+function makePDF(){let docText=document.getElementById('pdfText').value;if(!docText){alert('Enter text first');return;}let pdfWindow=window.open('','_blank');pdfWindow.document.write('<pre>'+docText+'</pre>');}function saveNotes(){localStorage.setItem('myNotes',document.getElementById('notesText').value);alert('Saved');} function loadNotes(){document.getElementById('notesText').value=localStorage.getItem('myNotes')||'';alert('Loaded');}
 
-/* CALCULATOR */
-function openCalculator(){document.getElementById("calculatorPage").style.display='block';chat.style.display='none';}
-function calcAppend(v){document.getElementById("calcInput").value+=v;}
-function calcClear(){document.getElementById("calcInput").value='';}
-function calcResult(){
- try{
-  document.getElementById("calcInput").value=eval(document.getElementById("calcInput").value);
- }catch{document.getElementById("calcInput").value='Error';}
-}
-
-/* NOTES */
-function openNotes(){document.getElementById("notesPage").style.display='block';chat.style.display='none';}
-function saveNotes(){localStorage.setItem("myNotes",document.getElementById("notesArea").value);alert("Notes saved!");}
-function loadNotes(){document.getElementById("notesArea").value=localStorage.getItem("myNotes")||'';}
-
-/* PDF */
-function openPDF(){document.getElementById("pdfPage").style.display='block';chat.style.display='none';}
-function downloadPDF(){
- const { jsPDF } = window.jspdf;
- let doc = new jsPDF();
- let text=document.getElementById("pdfText").value;
- doc.text(text,10,10);
- doc.save("document.pdf");
-}
-
-/* GAME */
-let score=0;
-function openGame(){document.getElementById("gamePage").style.display='block';chat.style.display='none';score=0;document.getElementById("score").innerText="Score: 0";}
-function tap(){score++;document.getElementById("score").innerText="Score: "+score;}
-</script>
+/* GAME / let score=0;let gameInterval; function openGame(){document.getElementById('gameBox').style.display='block';startGame();} function closeGame(){document.getElementById('gameBox').style.display='none';stopGame();} function startGame(){score=0;document.getElementById('score').innerText='Score: 0';let area=document.getElementById('gameArea');area.innerHTML='';gameInterval=setInterval(()=>{ let obj=document.createElement('div'); obj.style.width='50px';obj.style.height='50px'; obj.style.background='gold';obj.style.position='absolute'; obj.style.left=Math.random()(area.clientWidth-50)+'px'; obj.style.top='0px'; obj.style.borderRadius='50%'; area.appendChild(obj); let fall=setInterval(()=>{ let top=parseInt(obj.style.top); if(top>=area.clientHeight-50){area.removeChild(obj);clearInterval(fall);}else{obj.style.top=top+5+'px';}},50); obj.onclick=()=>{score++;document.getElementById('score').innerText='Score: '+score;area.removeChild(obj);clearInterval(fall);};},1000);} function stopGame(){clearInterval(gameInterval);} </script>
 
 </body>
 </html>
