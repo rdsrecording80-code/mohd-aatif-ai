@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Mohd Aatif AI</title>
+
 <style>
 body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
 header img{width:45px;height:45px;border-radius:50%;border:2px solid gold;margin-right:10px;}
 h1{color:gold;font-size:20px;flex:1;}
-.icon{background:gold;border:none;border-radius:50%;width:40px;height:40px;}
+.icon{background:gold;border:none;border-radius:50%;width:40px;height:40px;margin-left:5px;}
 
 #chat{height:58vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
@@ -20,15 +22,10 @@ h1{color:gold;font-size:20px;flex:1;}
 button.send{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;}
 
 footer{text-align:center;padding:10px;color:gold;}
-footer span{margin:0 8px;cursor:pointer;}
+.page{display:none;padding:15px;}
 
-.popup{
-display:none;position:fixed;top:50%;left:50%;
-transform:translate(-50%,-50%);
-background:#111;border:2px solid gold;
-padding:15px;border-radius:10px;width:300px;
-}
-.popup button{background:gold;border:none;padding:6px;border-radius:5px;margin-top:10px;}
+#tools{display:none;position:fixed;top:60px;right:10px;background:#222;border:1px solid gold;border-radius:10px;padding:10px;}
+.toolBtn{display:block;background:gold;border:none;margin:5px 0;padding:8px;border-radius:6px;width:120px;}
 </style>
 </head>
 
@@ -37,7 +34,8 @@ padding:15px;border-radius:10px;width:300px;
 <header>
 <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
 <h1>Mohd Aatif AI</h1>
-<button class="icon">⋮</button>
+<button class="icon" onclick="clearChat()">🗑</button>
+<button class="icon" onclick="toggleTools()">⋮</button>
 </header>
 
 <div id="chat"></div>
@@ -48,89 +46,133 @@ padding:15px;border-radius:10px;width:300px;
 </div>
 
 <footer>
-<span onclick="openPage('home')">Home</span> |
 <span onclick="openPage('about')">About</span> |
 <span onclick="openPage('privacy')">Privacy</span> |
 <span onclick="openPage('contact')">Contact</span>
 </footer>
 
-<!-- POPUP -->
-<div id="pageBox" class="popup">
-<h3 id="pageTitle"></h3>
-<p id="pageText"></p>
-<button onclick="closePage()">Close</button>
+<!-- TOOLS -->
+<div id="tools">
+<button class="toolBtn" onclick="calc()">Calculator</button>
+<button class="toolBtn" onclick="note()">Notes</button>
+</div>
+
+<!-- PAGES -->
+<div id="about" class="page">
+<h2>About</h2>
+<p>Mohd Aatif AI is a smart assistant software created by Mohd Aatif.  
+This AI is under development and will become more intelligent in the future.</p>
+<button onclick="closePages()">Back</button>
+</div>
+
+<div id="privacy" class="page">
+<h2>Privacy</h2>
+<p>No personal data is stored on servers.  
+Only chat backup is saved in your browser for convenience.</p>
+<button onclick="closePages()">Back</button>
+</div>
+
+<div id="contact" class="page">
+<h2>Contact</h2>
+<p>Email: draatifdratif@gmail.com</p>
+<button onclick="closePages()">Back</button>
 </div>
 
 <script>
 const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 
-function addMsg(t,c){
-let d=document.createElement("div");
-d.className=c;
-d.innerHTML=t;
-chat.appendChild(d);
-chat.scrollTop=chat.scrollHeight;
+/* BACKUP */
+function saveBackup(){localStorage.setItem("backup",chat.innerHTML);}
+function loadBackup(){chat.innerHTML=localStorage.getItem("backup")||"";}
+loadBackup();
+
+/* VOICE */
+function speak(text){
+ let u=new SpeechSynthesisUtterance(text);
+ u.lang="hi-IN";
+ u.rate=0.9;
+ speechSynthesis.cancel();
+ speechSynthesis.speak(u);
 }
 
-/* SMART ANSWERS */
-function smartReply(q){
-q=q.toLowerCase();
-
-if(q.includes("aatif") || q.includes("creator"))
-return "Mohd Aatif ek creator aur developer hain. Unhone mujhe banaya hai.";
-
-if(q.includes("assalam"))
-return "Wa Alaikum Assalam! Aap kaise hain?";
-
-if(q.includes("kaun ho"))
-return "Main Mohd Aatif AI hoon, ek smart assistant software.";
-
-if(q.includes("namaz"))
-return "Namaz waqt par padhna bahut zaroori hai.";
-
-return "Main seekh raha hoon. Aap aur pooch sakte hain.";
+/* MESSAGE */
+function addMsg(t,c){
+ let d=document.createElement("div");
+ d.className=c;
+ d.innerHTML=t;
+ chat.appendChild(d);
+ chat.scrollTop=chat.scrollHeight;
+ saveBackup();
 }
 
 function send(){
-let q=input.value.trim();
-if(!q) return;
-addMsg(q,"user");
-input.value="";
-setTimeout(()=>addMsg(smartReply(q),"bot"),400);
+ let q=input.value.trim();
+ if(!q) return;
+ input.value="";
+ addMsg(q,"user");
+ answer(q.toLowerCase());
 }
 
-/* FOOTER PAGES */
-function openPage(type){
-let title=document.getElementById("pageTitle");
-let text=document.getElementById("pageText");
+/* ANSWER */
+function answer(q){
+ let a="";
 
-if(type=="home"){
-title.innerText="Home";
-text.innerText="Welcome to Mohd Aatif AI. Yeh ek smart AI assistant software hai.";
-}
-if(type=="about"){
-title.innerText="About";
-text.innerText="Mohd Aatif AI ek intelligent software hai jo users ki madad ke liye banaya gaya hai.";
-}
-if(type=="privacy"){
-title.innerText="Privacy";
-text.innerText="Hum koi personal data store nahin karte. Aap safe hain.";
-}
-if(type=="contact"){
-title.innerText="Contact";
-text.innerText="Email: mohdaatif@example.com";
+ if(q.includes("salam")||q.includes("assalam")){
+  a="Wa Alaikum Assalam Rahmatullah";
+ }
+ else if(q.includes("kaun ho")){
+  a="Main Mohd Aatif AI hoon. Ek smart assistant software.";
+ }
+ else if(q.includes("kisne banaya")){
+  a="Mujhe Mohd Aatif ne create kiya hai.";
+ }
+ else if(q.includes("mohd aatif")){
+  a="Mohd Aatif ek creator aur developer hain jinhone mujhe banaya.";
+ }
+ else{
+  let link="https://www.google.com/search?q="+encodeURIComponent(q);
+  a=`<a href="${link}" target="_blank">Open Search</a>`;
+ }
+
+ addMsg("Answer: "+a,"bot");
+ speak(a.replace(/<[^>]*>/g,""));
 }
 
-document.getElementById("pageBox").style.display="block";
+/* CLEAR */
+function clearChat(){chat.innerHTML="";saveBackup();}
+
+/* TOOLS */
+function toggleTools(){
+ let t=document.getElementById("tools");
+ t.style.display=t.style.display==="block"?"none":"block";
 }
 
-function closePage(){
-document.getElementById("pageBox").style.display="none";
+function calc(){
+ let r=prompt("Enter calculation:");
+ if(r){addMsg("Result: "+eval(r),"bot");}
+}
+
+function note(){
+ let n=prompt("Write note:");
+ if(n){localStorage.setItem("note",n);alert("Saved");}
+}
+
+/* PAGES */
+function openPage(id){
+ chat.style.display="none";
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ document.getElementById(id).style.display="block";
+}
+function closePages(){
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ chat.style.display="flex";
 }
 
 /* WELCOME */
-addMsg("Assalamualaikum! Main Mohd Aatif AI hoon.","bot");
+if(chat.innerHTML===""){
+ addMsg("Assalamualaikum! Main Mohd Aatif AI hoon. Aap kya poochna chahte hain?","bot");
+}
 </script>
 
 </body>
