@@ -3,39 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mohd Aatif AI Tools</title>
+<title>Mohd Aatif AI</title>
 
 <style>
-body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
+body{margin:0;background:#000;color:white;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
-h1{color:gold;flex:1;font-size:20px;}
-button{background:gold;border:none;padding:8px 12px;border-radius:15px;}
+header img{width:45px;height:45px;border-radius:50%;border:2px solid gold;margin-right:10px;}
+h1{color:gold;font-size:20px;flex:1;margin:0}
+button{background:gold;border:none;padding:8px 12px;border-radius:20px;margin-left:5px;}
 #chat{height:55vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
-.user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
-.user{background:#1e88e5;align-self:flex-end;}
-.bot{background:#333;border-left:4px solid gold;}
+.user{background:#1e88e5;padding:10px;border-radius:10px;align-self:flex-end;margin:5px;}
+.bot{background:#333;padding:10px;border-radius:10px;margin:5px;border-left:4px solid gold;}
 #inputArea{display:flex;padding:10px;background:#111;}
 #input{flex:1;padding:10px;border-radius:20px;border:none;}
 footer{text-align:center;color:gold;padding:10px;}
 .page{display:none;padding:15px;}
-.toolBtn{margin:5px;padding:10px;background:#222;color:white;border:1px solid gold;}
+.toolBtn{background:#222;color:gold;border:1px solid gold;margin:5px;padding:10px;border-radius:10px;}
 </style>
 </head>
 
 <body>
 
 <header>
+<img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
 <h1>Mohd Aatif AI</h1>
 <button onclick="toggleVoice()">🎤</button>
-<button onclick="openPage('tools')">🧰</button>
-<button onclick="openGame()">🎮</button>
+<button onclick="clearChat()">🗑</button>
 </header>
 
 <div id="chat"></div>
 
 <div id="inputArea">
-<input id="input" placeholder="Ask Dua or Anything">
+<input id="input" placeholder="Ask Dua / Salam / Question">
 <button onclick="send()">Send</button>
+<button onclick="openGame()">🎮</button>
+<button onclick="openPage('tools')">🧰</button>
 </div>
 
 <footer>
@@ -44,107 +46,126 @@ footer{text-align:center;color:gold;padding:10px;}
 <span onclick="openPage('contact')">Contact</span>
 </footer>
 
+<!-- PAGES -->
+<div id="about" class="page">
+<h2>About</h2>
+<p>Mohd Aatif AI – Islamic & Smart Assistant.</p>
+<button onclick="closePages()">Back</button>
+</div>
+
+<div id="privacy" class="page">
+<h2>Privacy</h2>
+<p>No data stored. Only browser backup.</p>
+<button onclick="closePages()">Back</button>
+</div>
+
+<div id="contact" class="page">
+<h2>Contact</h2>
+<p>Email: draatifdratif@gmail.com</p>
+<button onclick="closePages()">Back</button>
+</div>
+
+<div id="tools" class="page">
+<h2>Tools</h2>
+<button class="toolBtn" onclick="alert('Age Tool Coming Soon')">Age Calculator</button>
+<button class="toolBtn" onclick="alert('PDF Tool Coming Soon')">PDF Maker</button>
+<button class="toolBtn" onclick="alert('QR Tool Coming Soon')">QR Generator</button>
+<button onclick="closePages()">Back</button>
+</div>
+
 <!-- GAME -->
 <div id="game" class="page">
-<h2>Alif Ba Ta Game</h2>
-<p id="score">Score 0</p>
-<div id="letter" onclick="tap()" style="font-size:60px;background:gold;color:black;width:120px;height:120px;display:flex;align-items:center;justify-content:center;border-radius:20px;">ا</div>
-<br><button onclick="closePages()">Back</button>
+<h2>Alphabet Game</h2>
+<p id="letter">ا</p>
+<button onclick="nextLetter()">Next</button>
+<button onclick="closePages()">Back</button>
 </div>
-
-<!-- TOOLS -->
-<div id="tools" class="page">
-<h2>AI Tools</h2>
-
-<button class="toolBtn" onclick="openCalc()">Calculator</button>
-<button class="toolBtn" onclick="openNotes()">Notes</button>
-<button class="toolBtn" onclick="openTasbeeh()">Tasbeeh Counter</button>
-
-<div id="calc" style="display:none;">
-<input id="c1"><input id="c2">
-<button onclick="calc()">=</button>
-<p id="cres"></p>
-</div>
-
-<div id="notes" style="display:none;">
-<textarea id="note" rows="4" cols="30"></textarea>
-<button onclick="saveNote()">Save</button>
-</div>
-
-<div id="tasbeeh" style="display:none;">
-<p id="count">0</p>
-<button onclick="inc()">+</button>
-</div>
-
-<br><button onclick="closePages()">Back</button>
-</div>
-
-<!-- PAGES -->
-<div id="about" class="page"><h2>About</h2>Mohd Aatif AI Multi Tool Website.<br><button onclick="closePages()">Back</button></div>
-<div id="privacy" class="page"><h2>Privacy</h2>No Data Stored.<br><button onclick="closePages()">Back</button></div>
-<div id="contact" class="page"><h2>Contact</h2>Email: draatifdratif@gmail.com<br><button onclick="closePages()">Back</button></div>
 
 <script>
-let voice=true;
+let voiceOn=true;
 const chat=document.getElementById("chat");
+const input=document.getElementById("input");
 
 function speak(t){
- if(!voice) return;
+ if(!voiceOn) return;
  let u=new SpeechSynthesisUtterance(t);
  u.lang="hi-IN";
  speechSynthesis.speak(u);
 }
-function toggleVoice(){voice=!voice;}
+function toggleVoice(){voiceOn=!voiceOn;}
 
 function addMsg(t,c){
  let d=document.createElement("div");
  d.className=c;
  d.innerHTML=t;
  chat.appendChild(d);
+ chat.scrollTop=chat.scrollHeight;
+ localStorage.setItem("backup",chat.innerHTML);
 }
 
 function send(){
- let q=input.value;
+ let q=input.value.trim();
+ if(!q) return;
+ input.value="";
  addMsg(q,"user");
  answer(q.toLowerCase());
- input.value="";
 }
 
+/* DUAS */
 const duas=[
-{key:"sone",text:"Allahumma bismika amutu wa ahya"},
-{key:"ilm",text:"Rabbi zidni ilma"}
+{key:["sone"],text:"Allahumma bismika amutu wa ahya"},
+{key:["uthne"],text:"Alhamdu lillahil lazi ahyana"},
+{key:["khane"],text:"Bismillah aur Alhamdulillah"},
+{key:["pani"],text:"Bismillah"},
+{key:["ilm"],text:"Rabbi zidni ilma"},
+{key:["imtihan"],text:"Rabbi yassir"},
+{key:["subah"],text:"Allahumma bika asbahna"},
+{key:["shaam"],text:"Allahumma bika amsayna"},
+{key:["maafi"],text:"Astaghfirullah"},
+{key:["rizq"],text:"Allahumma barik lana"},
+{key:["parents"],text:"Rabbir hamhuma"},
+{key:["dost"],text:"Allahumma ihfazhu"},
+{key:["jannat"],text:"Allahumma inni as alukal jannah"},
+{key:["musibat"],text:"Inna lillahi"},
+{key:["sehat"],text:"Allahumma afiyah"}
 ];
 
 function answer(q){
- for(let d of duas){
-  if(q.includes(d.key)){
-   addMsg(d.text,"bot");
-   speak(d.text);
-   return;
+ let found=false,a="",s="";
+
+ if(q.includes("salam")){
+  a="Wa Alaikum Assalam";
+  s=a;
+  found=true;
+ }
+
+ if(!found){
+  for(let d of duas){
+   for(let k of d.key){
+    if(q.includes(k)){
+     a=d.text; s=d.text; found=true; break;
+    }
+   }
+   if(found) break;
   }
  }
- let link="https://google.com/search?q="+q;
- addMsg(`<a href="${link}" target="_blank">Search Google</a>`,"bot");
- speak("Google open");
+
+ if(!found){
+  let link="https://www.google.com/search?q="+encodeURIComponent(q);
+  a=`<a href="${link}" target="_blank">Google Search</a>`;
+  s="Google search karo";
+ }
+
+ addMsg("Answer: "+a,"bot");
+ speak(s);
 }
 
-/* GAME */
-let score=0;
-const letters=["ا","ب","ت"];
-function openGame(){openPage('game');}
-function tap(){
- score++;
- scoreEl.innerText="Score "+score;
- letter.innerText=letters[Math.floor(Math.random()*3)];
-}
+chat.innerHTML=localStorage.getItem("backup")||"Welcome Aatif AI";
 
-/* TOOLS */
-function openCalc(){calc.style.display="block";}
-function calc(){cres.innerText=Number(c1.value)+Number(c2.value);}
-function openNotes(){notes.style.display="block";}
-function saveNote(){localStorage.note=note.value;}
-function openTasbeeh(){tasbeeh.style.display="block";}
-let c=0;function inc(){count.innerText=++c;}
+function clearChat(){
+ localStorage.removeItem("backup");
+ chat.innerHTML="";
+}
 
 /* PAGES */
 function openPage(id){
@@ -155,6 +176,16 @@ function openPage(id){
 function closePages(){
  document.querySelectorAll(".page").forEach(p=>p.style.display="none");
  chat.style.display="flex";
+}
+
+/* GAME */
+const letters=["ا","ب","ت","ث","ج","ح","خ"];
+let i=0;
+function openGame(){openPage('game')}
+function nextLetter(){
+ i=(i+1)%letters.length;
+ document.getElementById("letter").innerText=letters[i];
+ speak(letters[i]);
 }
 </script>
 
