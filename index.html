@@ -10,15 +10,16 @@ body{margin:0;background:#000;color:white;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
 header img{width:45px;height:45px;border-radius:50%;border:2px solid gold;margin-right:10px;}
 h1{color:gold;font-size:20px;flex:1;margin:0}
-button{background:gold;border:none;padding:8px 12px;border-radius:20px;margin-left:5px;}
-#chat{height:55vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
+button{background:gold;border:none;padding:8px 12px;border-radius:20px;margin:3px;}
+#chat{height:50vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user{background:#1e88e5;padding:10px;border-radius:10px;align-self:flex-end;margin:5px;}
 .bot{background:#333;padding:10px;border-radius:10px;margin:5px;border-left:4px solid gold;}
 #inputArea{display:flex;padding:10px;background:#111;}
 #input{flex:1;padding:10px;border-radius:20px;border:none;}
 footer{text-align:center;color:gold;padding:10px;}
 .page{display:none;padding:15px;}
-.toolBtn{background:#222;color:gold;border:1px solid gold;margin:5px;padding:10px;border-radius:10px;}
+.toolBtn{background:#222;color:gold;border:1px solid gold;margin:5px;padding:10px;border-radius:10px;width:90%;}
+textarea{width:95%;height:120px;background:#111;color:white;border:1px solid gold;}
 </style>
 </head>
 
@@ -34,9 +35,8 @@ footer{text-align:center;color:gold;padding:10px;}
 <div id="chat"></div>
 
 <div id="inputArea">
-<input id="input" placeholder="Ask Dua / Salam / Question">
+<input id="input" placeholder="Ask Dua / Question">
 <button onclick="send()">Send</button>
-<button onclick="openGame()">🎮</button>
 <button onclick="openPage('tools')">🧰</button>
 </div>
 
@@ -46,31 +46,72 @@ footer{text-align:center;color:gold;padding:10px;}
 <span onclick="openPage('contact')">Contact</span>
 </footer>
 
-<!-- PAGES -->
+<!-- ABOUT -->
 <div id="about" class="page">
 <h2>About</h2>
-<p>Mohd Aatif AI – Islamic & Smart Assistant.</p>
+<p>
+Mohd Aatif AI is a smart assistant platform designed to provide Islamic duas,
+quick search help, useful tools, and simple educational support.
+It works offline for chat backup and offers multiple utilities in one place.
+</p>
 <button onclick="closePages()">Back</button>
 </div>
 
+<!-- PRIVACY -->
 <div id="privacy" class="page">
-<h2>Privacy</h2>
-<p>No data stored. Only browser backup.</p>
+<h2>Privacy Policy</h2>
+<p>
+We respect your privacy.  
+No personal data is collected or shared.  
+Chat history is stored only inside your own browser for backup purposes.
+No external server is used for saving information.
+</p>
 <button onclick="closePages()">Back</button>
 </div>
 
+<!-- CONTACT -->
 <div id="contact" class="page">
 <h2>Contact</h2>
 <p>Email: draatifdratif@gmail.com</p>
 <button onclick="closePages()">Back</button>
 </div>
 
+<!-- TOOLS -->
 <div id="tools" class="page">
 <h2>Tools</h2>
-<button class="toolBtn" onclick="alert('Age Tool Coming Soon')">Age Calculator</button>
-<button class="toolBtn" onclick="alert('PDF Tool Coming Soon')">PDF Maker</button>
-<button class="toolBtn" onclick="alert('QR Tool Coming Soon')">QR Generator</button>
+
+<button class="toolBtn" onclick="openPage('calculator')">Calculator</button>
+<button class="toolBtn" onclick="openPage('notes')">Notes</button>
+<button class="toolBtn" onclick="openPage('namaz')">Namaz Time</button>
+<button class="toolBtn" onclick="makePDF()">PDF Maker</button>
+<button class="toolBtn" onclick="scan()">Scanner</button>
+<button class="toolBtn" onclick="openPage('game')">Alphabet Game</button>
+
 <button onclick="closePages()">Back</button>
+</div>
+
+<!-- CALCULATOR -->
+<div id="calculator" class="page">
+<h2>Calculator</h2>
+<input id="calcInput" style="width:90%;padding:10px;">
+<button onclick="calc()">=</button>
+<p id="calcRes"></p>
+<button onclick="openPage('tools')">Back</button>
+</div>
+
+<!-- NOTES -->
+<div id="notes" class="page">
+<h2>Notes</h2>
+<textarea id="noteBox"></textarea><br>
+<button onclick="saveNote()">Save</button>
+<button onclick="openPage('tools')">Back</button>
+</div>
+
+<!-- NAMAZ -->
+<div id="namaz" class="page">
+<h2>Namaz Time</h2>
+<a href="https://www.islamicfinder.org/prayer-times/" target="_blank">Open Namaz Time</a>
+<button onclick="openPage('tools')">Back</button>
 </div>
 
 <!-- GAME -->
@@ -78,7 +119,7 @@ footer{text-align:center;color:gold;padding:10px;}
 <h2>Alphabet Game</h2>
 <p id="letter">ا</p>
 <button onclick="nextLetter()">Next</button>
-<button onclick="closePages()">Back</button>
+<button onclick="openPage('tools')">Back</button>
 </div>
 
 <script>
@@ -86,6 +127,7 @@ let voiceOn=true;
 const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 
+/* VOICE */
 function speak(t){
  if(!voiceOn) return;
  let u=new SpeechSynthesisUtterance(t);
@@ -94,15 +136,14 @@ function speak(t){
 }
 function toggleVoice(){voiceOn=!voiceOn;}
 
+/* CHAT */
 function addMsg(t,c){
  let d=document.createElement("div");
  d.className=c;
  d.innerHTML=t;
  chat.appendChild(d);
- chat.scrollTop=chat.scrollHeight;
  localStorage.setItem("backup",chat.innerHTML);
 }
-
 function send(){
  let q=input.value.trim();
  if(!q) return;
@@ -114,53 +155,31 @@ function send(){
 /* DUAS */
 const duas=[
 {key:["sone"],text:"Allahumma bismika amutu wa ahya"},
-{key:["uthne"],text:"Alhamdu lillahil lazi ahyana"},
-{key:["khane"],text:"Bismillah aur Alhamdulillah"},
+{key:["uthne"],text:"Alhamdu lillahillazi ahyana"},
+{key:["khane"],text:"Bismillah"},
 {key:["pani"],text:"Bismillah"},
 {key:["ilm"],text:"Rabbi zidni ilma"},
-{key:["imtihan"],text:"Rabbi yassir"},
-{key:["subah"],text:"Allahumma bika asbahna"},
-{key:["shaam"],text:"Allahumma bika amsayna"},
-{key:["maafi"],text:"Astaghfirullah"},
-{key:["rizq"],text:"Allahumma barik lana"},
-{key:["parents"],text:"Rabbir hamhuma"},
-{key:["dost"],text:"Allahumma ihfazhu"},
-{key:["jannat"],text:"Allahumma inni as alukal jannah"},
-{key:["musibat"],text:"Inna lillahi"},
 {key:["sehat"],text:"Allahumma afiyah"}
 ];
 
 function answer(q){
- let found=false,a="",s="";
-
- if(q.includes("salam")){
-  a="Wa Alaikum Assalam";
-  s=a;
-  found=true;
- }
-
+ let a="",found=false;
+ if(q.includes("salam")){a="Wa Alaikum Assalam";found=true;}
  if(!found){
   for(let d of duas){
    for(let k of d.key){
-    if(q.includes(k)){
-     a=d.text; s=d.text; found=true; break;
-    }
+    if(q.includes(k)){a=d.text;found=true;}
    }
-   if(found) break;
   }
  }
-
  if(!found){
-  let link="https://www.google.com/search?q="+encodeURIComponent(q);
-  a=`<a href="${link}" target="_blank">Google Search</a>`;
-  s="Google search karo";
+  a="Search on Google";
  }
-
  addMsg("Answer: "+a,"bot");
- speak(s);
+ speak(a);
 }
 
-chat.innerHTML=localStorage.getItem("backup")||"Welcome Aatif AI";
+chat.innerHTML=localStorage.getItem("backup")||"Welcome to Mohd Aatif AI";
 
 function clearChat(){
  localStorage.removeItem("backup");
@@ -178,13 +197,35 @@ function closePages(){
  chat.style.display="flex";
 }
 
+/* CALC */
+function calc(){
+ let v=document.getElementById("calcInput").value;
+ document.getElementById("calcRes").innerText=eval(v);
+}
+
+/* NOTES */
+function saveNote(){
+ localStorage.setItem("note",noteBox.value);
+ alert("Saved");
+}
+noteBox.value=localStorage.getItem("note")||"";
+
+/* PDF */
+function makePDF(){
+ window.print();
+}
+
+/* SCAN */
+function scan(){
+ alert("Use camera scan app");
+}
+
 /* GAME */
-const letters=["ا","ب","ت","ث","ج","ح","خ"];
+const letters=["ا","ب","ت","ث","ج"];
 let i=0;
-function openGame(){openPage('game')}
 function nextLetter(){
  i=(i+1)%letters.length;
- document.getElementById("letter").innerText=letters[i];
+ letter.innerText=letters[i];
  speak(letters[i]);
 }
 </script>
