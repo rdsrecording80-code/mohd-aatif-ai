@@ -8,7 +8,7 @@ body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
 header img{width:45px;height:45px;border-radius:50%;border:2px solid gold;margin-right:10px;}
 h1{color:gold;font-size:20px;flex:1;}
-.icon{background:gold;border:none;border-radius:50%;width:40px;height:40px;margin-left:5px;}
+.icon{background:gold;border:none;border-radius:50%;width:40px;height:40px;}
 
 #chat{height:58vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
@@ -20,21 +20,15 @@ h1{color:gold;font-size:20px;flex:1;}
 button.send{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;}
 
 footer{text-align:center;padding:10px;color:gold;}
+footer span{margin:0 8px;cursor:pointer;}
 
-#tools{display:none;position:fixed;top:60px;right:10px;background:#222;border:1px solid gold;border-radius:10px;padding:10px;}
-.toolBtn{display:block;background:gold;border:none;margin:5px 0;padding:8px;border-radius:6px;width:140px;}
-
-/* POPUPS */
 .popup{
 display:none;position:fixed;top:50%;left:50%;
 transform:translate(-50%,-50%);
 background:#111;border:2px solid gold;
-padding:15px;border-radius:10px;width:280px;
+padding:15px;border-radius:10px;width:300px;
 }
-.popup input, .popup textarea{
-width:100%;padding:8px;margin:5px 0;border-radius:5px;border:none;
-}
-.popup button{background:gold;border:none;padding:8px;border-radius:5px;margin-top:5px;}
+.popup button{background:gold;border:none;padding:6px;border-radius:5px;margin-top:10px;}
 </style>
 </head>
 
@@ -43,7 +37,7 @@ width:100%;padding:8px;margin:5px 0;border-radius:5px;border:none;
 <header>
 <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
 <h1>Mohd Aatif AI</h1>
-<button class="icon" onclick="toggleTools()">⋮</button>
+<button class="icon">⋮</button>
 </header>
 
 <div id="chat"></div>
@@ -53,36 +47,24 @@ width:100%;padding:8px;margin:5px 0;border-radius:5px;border:none;
 <button class="send" onclick="send()">Send</button>
 </div>
 
-<footer>About | Privacy | Contact</footer>
+<footer>
+<span onclick="openPage('home')">Home</span> |
+<span onclick="openPage('about')">About</span> |
+<span onclick="openPage('privacy')">Privacy</span> |
+<span onclick="openPage('contact')">Contact</span>
+</footer>
 
-<!-- TOOLS -->
-<div id="tools">
-<button class="toolBtn" onclick="openCalc()">Calculator</button>
-<button class="toolBtn" onclick="openPDF()">PDF Maker</button>
-</div>
-
-<!-- CALCULATOR -->
-<div id="calcBox" class="popup">
-<h3>Calculator</h3>
-<input id="calcInput" placeholder="2+2">
-<button onclick="doCalc()">Result</button>
-<p id="calcResult"></p>
-<button onclick="closePop()">Close</button>
-</div>
-
-<!-- PDF -->
-<div id="pdfBox" class="popup">
-<h3>PDF Maker</h3>
-<textarea id="pdfText" rows="6" placeholder="Write text..."></textarea>
-<button onclick="makePDF()">Download PDF</button>
-<button onclick="closePop()">Close</button>
+<!-- POPUP -->
+<div id="pageBox" class="popup">
+<h3 id="pageTitle"></h3>
+<p id="pageText"></p>
+<button onclick="closePage()">Close</button>
 </div>
 
 <script>
 const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 
-/* CHAT */
 function addMsg(t,c){
 let d=document.createElement("div");
 d.className=c;
@@ -91,49 +73,60 @@ chat.appendChild(d);
 chat.scrollTop=chat.scrollHeight;
 }
 
+/* SMART ANSWERS */
+function smartReply(q){
+q=q.toLowerCase();
+
+if(q.includes("aatif") || q.includes("creator"))
+return "Mohd Aatif ek creator aur developer hain. Unhone mujhe banaya hai.";
+
+if(q.includes("assalam"))
+return "Wa Alaikum Assalam! Aap kaise hain?";
+
+if(q.includes("kaun ho"))
+return "Main Mohd Aatif AI hoon, ek smart assistant software.";
+
+if(q.includes("namaz"))
+return "Namaz waqt par padhna bahut zaroori hai.";
+
+return "Main seekh raha hoon. Aap aur pooch sakte hain.";
+}
+
 function send(){
 let q=input.value.trim();
 if(!q) return;
 addMsg(q,"user");
 input.value="";
-addMsg("Searching...","bot");
+setTimeout(()=>addMsg(smartReply(q),"bot"),400);
 }
 
-/* TOOLS */
-function toggleTools(){
-let t=document.getElementById("tools");
-t.style.display=t.style.display==="block"?"none":"block";
+/* FOOTER PAGES */
+function openPage(type){
+let title=document.getElementById("pageTitle");
+let text=document.getElementById("pageText");
+
+if(type=="home"){
+title.innerText="Home";
+text.innerText="Welcome to Mohd Aatif AI. Yeh ek smart AI assistant software hai.";
+}
+if(type=="about"){
+title.innerText="About";
+text.innerText="Mohd Aatif AI ek intelligent software hai jo users ki madad ke liye banaya gaya hai.";
+}
+if(type=="privacy"){
+title.innerText="Privacy";
+text.innerText="Hum koi personal data store nahin karte. Aap safe hain.";
+}
+if(type=="contact"){
+title.innerText="Contact";
+text.innerText="Email: mohdaatif@example.com";
 }
 
-/* CALCULATOR */
-function openCalc(){
-closePop();
-document.getElementById("calcBox").style.display="block";
-}
-function doCalc(){
-let v=document.getElementById("calcInput").value;
-try{
-document.getElementById("calcResult").innerText="Result: "+eval(v);
-}catch{
-document.getElementById("calcResult").innerText="Error";
-}
+document.getElementById("pageBox").style.display="block";
 }
 
-/* PDF */
-function openPDF(){
-closePop();
-document.getElementById("pdfBox").style.display="block";
-}
-function makePDF(){
-let text=document.getElementById("pdfText").value;
-let w=window.open("");
-w.document.write("<pre>"+text+"</pre>");
-w.print();
-}
-
-/* CLOSE */
-function closePop(){
-document.querySelectorAll(".popup").forEach(p=>p.style.display="none");
+function closePage(){
+document.getElementById("pageBox").style.display="none";
 }
 
 /* WELCOME */
