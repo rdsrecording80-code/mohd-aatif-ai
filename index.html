@@ -9,38 +9,17 @@
 body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
 header img{width:50px;height:50px;border-radius:50%;border:2px solid gold;margin-right:10px;}
-h1{color:gold;font-size:22px;flex:1}
-
-/* CHAT */
-#chat{height:55vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
+h1{color:gold;font-size:22px;flex:1;}
+#chat{height:60vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
 .user{background:#1e88e5;align-self:flex-end;}
 .bot{background:#333;border-left:4px solid gold;}
-
-/* INPUT */
 #inputArea{display:flex;padding:10px;background:#111;}
 #input{flex:1;padding:10px;border-radius:20px;border:none;}
-button{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;font-weight:bold}
-
-/* FOOTER */
+button{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;}
 footer{text-align:center;padding:10px;color:gold;}
 .page{display:none;padding:15px;}
-
-/* GAME */
-#gameBox{
-display:none;
-position:fixed;
-top:0;left:0;
-width:100%;height:100%;
-background:#000;
-z-index:99;
-text-align:center;
-}
-#target{
-width:80px;height:80px;
-position:absolute;
-cursor:pointer;
-}
+a{color:#00e5ff;text-decoration:none;}
 </style>
 </head>
 
@@ -58,7 +37,6 @@ cursor:pointer;
 <div id="inputArea">
 <input id="input" placeholder="Ask Dua or Salam...">
 <button onclick="send()">Send</button>
-<button onclick="openGame()">🎮</button>
 </div>
 
 <footer>
@@ -67,34 +45,43 @@ cursor:pointer;
 <span onclick="openPage('contact')">Contact</span>
 </footer>
 
-<!-- ABOUT -->
+<!-- GAME BUTTON -->
+<div style="text-align:center;margin:10px;">
+<button onclick="openGame()">🎮 Play Game</button>
+</div>
+
+<!-- GAME -->
+<div id="gameBox" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:white;z-index:99;text-align:center;">
+<h2>Alif Ba Ta Game</h2>
+<p id="score">Score: 0</p>
+
+<div id="target" onclick="tap()" 
+style="font-size:60px;background:gold;color:black;
+width:120px;height:120px;border-radius:20px;
+display:flex;align-items:center;justify-content:center;
+margin:auto;">ا</div>
+
+<br>
+<button onclick="closeGame()">Back</button>
+</div>
+
+<!-- PAGES -->
 <div id="about" class="page">
 <h2>About</h2>
-<p>Mohd Aatif AI ek smart assistant hai jo Dua, search aur help karta hai.</p>
+<p>Mohd Aatif AI ek smart assistant hai jo Duas, Salam aur Search help deta hai.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
-<!-- PRIVACY -->
 <div id="privacy" class="page">
 <h2>Privacy</h2>
-<p>Data store nahin hota. Sirf chat browser me save hoti hai.</p>
+<p>Koi personal data store nahi hota. Sirf chat backup browser me rehta hai.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
-<!-- CONTACT -->
 <div id="contact" class="page">
 <h2>Contact</h2>
 <p>Email: draatifdratif@gmail.com</p>
 <button onclick="closePages()">Back</button>
-</div>
-
-<!-- GAME -->
-<div id="gameBox">
-<h2>3D Tap Game</h2>
-<p id="score">Score: 0</p>
-<img id="target" src="https://cdn-icons-png.flaticon.com/512/616/616408.png">
-<br><br>
-<button onclick="closeGame()">Back</button>
 </div>
 
 <script>
@@ -103,12 +90,12 @@ const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 
 /* VOICE */
-function speak(t){
+function speak(text){
  if(!voiceOn) return;
- let u=new SpeechSynthesisUtterance(t);
- u.lang="hi-IN";
+ let msg=new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g,""));
+ msg.lang="hi-IN";
  speechSynthesis.cancel();
- speechSynthesis.speak(u);
+ speechSynthesis.speak(msg);
 }
 function toggleVoice(){voiceOn=!voiceOn;}
 
@@ -132,25 +119,49 @@ function send(){
 
 /* DUAS */
 const duas=[
-{key:"sone",text:"Allahumma bismika amutu wa ahya."},
-{key:"khane",text:"Bismillah Alhamdulillah."},
-{key:"ilm",text:"Rabbi zidni ilma."}
+{key:["sone"],text:"Sone ki Dua: Allahumma bismika amutu wa ahya."},
+{key:["uthne"],text:"Uthne ki Dua: Alhamdu lillahil-lazi ahyana."},
+{key:["khane"],text:"Khane se pehle Bismillah."},
+{key:["pani"],text:"Pani peene ki Dua: Bismillah."},
+{key:["ilm"],text:"Rabbi zidni ilma."},
+{key:["exam"],text:"Rabbi yassir wala tuassir."},
+{key:["sehat"],text:"Allahumma inni as'alukal afiyah."},
+{key:["subah"],text:"Allahumma bika asbahna."},
+{key:["shaam"],text:"Allahumma bika amsayna."}
 ];
 
+/* ANSWER */
 function answer(q){
+ let a="", speakText="", found=false;
+
  if(q.includes("salam")){
- addMsg("Wa Alaikum Assalam","bot");
- speak("Wa Alaikum Assalam");
- return;
+  a="Wa Alaikum Assalam";
+  speakText=a;
+  found=true;
  }
- for(let d of duas){
- if(q.includes(d.key)){
- addMsg(d.text,"bot");
- speak(d.text);
- return;
+
+ if(!found){
+  for(let d of duas){
+   for(let k of d.key){
+    if(q.includes(k)){
+     a=d.text;
+     speakText=d.text;
+     found=true;
+     break;
+    }
+   }
+   if(found) break;
+  }
  }
+
+ if(!found){
+  let link="https://www.google.com/search?q="+encodeURIComponent(q);
+  a=`<a href="${link}" target="_blank">Google Search kare 👍</a>`;
+  speakText="Google par search khol diya";
  }
- addMsg("Google Search kare 👍","bot");
+
+ addMsg("Answer: "+a,"bot");
+ speak(speakText||a);
 }
 
 /* BACKUP */
@@ -173,31 +184,17 @@ function closePages(){
  chat.style.display="flex";
 }
 
-/* GAME SYSTEM */
+/* GAME */
 let score=0;
-const target=document.getElementById("target");
-
-function openGame(){
- document.getElementById("gameBox").style.display="block";
- moveTarget();
-}
-function closeGame(){
- document.getElementById("gameBox").style.display="none";
-}
-
-function moveTarget(){
- let x=Math.random()*80;
- let y=Math.random()*60;
- target.style.left=x+"%";
- target.style.top=y+"%";
-}
-
-target.onclick=function(){
+const letters=["ا","ب","ت"];
+function openGame(){document.getElementById("gameBox").style.display="block";}
+function closeGame(){document.getElementById("gameBox").style.display="none";}
+function tap(){
  score++;
  document.getElementById("score").innerText="Score: "+score;
- speak("Good");
- moveTarget();
-};
+ document.getElementById("target").innerText=
+ letters[Math.floor(Math.random()*letters.length)];
+}
 </script>
 
 </body>
