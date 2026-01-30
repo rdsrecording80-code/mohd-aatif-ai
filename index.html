@@ -10,7 +10,7 @@ body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
 header img{width:45px;height:45px;border-radius:50%;border:2px solid gold;margin-right:10px;}
 h1{color:gold;font-size:20px;flex:1;}
-.icon{background:gold;border:none;border-radius:50%;width:40px;height:40px;margin-left:5px;}
+.icon{background:gold;border:none;border-radius:50%;width:40px;height:40px;margin-left:5px;cursor:pointer;}
 
 #chat{height:58vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
@@ -18,15 +18,15 @@ h1{color:gold;font-size:20px;flex:1;}
 .bot{background:#333;border-left:4px solid gold;}
 
 #inputArea{display:flex;padding:10px;background:#111;}
-#input{flex:1;padding:12px;border-radius:20px;border:none;}
-button.send{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;}
+#input{flex:1;padding:12px;border-radius:20px;border:none;color:white;background:#222;}
+button.send{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;cursor:pointer;}
 
-footer{text-align:center;padding:10px;color:gold;}
-.page{display:none;padding:15px;}
+footer{text-align:center;padding:10px;color:gold;cursor:pointer;}
+.page{display:none;padding:15px;background:#111;border-top:2px solid gold;}
 
 #tools{display:none;position:fixed;top:60px;right:10px;background:#222;border:1px solid gold;border-radius:10px;padding:10px;}
-.toolBtn{display:block;background:gold;border:none;margin:5px 0;padding:8px;border-radius:6px;width:140px;}
-.searchBtn{background:gold;padding:8px;border-radius:6px;color:black;text-decoration:none;display:inline-block;margin-top:5px;}
+.toolBtn{display:block;background:gold;border:none;margin:5px 0;padding:8px;border-radius:6px;width:120px;cursor:pointer;}
+a.searchBtn{text-decoration:none;color:black;font-weight:bold;}
 </style>
 </head>
 
@@ -55,22 +55,20 @@ footer{text-align:center;padding:10px;color:gold;}
 <!-- TOOLS -->
 <div id="tools">
 <button class="toolBtn" onclick="calc()">Calculator</button>
-<button class="toolBtn" onclick="note()">Save Note</button>
-<button class="toolBtn" onclick="viewNote()">View Note</button>
+<button class="toolBtn" onclick="note()">Notes</button>
 </div>
 
 <!-- PAGES -->
 <div id="about" class="page">
 <h2>About</h2>
-<p>Mohd Aatif AI is a smart assistant software created by Mohd Aatif.
+<p>Mohd Aatif AI is a smart assistant software created by Mohd Aatif.  
 This AI is under development and will become more intelligent in the future.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
 <div id="privacy" class="page">
 <h2>Privacy</h2>
-<p>No personal data is stored on servers.
-Only chat backup is saved in your browser.</p>
+<p>No personal data is stored on servers. Only chat backup is saved in your browser for convenience.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
@@ -93,6 +91,7 @@ loadBackup();
 function speak(text){
  let u=new SpeechSynthesisUtterance(text);
  u.lang="hi-IN";
+ u.rate=0.9;
  speechSynthesis.cancel();
  speechSynthesis.speak(u);
 }
@@ -119,24 +118,32 @@ function send(){
 function answer(q){
  let a="";
 
- if(q.includes("salam")){
+ if(q.includes("salam")||q.includes("assalam")){
   a="Wa Alaikum Assalam Rahmatullah";
  }
  else if(q.includes("kaun ho")){
-  a="Main Mohd Aatif AI hoon.";
+  a="Main Mohd Aatif AI hoon. Ek smart assistant software.";
  }
  else if(q.includes("kisne banaya")){
   a="Mujhe Mohd Aatif ne create kiya hai.";
  }
  else if(q.includes("mohd aatif")){
-  a="Mohd Aatif ek creator aur developer hain.";
+  a="Mohd Aatif ek creator aur developer hain jinhone mujhe banaya.";
+ }
+ else if(/\d+[\+\-\*\/]\d+/.test(q)){
+  try{
+    a="Result: "+eval(q);
+  }catch(e){
+    a="Calculation error";
+  }
  }
  else{
   let link="https://www.google.com/search?q="+encodeURIComponent(q);
-  a=`<a class="searchBtn" target="_blank" href="${link}">Search on Google</a>`;
+  a=`Mohd Aatif AI ne search kar liya.<br>
+  <a class="searchBtn" target="_blank" href="${link}">Is par click karke dekh sakte ho</a>`;
  }
 
- addMsg(a,"bot");
+ addMsg("Answer: "+a,"bot");
  speak(a.replace(/<[^>]*>/g,""));
 }
 
@@ -149,29 +156,17 @@ function toggleTools(){
  t.style.display=t.style.display==="block"?"none":"block";
 }
 
-/* CALCULATOR */
 function calc(){
- try{
-  let r=prompt("Enter calculation:");
-  if(!r) return;
-  let ans=eval(r);
-  addMsg("Result: "+ans,"bot");
- }catch{
-  addMsg("Invalid Calculation","bot");
+ let r=prompt("Enter calculation:");
+ if(r){ 
+   try{ addMsg("Result: "+eval(r),"bot"); }
+   catch(e){ addMsg("Calculation error","bot"); }
  }
- toggleTools();
 }
 
-/* NOTES */
 function note(){
  let n=prompt("Write note:");
  if(n){localStorage.setItem("note",n);alert("Saved");}
- toggleTools();
-}
-function viewNote(){
- let n=localStorage.getItem("note")||"No Note Saved";
- alert(n);
- toggleTools();
 }
 
 /* PAGES */
@@ -187,7 +182,7 @@ function closePages(){
 
 /* WELCOME */
 if(chat.innerHTML===""){
- addMsg("Assalamualaikum! Main Mohd Aatif AI hoon.","bot");
+ addMsg("Assalamualaikum! Main Mohd Aatif AI hoon. Aap kya poochna chahte hain?","bot");
 }
 </script>
 
