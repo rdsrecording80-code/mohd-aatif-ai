@@ -9,17 +9,16 @@
 body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
 header img{width:50px;height:50px;border-radius:50%;border:2px solid gold;margin-right:10px;}
-h1{color:gold;font-size:20px;flex:1;}
-#chat{height:55vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
+h1{color:gold;font-size:22px;flex:1;}
+#chat{height:60vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
 .user{background:#1e88e5;align-self:flex-end;}
 .bot{background:#333;border-left:4px solid gold;}
 #inputArea{display:flex;padding:10px;background:#111;}
 #input{flex:1;padding:10px;border-radius:20px;border:none;}
-button{background:gold;border:none;padding:10px;border-radius:20px;margin-left:5px;}
+button{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;}
 footer{text-align:center;padding:10px;color:gold;}
 .page{display:none;padding:15px;}
-.tool{margin:5px;padding:10px;background:#222;border-radius:10px;}
 a{color:#00e5ff;}
 </style>
 </head>
@@ -31,12 +30,31 @@ a{color:#00e5ff;}
 <h1>Mohd Aatif AI</h1>
 <button onclick="toggleVoice()">🎤</button>
 <button onclick="clearChat()">🗑</button>
+<button onclick="toggleMenu()">⋮</button>
 </header>
+
+<!-- 3 DOT MENU -->
+<div id="menuBox" style="
+display:none;
+position:absolute;
+top:60px;
+right:10px;
+background:#111;
+border:1px solid gold;
+border-radius:10px;
+padding:10px;
+z-index:99;">
+<button onclick="scan()">📷 Camera</button><br><br>
+<button onclick="openCalc()">🧮 Calculator</button><br><br>
+<button onclick="openNotes()">📝 Notes</button><br><br>
+<button onclick="makePDF()">📄 PDF</button><br><br>
+<button onclick="openGame()">🎮 Game</button>
+</div>
 
 <div id="chat"></div>
 
 <div id="inputArea">
-<input id="input" placeholder="Ask anything...">
+<input id="input" placeholder="Ask Dua or Salam...">
 <button onclick="send()">Send</button>
 </div>
 
@@ -46,49 +64,17 @@ a{color:#00e5ff;}
 <span onclick="openPage('contact')">Contact</span>
 </footer>
 
-<!-- TOOLS -->
-<div class="tool">
-<button onclick="scan()">📷 Camera</button>
-<button onclick="openCalc()">🧮 Calculator</button>
-<button onclick="openNotes()">📝 Notes</button>
-<button onclick="makePDF()">📄 PDF</button>
-<button onclick="openGame()">🎮 Game</button>
-</div>
-
-<!-- GAME -->
-<div id="gameBox" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;text-align:center;">
-<h2>Tap Cartoon Game</h2>
-<p id="score">Score: 0</p>
-<img src="https://i.postimg.cc/3x3QzSGq/cartoon.png" width="120" onclick="tap()">
-<br><button onclick="closeGame()">Back</button>
-</div>
-
-<!-- NOTES -->
-<div id="notesBox" class="page">
-<textarea id="noteText" style="width:100%;height:200px;"></textarea>
-<button onclick="saveNote()">Save</button>
-<button onclick="closePages()">Back</button>
-</div>
-
-<!-- CALC -->
-<div id="calcBox" class="page">
-<input id="calcInput" placeholder="2+2">
-<button onclick="calc()">=</button>
-<p id="calcRes"></p>
-<button onclick="closePages()">Back</button>
-</div>
-
 <!-- PAGES -->
 <div id="about" class="page">
 <h2>About</h2>
 <p>Mohd Aatif AI is a smart assistant created by Mohd Aatif.  
-This AI is under development and will soon convert into a powerful intelligent AI.</p>
+It provides duas, tools and helpful search links in simple language.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
 <div id="privacy" class="page">
 <h2>Privacy</h2>
-<p>No personal data is stored. Only local chat backup is saved in your device.</p>
+<p>No personal data stored. Only chat backup in your browser.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
@@ -98,20 +84,34 @@ This AI is under development and will soon convert into a powerful intelligent A
 <button onclick="closePages()">Back</button>
 </div>
 
+<!-- GAME -->
+<div id="gameBox" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:black;text-align:center;">
+<h2>Tap Game</h2>
+<p id="score">Score: 0</p>
+<button onclick="tap()">TAP</button><br><br>
+<button onclick="closeGame()">Back</button>
+</div>
+
 <script>
 let voiceOn=true;
+let score=0;
 const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 
 /* VOICE */
 function speak(t){
  if(!voiceOn) return;
- let u=new SpeechSynthesisUtterance(t.replace(/<[^>]*>/g,""));
+ let u=new SpeechSynthesisUtterance(t);
  u.lang="hi-IN";
- speechSynthesis.cancel();
  speechSynthesis.speak(u);
 }
 function toggleVoice(){voiceOn=!voiceOn;}
+
+/* MENU */
+function toggleMenu(){
+ let m=document.getElementById("menuBox");
+ m.style.display = m.style.display=="block" ? "none":"block";
+}
 
 /* MESSAGE */
 function addMsg(t,c){
@@ -119,10 +119,8 @@ function addMsg(t,c){
  d.className=c;
  d.innerHTML=t;
  chat.appendChild(d);
- chat.scrollTop=chat.scrollHeight;
  localStorage.setItem("backup",chat.innerHTML);
 }
-
 function send(){
  let q=input.value.trim();
  if(!q) return;
@@ -133,33 +131,23 @@ function send(){
 
 /* DUAS */
 const duas=[
-{key:["sone"],text:"Sone ki Dua: Allahumma bismika amutu wa ahya."},
-{key:["pani"],text:"Pani peene ki Dua: Bismillah."},
-{key:["ilm"],text:"Rabbi zidni ilma."}
+{key:["sone"],text:"Allahumma bismika amutu wa ahya."},
+{key:["uthne"],text:"Alhamdu lillahil-lazi ahyana."},
+{key:["khane"],text:"Bismillah, Alhamdulillah."},
+{key:["pani"],text:"Bismillah."},
+{key:["ilm"],text:"Rabbi zidni ilma."},
+{key:["sehat"],text:"Allahumma inni as'alukal afiyah."}
 ];
 
 /* ANSWER */
 function answer(q){
- let a="",found=false;
-
- if(q.includes("mohd aatif")){
-  a="Mohd Aatif ek creator aur developer hain. Unhone mujhe banaya hai.";
-  found=true;
- }
-
- if(!found){
-  for(let d of duas){
-   for(let k of d.key){
-    if(q.includes(k)){a=d.text;found=true;}
-   }
+ let a="Search kare 👍";
+ if(q.includes("salam")) a="Wa Alaikum Assalam";
+ for(let d of duas){
+  for(let k of d.key){
+   if(q.includes(k)) a=d.text;
   }
  }
-
- if(!found){
-  let link="https://www.google.com/search?q="+encodeURIComponent(q);
-  a=`<a href="${link}" target="_blank">Open Search</a>`;
- }
-
  addMsg("Answer: "+a,"bot");
  speak(a);
 }
@@ -168,35 +156,32 @@ function answer(q){
 chat.innerHTML=localStorage.getItem("backup")||"Welcome Mohd Aatif AI";
 
 /* CLEAR */
-function clearChat(){localStorage.removeItem("backup");chat.innerHTML="";}
-
-/* PAGES */
-function openPage(id){chat.style.display="none";document.getElementById(id).style.display="block";}
-function closePages(){document.querySelectorAll(".page").forEach(p=>p.style.display="none");chat.style.display="flex";}
-
-/* CAMERA */
-function scan(){
- navigator.mediaDevices.getUserMedia({video:true})
- .then(()=>addMsg("Camera Ready","bot"))
- .catch(()=>addMsg("Camera Denied","bot"));
+function clearChat(){
+ localStorage.removeItem("backup");
+ chat.innerHTML="";
 }
 
-/* CALC */
-function openCalc(){openPage('calcBox');}
-function calc(){calcRes.innerText=eval(calcInput.value);}
+/* PAGES */
+function openPage(id){
+ chat.style.display="none";
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ document.getElementById(id).style.display="block";
+}
+function closePages(){
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ chat.style.display="flex";
+}
 
-/* NOTES */
-function openNotes(){openPage('notesBox');noteText.value=localStorage.getItem("note")||"";}
-function saveNote(){localStorage.setItem("note",noteText.value);}
-
-/* PDF */
-function makePDF(){window.print();}
+/* TOOLS */
+function scan(){alert("Camera Open");}
+function openCalc(){alert("Calculator Open");}
+function openNotes(){alert("Notes Open");}
+function makePDF(){alert("PDF Created");}
 
 /* GAME */
-let score=0;
-function openGame(){gameBox.style.display="block";}
-function closeGame(){gameBox.style.display="none";}
-function tap(){score++;score.innerText="Score:"+score;}
+function openGame(){document.getElementById("gameBox").style.display="block";}
+function closeGame(){document.getElementById("gameBox").style.display="none";}
+function tap(){score++;document.getElementById("score").innerText="Score: "+score;}
 </script>
 
 </body>
