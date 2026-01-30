@@ -8,21 +8,19 @@
 <style>
 body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
-header img{width:45px;height:45px;border-radius:50%;border:2px solid gold;margin-right:8px;}
+header img{width:50px;height:50px;border-radius:50%;border:2px solid gold;margin-right:10px;}
 h1{color:gold;font-size:20px;flex:1;}
-button{background:gold;border:none;padding:8px 12px;border-radius:20px;margin:3px;cursor:pointer;}
-#chat{height:45vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
+#chat{height:55vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
 .user{background:#1e88e5;align-self:flex-end;}
 .bot{background:#333;border-left:4px solid gold;}
 #inputArea{display:flex;padding:10px;background:#111;}
 #input{flex:1;padding:10px;border-radius:20px;border:none;}
+button{background:gold;border:none;padding:10px;border-radius:20px;margin-left:5px;}
 footer{text-align:center;padding:10px;color:gold;}
 .page{display:none;padding:15px;}
-.tool{background:#111;padding:10px;margin:8px;border-radius:10px;}
-a{color:#00e5ff;text-decoration:none;}
-textarea,input{width:95%;padding:8px;margin:5px;border-radius:8px;}
-.searchBtn{display:inline-block;background:#00e5ff;color:#000;padding:8px 12px;border-radius:15px;}
+.tool{margin:5px;padding:10px;background:#222;border-radius:10px;}
+a{color:#00e5ff;}
 </style>
 </head>
 
@@ -42,72 +40,63 @@ textarea,input{width:95%;padding:8px;margin:5px;border-radius:8px;}
 <button onclick="send()">Send</button>
 </div>
 
-<div style="text-align:center">
-<button onclick="openPage('tools')">TOOLS</button>
-<button onclick="openPage('about')">About</button>
-<button onclick="openPage('privacy')">Privacy</button>
-<button onclick="openPage('contact')">Contact</button>
-</div>
+<footer>
+<span onclick="openPage('about')">About</span> |
+<span onclick="openPage('privacy')">Privacy</span> |
+<span onclick="openPage('contact')">Contact</span>
+</footer>
 
 <!-- TOOLS -->
-<div id="tools" class="page">
-<h2>TOOLS</h2>
-
 <div class="tool">
-<h3>Calculator</h3>
-<input id="calcInput" placeholder="2+2*5">
-<button onclick="calc()">Calculate</button>
-<p id="calcRes"></p>
+<button onclick="scan()">📷 Camera</button>
+<button onclick="openCalc()">🧮 Calculator</button>
+<button onclick="openNotes()">📝 Notes</button>
+<button onclick="makePDF()">📄 PDF</button>
+<button onclick="openGame()">🎮 Game</button>
 </div>
 
-<div class="tool">
-<h3>Notes</h3>
-<textarea id="noteBox" rows="4"></textarea>
+<!-- GAME -->
+<div id="gameBox" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;text-align:center;">
+<h2>Tap Cartoon Game</h2>
+<p id="score">Score: 0</p>
+<img src="https://i.postimg.cc/3x3QzSGq/cartoon.png" width="120" onclick="tap()">
+<br><button onclick="closeGame()">Back</button>
+</div>
+
+<!-- NOTES -->
+<div id="notesBox" class="page">
+<textarea id="noteText" style="width:100%;height:200px;"></textarea>
 <button onclick="saveNote()">Save</button>
-</div>
-
-<div class="tool">
-<h3>PDF Maker</h3>
-<textarea id="pdfText" rows="4" placeholder="Write text for PDF"></textarea>
-<button onclick="makePDF()">Download PDF</button>
-</div>
-
-<div class="tool">
-<h3>Scanner (Camera)</h3>
-<button onclick="scan()">Open Camera</button>
-</div>
-
-<div class="tool">
-<h3>Namaz Time</h3>
-<a href="https://www.islamicfinder.org/prayer-times/" target="_blank" class="searchBtn">Open Namaz Time</a>
-</div>
-
 <button onclick="closePages()">Back</button>
 </div>
 
-<!-- ABOUT -->
+<!-- CALC -->
+<div id="calcBox" class="page">
+<input id="calcInput" placeholder="2+2">
+<button onclick="calc()">=</button>
+<p id="calcRes"></p>
+<button onclick="closePages()">Back</button>
+</div>
+
+<!-- PAGES -->
 <div id="about" class="page">
 <h2>About</h2>
-<p>Mohd Aatif AI is a smart assistant providing Islamic help, tools and search support professionally.</p>
+<p>Mohd Aatif AI is a smart assistant created by Mohd Aatif.  
+This AI is under development and will soon convert into a powerful intelligent AI.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
-<!-- PRIVACY -->
 <div id="privacy" class="page">
 <h2>Privacy</h2>
-<p>No personal data is stored. Only chat and notes are saved locally in your browser.</p>
+<p>No personal data is stored. Only local chat backup is saved in your device.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
-<!-- CONTACT -->
 <div id="contact" class="page">
 <h2>Contact</h2>
 <p>Email: draatifdratif@gmail.com</p>
 <button onclick="closePages()">Back</button>
 </div>
-
-<!-- PDF LIBRARY -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
 let voiceOn=true;
@@ -124,7 +113,7 @@ function speak(t){
 }
 function toggleVoice(){voiceOn=!voiceOn;}
 
-/* CHAT */
+/* MESSAGE */
 function addMsg(t,c){
  let d=document.createElement("div");
  d.className=c;
@@ -142,66 +131,72 @@ function send(){
  answer(q.toLowerCase());
 }
 
+/* DUAS */
+const duas=[
+{key:["sone"],text:"Sone ki Dua: Allahumma bismika amutu wa ahya."},
+{key:["pani"],text:"Pani peene ki Dua: Bismillah."},
+{key:["ilm"],text:"Rabbi zidni ilma."}
+];
+
+/* ANSWER */
 function answer(q){
- let a="";
- if(q.includes("salam")) a="Wa Alaikum Assalam";
- else if(q.includes("dua")) a="Allah aapko kamyabi de. Ameen.";
- else{
-  let link="https://www.google.com/search?q="+encodeURIComponent(q);
-  a=`<a class="searchBtn" href="${link}" target="_blank">Open Google Search</a>`;
+ let a="",found=false;
+
+ if(q.includes("mohd aatif")){
+  a="Mohd Aatif ek creator aur developer hain. Unhone mujhe banaya hai.";
+  found=true;
  }
+
+ if(!found){
+  for(let d of duas){
+   for(let k of d.key){
+    if(q.includes(k)){a=d.text;found=true;}
+   }
+  }
+ }
+
+ if(!found){
+  let link="https://www.google.com/search?q="+encodeURIComponent(q);
+  a=`<a href="${link}" target="_blank">Open Search</a>`;
+ }
+
  addMsg("Answer: "+a,"bot");
  speak(a);
 }
 
 /* BACKUP */
-chat.innerHTML=localStorage.getItem("backup")||"Welcome to Mohd Aatif AI";
+chat.innerHTML=localStorage.getItem("backup")||"Welcome Mohd Aatif AI";
 
 /* CLEAR */
-function clearChat(){
- localStorage.removeItem("backup");
- chat.innerHTML="";
-}
+function clearChat(){localStorage.removeItem("backup");chat.innerHTML="";}
 
-/* CALC */
-function calc(){
- try{
-  calcRes.innerText=Function('"use strict";return ('+calcInput.value+')')();
- }catch{calcRes.innerText="Error";}
-}
-
-/* NOTES */
-noteBox.value=localStorage.getItem("note")||"";
-function saveNote(){
- localStorage.setItem("note",noteBox.value);
- alert("Saved");
-}
-
-/* REAL PDF */
-function makePDF(){
- const { jsPDF } = window.jspdf;
- const doc = new jsPDF();
- doc.text(pdfText.value,10,10);
- doc.save("aatif.pdf");
-}
+/* PAGES */
+function openPage(id){chat.style.display="none";document.getElementById(id).style.display="block";}
+function closePages(){document.querySelectorAll(".page").forEach(p=>p.style.display="none");chat.style.display="flex";}
 
 /* CAMERA */
 function scan(){
  navigator.mediaDevices.getUserMedia({video:true})
- .then(()=>alert("Camera Opened"))
- .catch(()=>alert("Permission Denied"));
+ .then(()=>addMsg("Camera Ready","bot"))
+ .catch(()=>addMsg("Camera Denied","bot"));
 }
 
-/* PAGES */
-function openPage(id){
- chat.style.display="none";
- document.querySelectorAll(".page").forEach(p=>p.style.display="none");
- document.getElementById(id).style.display="block";
-}
-function closePages(){
- document.querySelectorAll(".page").forEach(p=>p.style.display="none");
- chat.style.display="flex";
-}
+/* CALC */
+function openCalc(){openPage('calcBox');}
+function calc(){calcRes.innerText=eval(calcInput.value);}
+
+/* NOTES */
+function openNotes(){openPage('notesBox');noteText.value=localStorage.getItem("note")||"";}
+function saveNote(){localStorage.setItem("note",noteText.value);}
+
+/* PDF */
+function makePDF(){window.print();}
+
+/* GAME */
+let score=0;
+function openGame(){gameBox.style.display="block";}
+function closeGame(){gameBox.style.display="none";}
+function tap(){score++;score.innerText="Score:"+score;}
 </script>
 
 </body>
