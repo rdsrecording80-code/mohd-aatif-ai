@@ -2,24 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Mohd Aatif AI</title>
 
 <style>
-body{margin:0;background:#000;color:white;font-family:sans-serif;}
+body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
-header img{width:45px;height:45px;border-radius:50%;border:2px solid gold;margin-right:10px;}
-h1{color:gold;font-size:20px;flex:1;margin:0}
+header img{width:45px;height:45px;border-radius:50%;border:2px solid gold;margin-right:8px;}
+h1{color:gold;font-size:20px;flex:1;}
 button{background:gold;border:none;padding:8px 12px;border-radius:20px;margin:3px;}
-#chat{height:50vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
-.user{background:#1e88e5;padding:10px;border-radius:10px;align-self:flex-end;margin:5px;}
-.bot{background:#333;padding:10px;border-radius:10px;margin:5px;border-left:4px solid gold;}
+#chat{height:45vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
+.user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
+.user{background:#1e88e5;align-self:flex-end;}
+.bot{background:#333;border-left:4px solid gold;}
 #inputArea{display:flex;padding:10px;background:#111;}
 #input{flex:1;padding:10px;border-radius:20px;border:none;}
-footer{text-align:center;color:gold;padding:10px;}
+footer{text-align:center;padding:10px;color:gold;}
 .page{display:none;padding:15px;}
-.toolBtn{background:#222;color:gold;border:1px solid gold;margin:5px;padding:10px;border-radius:10px;width:90%;}
-textarea{width:95%;height:120px;background:#111;color:white;border:1px solid gold;}
+.tool{background:#111;padding:10px;margin:5px;border-radius:10px;}
+a{color:#00e5ff;}
+textarea,input{width:95%;padding:8px;margin:5px;border-radius:8px;}
 </style>
 </head>
 
@@ -35,37 +37,64 @@ textarea{width:95%;height:120px;background:#111;color:white;border:1px solid gol
 <div id="chat"></div>
 
 <div id="inputArea">
-<input id="input" placeholder="Ask Dua / Question">
+<input id="input" placeholder="Ask anything...">
 <button onclick="send()">Send</button>
-<button onclick="openPage('tools')">🧰</button>
 </div>
 
-<footer>
-<span onclick="openPage('about')">About</span> |
-<span onclick="openPage('privacy')">Privacy</span> |
-<span onclick="openPage('contact')">Contact</span>
-</footer>
+<!-- TOOLS -->
+<div style="text-align:center">
+<button onclick="openPage('tools')">TOOLS</button>
+<button onclick="openPage('about')">About</button>
+<button onclick="openPage('privacy')">Privacy</button>
+<button onclick="openPage('contact')">Contact</button>
+</div>
+
+<!-- TOOLS PAGE -->
+<div id="tools" class="page">
+<h2>TOOLS</h2>
+
+<div class="tool">
+<h3>Calculator</h3>
+<input id="calcInput" placeholder="2+2*5">
+<button onclick="calc()">Calculate</button>
+<p id="calcRes"></p>
+</div>
+
+<div class="tool">
+<h3>Notes</h3>
+<textarea id="noteBox" rows="4"></textarea>
+<button onclick="saveNote()">Save</button>
+</div>
+
+<div class="tool">
+<h3>PDF Maker</h3>
+<button onclick="makePDF()">Create PDF</button>
+</div>
+
+<div class="tool">
+<h3>Scanner</h3>
+<button onclick="scan()">Open Camera</button>
+</div>
+
+<div class="tool">
+<h3>Namaz Time</h3>
+<a href="https://www.islamicfinder.org/prayer-times/" target="_blank">Open Namaz Time</a>
+</div>
+
+<button onclick="closePages()">Back</button>
+</div>
 
 <!-- ABOUT -->
 <div id="about" class="page">
 <h2>About</h2>
-<p>
-Mohd Aatif AI is a smart assistant platform designed to provide Islamic duas,
-quick search help, useful tools, and simple educational support.
-It works offline for chat backup and offers multiple utilities in one place.
-</p>
+<p>Mohd Aatif AI is a smart assistant providing Islamic help, tools and search support in simple language.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
 <!-- PRIVACY -->
 <div id="privacy" class="page">
-<h2>Privacy Policy</h2>
-<p>
-We respect your privacy.  
-No personal data is collected or shared.  
-Chat history is stored only inside your own browser for backup purposes.
-No external server is used for saving information.
-</p>
+<h2>Privacy</h2>
+<p>No personal data is stored. Only chat and notes are saved in your browser.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
@@ -74,52 +103,6 @@ No external server is used for saving information.
 <h2>Contact</h2>
 <p>Email: draatifdratif@gmail.com</p>
 <button onclick="closePages()">Back</button>
-</div>
-
-<!-- TOOLS -->
-<div id="tools" class="page">
-<h2>Tools</h2>
-
-<button class="toolBtn" onclick="openPage('calculator')">Calculator</button>
-<button class="toolBtn" onclick="openPage('notes')">Notes</button>
-<button class="toolBtn" onclick="openPage('namaz')">Namaz Time</button>
-<button class="toolBtn" onclick="makePDF()">PDF Maker</button>
-<button class="toolBtn" onclick="scan()">Scanner</button>
-<button class="toolBtn" onclick="openPage('game')">Alphabet Game</button>
-
-<button onclick="closePages()">Back</button>
-</div>
-
-<!-- CALCULATOR -->
-<div id="calculator" class="page">
-<h2>Calculator</h2>
-<input id="calcInput" style="width:90%;padding:10px;">
-<button onclick="calc()">=</button>
-<p id="calcRes"></p>
-<button onclick="openPage('tools')">Back</button>
-</div>
-
-<!-- NOTES -->
-<div id="notes" class="page">
-<h2>Notes</h2>
-<textarea id="noteBox"></textarea><br>
-<button onclick="saveNote()">Save</button>
-<button onclick="openPage('tools')">Back</button>
-</div>
-
-<!-- NAMAZ -->
-<div id="namaz" class="page">
-<h2>Namaz Time</h2>
-<a href="https://www.islamicfinder.org/prayer-times/" target="_blank">Open Namaz Time</a>
-<button onclick="openPage('tools')">Back</button>
-</div>
-
-<!-- GAME -->
-<div id="game" class="page">
-<h2>Alphabet Game</h2>
-<p id="letter">ا</p>
-<button onclick="nextLetter()">Next</button>
-<button onclick="openPage('tools')">Back</button>
 </div>
 
 <script>
@@ -132,6 +115,7 @@ function speak(t){
  if(!voiceOn) return;
  let u=new SpeechSynthesisUtterance(t);
  u.lang="hi-IN";
+ speechSynthesis.cancel();
  speechSynthesis.speak(u);
 }
 function toggleVoice(){voiceOn=!voiceOn;}
@@ -142,8 +126,10 @@ function addMsg(t,c){
  d.className=c;
  d.innerHTML=t;
  chat.appendChild(d);
+ chat.scrollTop=chat.scrollHeight;
  localStorage.setItem("backup",chat.innerHTML);
 }
+
 function send(){
  let q=input.value.trim();
  if(!q) return;
@@ -152,55 +138,33 @@ function send(){
  answer(q.toLowerCase());
 }
 
-/* DUAS */
-const duas=[
-{key:["sone"],text:"Allahumma bismika amutu wa ahya"},
-{key:["uthne"],text:"Alhamdu lillahillazi ahyana"},
-{key:["khane"],text:"Bismillah"},
-{key:["pani"],text:"Bismillah"},
-{key:["ilm"],text:"Rabbi zidni ilma"},
-{key:["sehat"],text:"Allahumma afiyah"}
-];
-
 function answer(q){
- let a="",found=false;
- if(q.includes("salam")){a="Wa Alaikum Assalam";found=true;}
- if(!found){
-  for(let d of duas){
-   for(let k of d.key){
-    if(q.includes(k)){a=d.text;found=true;}
-   }
-  }
- }
- if(!found){
-  a="Search on Google";
+ let a="";
+ if(q.includes("salam")) a="Wa Alaikum Assalam";
+ else if(q.includes("dua")) a="Allah aapko kamyabi de. Ameen.";
+ else{
+  let link="https://www.google.com/search?q="+encodeURIComponent(q);
+  a=`<a href="${link}" target="_blank">Open Search</a>`;
  }
  addMsg("Answer: "+a,"bot");
  speak(a);
 }
 
+/* BACKUP */
 chat.innerHTML=localStorage.getItem("backup")||"Welcome to Mohd Aatif AI";
 
+/* CLEAR */
 function clearChat(){
  localStorage.removeItem("backup");
  chat.innerHTML="";
 }
 
-/* PAGES */
-function openPage(id){
- document.querySelectorAll(".page").forEach(p=>p.style.display="none");
- chat.style.display="none";
- document.getElementById(id).style.display="block";
-}
-function closePages(){
- document.querySelectorAll(".page").forEach(p=>p.style.display="none");
- chat.style.display="flex";
-}
-
-/* CALC */
+/* CALCULATOR */
 function calc(){
  let v=document.getElementById("calcInput").value;
- document.getElementById("calcRes").innerText=eval(v);
+ try{
+  document.getElementById("calcRes").innerText=Function('"use strict";return ('+v+')')();
+ }catch{document.getElementById("calcRes").innerText="Error";}
 }
 
 /* NOTES */
@@ -211,22 +175,24 @@ function saveNote(){
 noteBox.value=localStorage.getItem("note")||"";
 
 /* PDF */
-function makePDF(){
- window.print();
-}
+function makePDF(){window.print();}
 
 /* SCAN */
 function scan(){
- alert("Use camera scan app");
+ navigator.mediaDevices.getUserMedia({video:true})
+ .then(()=>alert("Camera Opened"))
+ .catch(()=>alert("Permission Denied"));
 }
 
-/* GAME */
-const letters=["ا","ب","ت","ث","ج"];
-let i=0;
-function nextLetter(){
- i=(i+1)%letters.length;
- letter.innerText=letters[i];
- speak(letters[i]);
+/* PAGES */
+function openPage(id){
+ chat.style.display="none";
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ document.getElementById(id).style.display="block";
+}
+function closePages(){
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ chat.style.display="flex";
 }
 </script>
 
