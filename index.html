@@ -1,109 +1,111 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Mohd Aatif AI</title>
+
 <style>
 body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
-header img{width:50px;height:50px;border-radius:50%;border:2px solid gold;margin-right:10px;}
-h1{color:gold;font-size:22px;flex:1;}
-#chat{height:60vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
+header img{width:45px;height:45px;border-radius:50%;border:2px solid gold;margin-right:10px;}
+h1{color:gold;font-size:20px;flex:1;margin:0;}
+.iconBtn{background:gold;border:none;padding:8px;border-radius:50%;margin-left:5px;}
+#chat{height:55vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
 .user{background:#1e88e5;align-self:flex-end;}
 .bot{background:#333;border-left:4px solid gold;}
 #inputArea{display:flex;padding:10px;background:#111;}
 #input{flex:1;padding:10px;border-radius:20px;border:none;}
-button{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;cursor:pointer;}
+button{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;}
 footer{text-align:center;padding:10px;color:gold;}
 .page{display:none;padding:15px;}
-a{color:#00e5ff;}
-/* 3-dot menu */
-.menu{position:relative;display:inline-block;}
-.menu-content{display:none;position:absolute;right:0;background:#222;color:#fff;min-width:180px;border:1px solid gold;border-radius:5px;z-index:100;}
-.menu-content button{display:block;width:100%;background:#222;color:#fff;border:none;text-align:left;padding:10px;cursor:pointer;border-bottom:1px solid gold;}
-.menu-content button:last-child{border-bottom:none;}
-.menu:hover .menu-content{display:block;}
-#gameBox, #cameraBox, #calculatorBox, #notesBox, #pdfBox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:white;z-index:99;text-align:center;padding:20px;overflow:auto;}
+#toolsMenu{display:none;position:fixed;top:60px;right:10px;background:#222;border:1px solid gold;border-radius:10px;padding:10px;z-index:99;}
+.toolBtn{display:block;width:100%;margin:5px 0;}
+textarea{width:100%;height:150px;}
 </style>
 </head>
-<body><header>
+
+<body>
+
+<header>
 <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
 <h1>Mohd Aatif AI</h1>
-<button onclick="toggleVoice()">🎤</button>
-<button onclick="clearChat()">🗑</button>
-<div class="menu">
-  ☰ Tools
-  <div class="menu-content">
-    <button onclick="openCalculator()">Calculator</button>
-    <button onclick="openNotes()">Notes</button>
-    <button onclick="openPDF()">PDF Maker</button>
-    <button onclick="openCamera()">Camera</button>
-    <button onclick="openGame()">Mini Game</button>
-  </div>
-</div>
-</header><div id="chat"></div>
+<button class="iconBtn" onclick="toggleMic()">🎤</button>
+<button class="iconBtn" onclick="toggleTools()">⋮</button>
+</header>
+
+<div id="chat"></div>
+
 <div id="inputArea">
 <input id="input" placeholder="Ask anything...">
 <button onclick="send()">Send</button>
-</div><footer>
+</div>
+
+<footer>
 <span onclick="openPage('about')">About</span> |
 <span onclick="openPage('privacy')">Privacy</span> |
 <span onclick="openPage('contact')">Contact</span>
-</footer><!-- Pages --><div id="about" class="page">
+</footer>
+
+<!-- TOOLS MENU -->
+<div id="toolsMenu">
+<button class="toolBtn" onclick="openCalc()">Calculator</button>
+<button class="toolBtn" onclick="openNotes()">Notes</button>
+<button class="toolBtn" onclick="makePDF()">PDF Download</button>
+</div>
+
+<!-- PAGES -->
+<div id="about" class="page">
 <h2>About</h2>
-<p>Mohd Aatif AI is a smart assistant created by Mohd Aatif. It can answer questions, provide Duas, help with tools like Calculator, Notes, PDF Maker, Camera, and Mini Games. This software was created by Mohd Aatif to assist users with learning and daily tasks. Soon it will be upgraded to AI intelligent version.</p>
+<p>Mohd Aatif AI is a smart assistant software created by Mohd Aatif.  
+This software is under development and will become more intelligent over time.</p>
 <button onclick="closePages()">Back</button>
-</div><div id="privacy" class="page">
+</div>
+
+<div id="privacy" class="page">
 <h2>Privacy</h2>
-<p>No personal data is stored except chat backup in your browser. All tools run locally.</p>
+<p>No personal data is stored. Chat history is saved only in your browser.</p>
 <button onclick="closePages()">Back</button>
-</div><div id="contact" class="page">
+</div>
+
+<div id="contact" class="page">
 <h2>Contact</h2>
 <p>Email: draatifdratif@gmail.com</p>
 <button onclick="closePages()">Back</button>
-</div><!-- Calculator Box --><div id="calculatorBox">
+</div>
+
+<!-- CALCULATOR -->
+<div id="calc" class="page">
 <h2>Calculator</h2>
-<input type="text" id="calcInput" placeholder="Enter expression"><button onclick="calcResult()">=</button>
-<p id="calcOutput"></p>
-<button onclick="closeCalculator()">Back</button>
-</div><!-- Notes Box --><div id="notesBox">
+<input id="calcInput">
+<button onclick="calcResult()">=</button>
+<p id="calcOut"></p>
+<button onclick="closePages()">Back</button>
+</div>
+
+<!-- NOTES -->
+<div id="notes" class="page">
 <h2>Notes</h2>
-<textarea id="notesArea" style="width:90%;height:60%;"></textarea><br>
-<button onclick="saveNotes()">Save Notes</button>
-<button onclick="closeNotes()">Back</button>
-</div><!-- PDF Box --><div id="pdfBox">
-<h2>PDF Maker</h2>
-<textarea id="pdfText" style="width:90%;height:60%;"></textarea><br>
-<button onclick="downloadPDF()">Download PDF</button>
-<button onclick="closePDF()">Back</button>
-</div><!-- Camera Box --><div id="cameraBox">
-<h2>Camera</h2>
-<video id="video" width="300" height="200" autoplay></video><br>
-<button onclick="capturePhoto()">Capture</button>
-<canvas id="canvas" width="300" height="200" style="display:none;"></canvas><br>
-<button onclick="closeCamera()">Back</button>
-</div><!-- Game Box --><div id="gameBox">
-<h2>Mini Tap Game</h2>
-<p id="score">Score: 0</p>
-<button onclick="tap()">TAP ME</button><br><br>
-<button onclick="closeGame()">Back</button>
-</div><script>
-let voiceOn=true;
+<textarea id="noteArea"></textarea>
+<button onclick="saveNote()">Save</button>
+<button onclick="closePages()">Back</button>
+</div>
+
+<script>
+let micOn=false;
 const chat=document.getElementById("chat");
 const input=document.getElementById("input");
 
-/* VOICE */
+/* SPEAK */
 function speak(t){
- if(!voiceOn) return;
- let u=new SpeechSynthesisUtterance(t.replace(/<[^>]*>/g,""));
- u.lang="hi-IN";
- speechSynthesis.cancel();
+ if(!micOn) return;
+ let u=new SpeechSynthesisUtterance(t);
  speechSynthesis.speak(u);
 }
-function toggleVoice(){voiceOn=!voiceOn;}
+function toggleMic(){micOn=!micOn;}
 
-/* MESSAGE */
+/* CHAT */
 function addMsg(t,c){
  let d=document.createElement("div");
  d.className=c;
@@ -112,6 +114,7 @@ function addMsg(t,c){
  chat.scrollTop=chat.scrollHeight;
  localStorage.setItem("backup",chat.innerHTML);
 }
+
 function send(){
  let q=input.value.trim();
  if(!q) return;
@@ -120,93 +123,66 @@ function send(){
  answer(q.toLowerCase());
 }
 
-/* DUAS */
-const duas=[
-{key:["sone"],text:"Sone ki Dua: Allahumma bismika amutu wa ahya."},
-{key:["uthne"],text:"Uthne ki Dua: Alhamdu lillahil-lazi ahyana."},
-{key:["khane"],text:"Khane se pehle Bismillah, baad Alhamdulillah."},
-{key:["pani"],text:"Pani peene ki Dua: Bismillah."},
-{key:["ilm","padhai"],text:"Rabbi zidni ilma."},
-{key:["imtihan","exam"],text:"Rabbi yassir wala tuassir."},
-{key:["sehat"],text:"Allahumma inni as'alukal afiyah."},
-{key:["subah"],text:"Allahumma bika asbahna."},
-{key:["shaam"],text:"Allahumma bika amsayna."},
-{key:["maafi"],text:"Astaghfirullah."},
-{key:["rozi","rizq"],text:"Allahumma barik lana."},
-{key:["parents"],text:"Rabbir hamhuma kama rabbayani."},
-{key:["dost"],text:"Allahumma ihfazhu."},
-{key:["jannat"],text:"Allahumma inni as'alukal jannah."},
-{key:["musibat"],text:"Inna lillahi wa inna ilaihi rajiun."},
-{key:["mohd aatif"],text:"Mohd Aatif created me. I am running software made by Mohd Aatif. Soon I will be upgraded to AI intelligent version."}
-];
-
+/* ANSWER */
 function answer(q){
- let a="", speakText="", found=false;
- if(q.includes("salam")){a="Wa Alaikum Assalam";speakText=a;found=true;}
- if(!found){
-  for(let d of duas){
-   for(let k of d.key){
-    if(q.includes(k)){a=d.text;speakText=d.text;found=true;break;}
-   }
-   if(found) break;
-  }
+ let a="";
+
+ if(q.includes("mohd aatif") || q.includes("kaun")){
+  a="Mohd Aatif ek creator aur developer hain. Unhone mujhe software ke roop me banaya hai. Main future me intelligent AI banunga.";
  }
- if(!found){
+ else{
   let link="https://www.google.com/search?q="+encodeURIComponent(q);
-  a=`<a href="${link}" target="_blank">Open Search</a><br>Mohd Aatif AI ne dhundh nikala.`;
-  speakText="Search dhundh nikala";
+  a=`<a href="${link}" target="_blank">Open Search</a>`;
  }
+
  addMsg("Answer: "+a,"bot");
- speak(speakText);
+ speak(a);
 }
 
 /* BACKUP */
 chat.innerHTML=localStorage.getItem("backup")||"Welcome to Mohd Aatif AI";
 
-/* CLEAR */
-function clearChat(){localStorage.removeItem("backup");chat.innerHTML="";}
+/* TOOLS */
+function toggleTools(){
+ let m=document.getElementById("toolsMenu");
+ m.style.display=m.style.display=="block"?"none":"block";
+}
 
 /* PAGES */
-function openPage(id){chat.style.display="none";document.querySelectorAll(".page").forEach(p=>p.style.display="none");document.getElementById(id).style.display="block";}
-function closePages(){document.querySelectorAll(".page").forEach(p=>p.style.display="none");chat.style.display="flex";}
+function openPage(id){
+ chat.style.display="none";
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ document.getElementById(id).style.display="block";
+}
+function closePages(){
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ chat.style.display="flex";
+}
 
-/* CALCULATOR */
-function openCalculator(){document.getElementById('calculatorBox').style.display='block';}
-function closeCalculator(){document.getElementById('calculatorBox').style.display='none';}
+/* CALC */
+function openCalc(){openPage('calc');}
 function calcResult(){
- let expr=document.getElementById('calcInput').value;
- try{document.getElementById('calcOutput').innerText=eval(expr);}catch{document.getElementById('calcOutput').innerText='Error';}
+ let v=document.getElementById("calcInput").value;
+ document.getElementById("calcOut").innerText=eval(v);
 }
 
 /* NOTES */
-function openNotes(){document.getElementById('notesBox').style.display='block';}
-function closeNotes(){document.getElementById('notesBox').style.display='none';}
-function saveNotes(){localStorage.setItem('mynotes',document.getElementById('notesArea').value);alert('Notes saved');}
-window.onload=function(){if(localStorage.getItem('mynotes')){document.getElementById('notesArea').value=localStorage.getItem('mynotes');}};
+function openNotes(){openPage('notes');}
+function saveNote(){
+ localStorage.setItem("note",document.getElementById("noteArea").value);
+}
+document.getElementById("noteArea").value=localStorage.getItem("note")||"";
 
 /* PDF */
-function openPDF(){document.getElementById('pdfBox').style.display='block';}
-function closePDF(){document.getElementById('pdfBox').style.display='none';}
-function downloadPDF(){
- let text=document.getElementById('pdfText').value;
- let blob=new Blob([text],{type:'application/pdf'});
- let a=document.createElement('a');
+function makePDF(){
+ let text=chat.innerText;
+ let blob=new Blob([text],{type:"text/plain"});
+ let a=document.createElement("a");
  a.href=URL.createObjectURL(blob);
- a.download='document.pdf';
+ a.download="chat.txt";
  a.click();
 }
+</script>
 
-/* CAMERA */
-function openCamera(){document.getElementById('cameraBox').style.display='block';
-navigator.mediaDevices.getUserMedia({video:true}).then(stream=>{document.getElementById('video').srcObject=stream;}).catch(()=>alert('Camera not available'));
-}
-function closeCamera(){document.getElementById('cameraBox').style.display='none';let video=document.getElementById('video');if(video.srcObject){video.srcObject.getTracks().forEach(track=>track.stop());}}
-function capturePhoto(){let canvas=document.getElementById('canvas');let video=document.getElementById('video');canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);let img=canvas.toDataURL('image/png');let w=window.open('');w.document.write(`<img src="${img}">`);}
-
-/* MINI GAME */
-let score=0;
-function openGame(){document.getElementById('gameBox').style.display='block';score=0;document.getElementById('score').innerText='Score: 0';}
-function closeGame(){document.getElementById('gameBox').style.display='none';}
-function tap(){score++;document.getElementById('score').innerText='Score: '+score;}
-</script></body>
+</body>
 </html>
