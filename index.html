@@ -10,7 +10,7 @@ body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
 header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
 header img{width:45px;height:45px;border-radius:50%;border:2px solid gold;margin-right:8px;}
 h1{color:gold;font-size:20px;flex:1;}
-button{background:gold;border:none;padding:8px 12px;border-radius:20px;margin:3px;}
+button{background:gold;border:none;padding:8px 12px;border-radius:20px;margin:3px;cursor:pointer;}
 #chat{height:45vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
 .user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
 .user{background:#1e88e5;align-self:flex-end;}
@@ -19,9 +19,10 @@ button{background:gold;border:none;padding:8px 12px;border-radius:20px;margin:3p
 #input{flex:1;padding:10px;border-radius:20px;border:none;}
 footer{text-align:center;padding:10px;color:gold;}
 .page{display:none;padding:15px;}
-.tool{background:#111;padding:10px;margin:5px;border-radius:10px;}
-a{color:#00e5ff;}
+.tool{background:#111;padding:10px;margin:8px;border-radius:10px;}
+a{color:#00e5ff;text-decoration:none;}
 textarea,input{width:95%;padding:8px;margin:5px;border-radius:8px;}
+.searchBtn{display:inline-block;background:#00e5ff;color:#000;padding:8px 12px;border-radius:15px;}
 </style>
 </head>
 
@@ -41,7 +42,6 @@ textarea,input{width:95%;padding:8px;margin:5px;border-radius:8px;}
 <button onclick="send()">Send</button>
 </div>
 
-<!-- TOOLS -->
 <div style="text-align:center">
 <button onclick="openPage('tools')">TOOLS</button>
 <button onclick="openPage('about')">About</button>
@@ -49,7 +49,7 @@ textarea,input{width:95%;padding:8px;margin:5px;border-radius:8px;}
 <button onclick="openPage('contact')">Contact</button>
 </div>
 
-<!-- TOOLS PAGE -->
+<!-- TOOLS -->
 <div id="tools" class="page">
 <h2>TOOLS</h2>
 
@@ -68,17 +68,18 @@ textarea,input{width:95%;padding:8px;margin:5px;border-radius:8px;}
 
 <div class="tool">
 <h3>PDF Maker</h3>
-<button onclick="makePDF()">Create PDF</button>
+<textarea id="pdfText" rows="4" placeholder="Write text for PDF"></textarea>
+<button onclick="makePDF()">Download PDF</button>
 </div>
 
 <div class="tool">
-<h3>Scanner</h3>
+<h3>Scanner (Camera)</h3>
 <button onclick="scan()">Open Camera</button>
 </div>
 
 <div class="tool">
 <h3>Namaz Time</h3>
-<a href="https://www.islamicfinder.org/prayer-times/" target="_blank">Open Namaz Time</a>
+<a href="https://www.islamicfinder.org/prayer-times/" target="_blank" class="searchBtn">Open Namaz Time</a>
 </div>
 
 <button onclick="closePages()">Back</button>
@@ -87,14 +88,14 @@ textarea,input{width:95%;padding:8px;margin:5px;border-radius:8px;}
 <!-- ABOUT -->
 <div id="about" class="page">
 <h2>About</h2>
-<p>Mohd Aatif AI is a smart assistant providing Islamic help, tools and search support in simple language.</p>
+<p>Mohd Aatif AI is a smart assistant providing Islamic help, tools and search support professionally.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
 <!-- PRIVACY -->
 <div id="privacy" class="page">
 <h2>Privacy</h2>
-<p>No personal data is stored. Only chat and notes are saved in your browser.</p>
+<p>No personal data is stored. Only chat and notes are saved locally in your browser.</p>
 <button onclick="closePages()">Back</button>
 </div>
 
@@ -105,6 +106,9 @@ textarea,input{width:95%;padding:8px;margin:5px;border-radius:8px;}
 <button onclick="closePages()">Back</button>
 </div>
 
+<!-- PDF LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
 let voiceOn=true;
 const chat=document.getElementById("chat");
@@ -113,7 +117,7 @@ const input=document.getElementById("input");
 /* VOICE */
 function speak(t){
  if(!voiceOn) return;
- let u=new SpeechSynthesisUtterance(t);
+ let u=new SpeechSynthesisUtterance(t.replace(/<[^>]*>/g,""));
  u.lang="hi-IN";
  speechSynthesis.cancel();
  speechSynthesis.speak(u);
@@ -144,7 +148,7 @@ function answer(q){
  else if(q.includes("dua")) a="Allah aapko kamyabi de. Ameen.";
  else{
   let link="https://www.google.com/search?q="+encodeURIComponent(q);
-  a=`<a href="${link}" target="_blank">Open Search</a>`;
+  a=`<a class="searchBtn" href="${link}" target="_blank">Open Google Search</a>`;
  }
  addMsg("Answer: "+a,"bot");
  speak(a);
@@ -159,25 +163,29 @@ function clearChat(){
  chat.innerHTML="";
 }
 
-/* CALCULATOR */
+/* CALC */
 function calc(){
- let v=document.getElementById("calcInput").value;
  try{
-  document.getElementById("calcRes").innerText=Function('"use strict";return ('+v+')')();
- }catch{document.getElementById("calcRes").innerText="Error";}
+  calcRes.innerText=Function('"use strict";return ('+calcInput.value+')')();
+ }catch{calcRes.innerText="Error";}
 }
 
 /* NOTES */
+noteBox.value=localStorage.getItem("note")||"";
 function saveNote(){
  localStorage.setItem("note",noteBox.value);
  alert("Saved");
 }
-noteBox.value=localStorage.getItem("note")||"";
 
-/* PDF */
-function makePDF(){window.print();}
+/* REAL PDF */
+function makePDF(){
+ const { jsPDF } = window.jspdf;
+ const doc = new jsPDF();
+ doc.text(pdfText.value,10,10);
+ doc.save("aatif.pdf");
+}
 
-/* SCAN */
+/* CAMERA */
 function scan(){
  navigator.mediaDevices.getUserMedia({video:true})
  .then(()=>alert("Camera Opened"))
