@@ -1,189 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Mohd Aatif AI</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohd Aatif AI - Islamic Knowledge Base</title>
+    <style>
+        :root { --gold: #D4AF37; --dark-bg: #050505; --msg-user: #1a73e8; --msg-bot: #1e1e1e; }
+        body { margin: 0; background: var(--dark-bg); color: #e0e0e0; font-family: 'Segoe UI', Arial, sans-serif; }
+        
+        /* Header & Branding */
+        header { display: flex; align-items: center; padding: 15px; border-bottom: 2px solid var(--gold); background: #111; position: sticky; top: 0; z-index: 1000; }
+        header img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold); margin-right: 12px; }
+        header h1 { color: var(--gold); font-size: 1.2rem; flex: 1; margin: 0; letter-spacing: 1px; }
 
-<style>
-body{margin:0;background:#000;color:#fff;font-family:sans-serif;}
-header{display:flex;align-items:center;padding:10px;border-bottom:2px solid gold;}
-header img{width:45px;height:45px;border-radius:50%;border:2px solid gold;margin-right:10px;}
-h1{color:gold;font-size:20px;flex:1;}
-.icon{background:gold;border:none;border-radius:50%;width:40px;height:40px;margin-left:5px;cursor:pointer;}
+        /* Chat Display */
+        #chat { height: 72vh; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+        .msg { padding: 12px 16px; border-radius: 18px; max-width: 85%; line-height: 1.6; font-size: 16px; position: relative; }
+        .user { background: var(--msg-user); align-self: flex-end; border-bottom-right-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .bot { background: var(--msg-bot); border-left: 4px solid var(--gold); align-self: flex-start; border-bottom-left-radius: 2px; }
+        
+        /* Specialized Content Styling */
+        .dua-box { background: #2c2c2c; padding: 10px; border-radius: 8px; margin-top: 8px; border: 1px dashed var(--gold); }
+        .arabic { font-size: 20px; color: #fff; display: block; margin-bottom: 5px; text-align: right; font-family: 'Amiri', serif; }
 
-#chat{height:58vh;overflow:auto;padding:10px;display:flex;flex-direction:column;}
-.user,.bot{margin:5px;padding:10px;border-radius:10px;max-width:80%;}
-.user{background:#1e88e5;align-self:flex-end;}
-.bot{background:#333;border-left:4px solid gold;}
+        /* Controls */
+        #inputArea { display: flex; padding: 15px; background: #111; gap: 8px; border-top: 1px solid #333; }
+        #input { flex: 1; padding: 12px 18px; border-radius: 30px; border: 1px solid #444; background: #000; color: white; outline: none; }
+        .btn-send { background: var(--gold); border: none; padding: 10px 22px; border-radius: 30px; font-weight: bold; cursor: pointer; color: #000; }
 
-#inputArea{display:flex;padding:10px;background:#111;}
-#input{flex:1;padding:12px;border-radius:20px;border:none;color:white;background:#222;}
-button.send{background:gold;border:none;padding:10px 15px;border-radius:20px;margin-left:5px;cursor:pointer;}
-
-footer{text-align:center;padding:10px;color:gold;cursor:pointer;}
-.page{display:none;padding:15px;background:#111;border-top:2px solid gold;}
-
-#tools{display:none;position:fixed;top:60px;right:10px;background:#222;border:1px solid gold;border-radius:10px;padding:10px;}
-.toolBtn{display:block;background:gold;border:none;margin:5px 0;padding:8px;border-radius:6px;width:120px;cursor:pointer;}
-a.searchBtn{text-decoration:none;color:black;font-weight:bold;}
-</style>
+        /* Pages */
+        .page { display: none; padding: 20px; background: #000; position: fixed; inset: 0; z-index: 2000; overflow-y: auto; }
+        .footer-links { text-align: center; padding: 10px; font-size: 13px; color: var(--gold); cursor: pointer; }
+    </style>
 </head>
-
 <body>
 
 <header>
-<img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg">
-<h1>Mohd Aatif AI</h1>
-<button class="icon" onclick="clearChat()">🗑</button>
-<button class="icon" onclick="toggleTools()">⋮</button>
+    <img src="https://i.postimg.cc/bJMkPCSv/1000066557.jpg" alt="Aatif">
+    <h1>Mohd Aatif AI</h1>
+    <button onclick="clearChat()" style="background:none; border:1px solid gold; color:gold; border-radius:5px; cursor:pointer;">🗑️ Clear</button>
 </header>
 
 <div id="chat"></div>
 
 <div id="inputArea">
-<input id="input" placeholder="Ask anything...">
-<button class="send" onclick="send()">Send</button>
+    <input id="input" type="text" placeholder="Koi bhi Dua ya Masla puchein...">
+    <button class="btn-send" onclick="send()">Batao</button>
 </div>
 
-<footer>
-<span onclick="openPage('about')">About</span> |
-<span onclick="openPage('privacy')">Privacy</span> |
-<span onclick="openPage('contact')">Contact</span>
-</footer>
-
-<!-- TOOLS -->
-<div id="tools">
-<button class="toolBtn" onclick="calc()">Calculator</button>
-<button class="toolBtn" onclick="note()">Notes</button>
+<div class="footer-links">
+    <span onclick="togglePage('about')">About Creator</span> | 
+    <span onclick="togglePage('guide')">Kaise Use Karein?</span>
 </div>
 
-<!-- PAGES -->
 <div id="about" class="page">
-<h2>About</h2>
-<p>Mohd Aatif AI is a smart assistant software created by Mohd Aatif.  
-This AI is under development and will become more intelligent in the future.</p>
-<button onclick="closePages()">Back</button>
-</div>
-
-<div id="privacy" class="page">
-<h2>Privacy</h2>
-<p>No personal data is stored on servers. Only chat backup is saved in your browser for convenience.</p>
-<button onclick="closePages()">Back</button>
-</div>
-
-<div id="contact" class="page">
-<h2>Contact</h2>
-<p>Email: draatifdratif@gmail.com</p>
-<button onclick="closePages()">Back</button>
+    <h2 style="color:var(--gold)">Mohd Aatif</h2>
+    <p>Main ek Digital Islamic Assistant hoon jise <b>Mohd Aatif</b> ne banaya hai.</p>
+    <button onclick="togglePage('about')" class="btn-send">Back</button>
 </div>
 
 <script>
-const chat=document.getElementById("chat");
-const input=document.getElementById("input");
+// --- BIG DATABASE (Aap yahan hazaron line add kar sakte hain) ---
+const ISLAMIC_DB = {
+    // RAMZAN SPECIAL
+    "sehri": "<b>Sehri ki Niyat:</b><div class='dua-box'><span class='arabic'>وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</span><br><i>Wa bi-sawmi ghadinn nawaytu min shahri ramadan.</i></div>",
+    "iftar": "<b>Iftar ki Dua:</b><div class='dua-box'><span class='arabic'>اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امنْتُ [وَعَلَيْكَ تَوَكَّلْتُ] وَعَلَى رِزْقِكَ اَفْطَرْتُ</span><br><i>Allahumma inni laka sumtu wa bika aamantu wa 'ala rizqika aftartu.</i></div>",
+    "taraweeh": "Taraweeh ki dua har 4 rakah ke baad padhi jati hai: 'Subhana dhil Mulki wal Malakut...'",
+    
+    // DAILY DUA
+    "sone ki dua": "<b>Sone ki Dua:</b><div class='dua-box'>Allahumma bismika amutu wa ahya.</div>",
+    "utne ki dua": "<b>Neend se utne ki Dua:</b><div class='dua-box'>Alhamdulillahilladhi ahyana ba'da ma amatana wa ilayhin-nushur.</div>",
+    "khane ki dua": "<b>Khana shuru karne ki Dua:</b><div class='dua-box'>Bismillahi wa 'ala barakatillah.</div>",
+    "ghar se nikalne": "<b>Ghar se nikalte waqt:</b><div class='dua-box'>Bismillahi tawakkaltu 'alallah, la hawla wa la quwwata illa billah.</div>",
+    
+    // IMPORTANT TOPICS
+    "namaz": "Namaz ke 7 faraiz hain. Kya aapko namaz ka tareeqa ya auqat (timing) janna hai?",
+    "zakat": "Zakat maal ko pak karti hai. Agar aapke paas 7.5 tola sona ya 52.5 tola chandi ke barabar raqam 1 saal se hai, toh 2.5% zakat dena farz hai.",
+    "aatif": "Mohd Aatif mere creator hain, unhone mujhe deen ki khidmat ke liye banaya hai.",
+    "quran": "Quran mein 114 Surah hain. Sabse pehli Surah 'Al-Fatiha' hai aur aakhri 'An-Nas'.",
+    
+    // SHIFA/MUSHIKL
+    "pareshani": "Pareshani mein 'Ya Hayyu Ya Qayyum bi-rahmatika astagheeth' padhein aur 'Hasbunallahu wa ni'mal wakeel' ka zikr karein."
+};
 
-/* BACKUP */
-function saveBackup(){localStorage.setItem("backup",chat.innerHTML);}
-function loadBackup(){chat.innerHTML=localStorage.getItem("backup")||"";}
-loadBackup();
+const chat = document.getElementById("chat");
+const input = document.getElementById("input");
 
-/* VOICE */
-function speak(text){
- let u=new SpeechSynthesisUtterance(text);
- u.lang="hi-IN";
- u.rate=0.9;
- speechSynthesis.cancel();
- speechSynthesis.speak(u);
+function addMsg(text, type) {
+    let d = document.createElement("div");
+    d.className = `msg ${type}`;
+    d.innerHTML = text;
+    chat.appendChild(d);
+    chat.scrollTop = chat.scrollHeight;
 }
 
-/* MESSAGE */
-function addMsg(t,c){
- let d=document.createElement("div");
- d.className=c;
- d.innerHTML=t;
- chat.appendChild(d);
- chat.scrollTop=chat.scrollHeight;
- saveBackup();
+function send() {
+    let q = input.value.trim().toLowerCase();
+    if (!q) return;
+
+    addMsg(input.value, "user");
+    input.value = "";
+
+    setTimeout(() => {
+        let found = false;
+        let response = "";
+
+        // Smart Search Logic
+        for (let key in ISLAMIC_DB) {
+            if (q.includes(key)) {
+                response = ISLAMIC_DB[key];
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            response = "Maaf kijiyega, is bare mein meri malumat abhi kam hai. Lekin aap Mohd Aatif se pooch sakte hain ya niche search karein:<br><br><a href='https://www.google.com/search?q=Islamic+dua+for+" + q + "' target='_blank' style='color:gold'>Click here to Search on Google</a>";
+        }
+
+        addMsg("<b>Aatif AI:</b><br>" + response, "bot");
+    }, 600);
 }
 
-function send(){
- let q=input.value.trim();
- if(!q) return;
- input.value="";
- addMsg(q,"user");
- answer(q.toLowerCase());
-}
+function clearChat() { chat.innerHTML = ""; addMsg("Assalamu Alaikum! Main Mohd Aatif AI hoon. Main Ramzan aur Deen ki har chiz mein aapki madad karunga.", "bot"); }
+function togglePage(id) { let p = document.getElementById(id); p.style.display = (p.style.display === "block") ? "none" : "block"; }
 
-/* ANSWER */
-function answer(q){
- let a="";
-
- if(q.includes("salam")||q.includes("assalam")){
-  a="Wa Alaikum Assalam Rahmatullah";
- }
- else if(q.includes("kaun ho")){
-  a="Main Mohd Aatif AI hoon. Ek smart assistant software.";
- }
- else if(q.includes("kisne banaya")){
-  a="Mujhe Mohd Aatif ne create kiya hai.";
- }
- else if(q.includes("mohd aatif")){
-  a="Mohd Aatif ek creator aur developer hain jinhone mujhe banaya.";
- }
- else if(/\d+[\+\-\*\/]\d+/.test(q)){
-  try{
-    a="Result: "+eval(q);
-  }catch(e){
-    a="Calculation error";
-  }
- }
- else{
-  let link="https://www.google.com/search?q="+encodeURIComponent(q);
-  a=`Mohd Aatif AI ne search kar liya.<br>
-  <a class="searchBtn" target="_blank" href="${link}">Is par click karke dekh sakte ho</a>`;
- }
-
- addMsg("Answer: "+a,"bot");
- speak(a.replace(/<[^>]*>/g,""));
-}
-
-/* CLEAR */
-function clearChat(){chat.innerHTML="";saveBackup();}
-
-/* TOOLS */
-function toggleTools(){
- let t=document.getElementById("tools");
- t.style.display=t.style.display==="block"?"none":"block";
-}
-
-function calc(){
- let r=prompt("Enter calculation:");
- if(r){ 
-   try{ addMsg("Result: "+eval(r),"bot"); }
-   catch(e){ addMsg("Calculation error","bot"); }
- }
-}
-
-function note(){
- let n=prompt("Write note:");
- if(n){localStorage.setItem("note",n);alert("Saved");}
-}
-
-/* PAGES */
-function openPage(id){
- chat.style.display="none";
- document.querySelectorAll(".page").forEach(p=>p.style.display="none");
- document.getElementById(id).style.display="block";
-}
-function closePages(){
- document.querySelectorAll(".page").forEach(p=>p.style.display="none");
- chat.style.display="flex";
-}
-
-/* WELCOME */
-if(chat.innerHTML===""){
- addMsg("Assalamualaikum! Main Mohd Aatif AI hoon. Aap kya poochna chahte hain?","bot");
-}
+// Start Welcome
+window.onload = () => { addMsg("Assalamu Alaikum! Main Mohd Aatif AI hoon. Ramzan ke masail ya koi bhi Dua puchein.", "bot"); };
 </script>
 
 </body>
