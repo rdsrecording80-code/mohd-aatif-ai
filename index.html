@@ -3,35 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohd Aatif AI - Islamic Ultimate Guide</title>
+    <title>Mohd Aatif AI</title>
     <style>
-        :root { --gold: #D4AF37; --dark: #000; --msg-bot: #1a1a1a; --msg-user: #0056b3; }
-        body { margin: 0; background: var(--dark); color: #fff; font-family: 'Segoe UI', Arial, sans-serif; overflow: hidden; }
+        :root { --gold: #D4AF37; --dark: #000; --blue: #1976d2; }
+        body { margin: 0; background: var(--dark); color: #fff; font-family: Arial, sans-serif; display: flex; flex-direction: column; height: 100vh; }
         
-        /* Layout */
-        header { display: flex; align-items: center; padding: 10px 15px; border-bottom: 2px solid var(--gold); background: #111; }
-        header img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold); margin-right: 10px; }
+        /* Header */
+        header { display: flex; align-items: center; padding: 10px 15px; border-bottom: 2px solid var(--gold); background: #111; flex-shrink: 0; }
+        header img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--gold); margin-right: 10px; }
         h1 { color: var(--gold); font-size: 18px; flex: 1; margin: 0; }
 
-        #chat { height: 70vh; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { padding: 12px; border-radius: 12px; max-width: 85%; font-size: 15px; line-height: 1.4; position: relative; }
-        .user { background: var(--msg-user); align-self: flex-end; border-bottom-right-radius: 2px; }
-        .bot { background: var(--msg-bot); border-left: 4px solid var(--gold); align-self: flex-start; border-bottom-left-radius: 2px; }
+        /* Main Chat Container */
+        #chat { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #050505; }
+        .user, .bot { padding: 12px; border-radius: 12px; max-width: 85%; line-height: 1.5; font-size: 15px; }
+        .user { background: var(--blue); align-self: flex-end; border-bottom-right-radius: 2px; }
+        .bot { background: #222; border-left: 4px solid var(--gold); align-self: flex-start; border-bottom-left-radius: 2px; }
 
-        #inputArea { display: flex; padding: 10px; background: #111; gap: 5px; border-top: 1px solid #333; }
-        #input { flex: 1; padding: 12px; border-radius: 25px; border: none; background: #222; color: #fff; outline: none; }
-        button.send-btn { background: var(--gold); border: none; width: 45px; height: 45px; border-radius: 50%; cursor: pointer; font-weight: bold; }
+        /* Input Section */
+        #inputArea { padding: 10px; background: #111; display: flex; gap: 8px; align-items: center; border-top: 1px solid #333; }
+        #input { flex: 1; padding: 12px 15px; border-radius: 25px; border: none; background: #222; color: #fff; outline: none; }
+        .send-btn { background: var(--gold); border: none; padding: 10px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; color: #000; }
 
-        footer { display: flex; justify-content: space-around; padding: 10px; background: #111; border-top: 1px solid #222; font-size: 12px; color: var(--gold); }
-        .nav-link { cursor: pointer; text-transform: uppercase; font-weight: bold; }
+        /* Navigation Footer */
+        footer { display: flex; justify-content: space-around; padding: 12px; background: #111; border-top: 1px solid #222; font-size: 12px; color: var(--gold); flex-shrink: 0; }
+        .nav-item { cursor: pointer; font-weight: bold; padding: 5px; }
 
-        /* Pages Overlay */
-        .page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; padding: 20px; box-sizing: border-box; overflow-y: auto; }
+        /* Full Screen Pages */
+        .page { display: none; position: fixed; inset: 0; background: #000; z-index: 1000; padding: 25px; overflow-y: auto; }
         .page h2 { color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 10px; }
-        .close-btn { background: var(--gold); color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+        .back-btn { background: var(--gold); color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin-top: 20px; }
         
-        .dua-card { background: #1a1a1a; border: 1px solid #333; padding: 10px; border-radius: 8px; margin: 10px 0; }
-        .arabic { display: block; font-size: 22px; text-align: right; margin-bottom: 5px; color: #fff; }
+        .dua-box { background: #1a1a1a; padding: 12px; border-radius: 8px; border: 1px dashed var(--gold); margin-top: 10px; }
+        .arabic { display: block; font-size: 22px; text-align: right; margin-bottom: 8px; color: #fff; line-height: 1.8; }
     </style>
 </head>
 <body>
@@ -45,84 +48,68 @@
 <div id="chat"></div>
 
 <div id="inputArea">
-    <input id="input" type="text" placeholder="Dua, Namaz, Ramzan ya Masail puchein...">
-    <button class="send-btn" onclick="send()">Go</button>
+    <input id="input" type="text" placeholder="Ask Mohd Aatif AI...">
+    <button class="send-btn" onclick="send()">Send</button>
 </div>
 
 <footer>
-    <span class="nav-link" onclick="openPage('home-page')">Home</span>
-    <span class="nav-link" onclick="openPage('about-page')">About</span>
-    <span class="nav-link" onclick="openPage('privacy-page')">Privacy</span>
-    <span class="nav-link" onclick="openPage('contact-page')">Contact</span>
+    <span class="nav-item" onclick="openPage('home-page')">HOME</span>
+    <span class="nav-item" onclick="openPage('about-page')">ABOUT</span>
+    <span class="nav-item" onclick="openPage('privacy-page')">PRIVACY</span>
+    <span class="nav-item" onclick="openPage('contact-page')">CONTACT</span>
 </footer>
 
 <div id="home-page" class="page">
-    <h2>Welcome</h2>
-    <p>Assalamualaikum! Yeh AI Mohd Aatif ne deen-e-Islam ki malumat ke liye banaya hai.</p>
-    <button class="close-btn" onclick="closePages()">Back to Chat</button>
+    <h2>Home</h2>
+    <p>Assalamualaikum! Yeh AI Mohd Aatif ne deen-e-Islam ki malumat phailane ke liye banaya hai.</p>
+    <button class="back-btn" onclick="closePages()">Back</button>
 </div>
 
 <div id="about-page" class="page">
-    <h2>About Creator</h2>
-    <p><b>Mohd Aatif</b> ek visionary developer hain jinhone is AI ko Islamic education aur Ramzan ki rehnumai ke liye design kiya hai.</p>
-    <button class="close-btn" onclick="closePages()">Back</button>
+    <h2>About</h2>
+    <p>Mohd Aatif AI ek intelligent assistant hai jo Islam, Namaz, aur Ramzan ke masail par roshni dalta hai.</p>
+    <button class="back-btn" onclick="closePages()">Back</button>
 </div>
 
 <div id="privacy-page" class="page">
-    <h2>Privacy Policy</h2>
-    <p>Aapki chat history sirf aapke phone (local storage) mein save hoti hai. Hum koi data server par store nahi karte.</p>
-    <button class="close-btn" onclick="closePages()">Back</button>
+    <h2>Privacy</h2>
+    <p>Aapka data safe hai. Yeh AI sirf aapke local browser mein history save karta hai.</p>
+    <button class="back-btn" onclick="closePages()">Back</button>
 </div>
 
 <div id="contact-page" class="page">
     <h2>Contact</h2>
     <p>Email: draatifdratif@gmail.com</p>
-    <button class="close-btn" onclick="closePages()">Back</button>
+    <button class="back-btn" onclick="closePages()">Back</button>
 </div>
 
 <script>
-// --- HUGE ISLAMIC DATABASE ---
 const DATA = {
-    // RAMZAN
-    "sehri": "<b>Sehri ki Dua:</b><div class='dua-card'><span class='arabic'>وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</span>Wa bi-sawmi ghadinn nawaytu min shahri ramadan.</div>",
-    "iftar": "<b>Iftar ki Dua:</b><div class='dua-card'><span class='arabic'>اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امنْتُ وَعَلَى رِزْقِكَ اَفْطَرْتُ</span>Allahumma inni laka sumtu wa bika aamantu wa 'ala rizqika aftartu.</div>",
-    "ramzan": "Ramzan barkaton wala mahina hai. Isme Roza, Namaz aur Quran ki tilawat ka dugna sawab milta hai.",
-    "taraweeh": "Taraweeh ki dua har 4 rakat ke baad: 'Subhana dhil Mulki wal Malakut...'",
-    
-    // DAILY DUA (Hazaron mein se mukhya)
-    "sone": "Sone ki dua: Allahumma bismika amutu wa ahya. ✨",
-    "uthne": "Neend se uthne ki dua: Alhamdulillahilladhi ahyana ba'da ma amatana wa ilayhin-nushur. ☀️",
-    "khana": "Khane se pehle: Bismillahi wa 'ala barakatillah. 🍽️",
-    "ghar se nikalne": "Bismillahi tawakkaltu 'alallah, la hawla wa la quwwata illa billah. 🏠",
-    "shifa": "Beemari ki dua: Allahumma rabban-nasi adhibil-ba'sa, ishfi wa antash-shafi. 🤲",
-    "wazu": "Wazu se pehle 'Bismillah' padhein aur baad mein 'Ash-hadu alla ilaha illallah...' 💧",
-
-    // GENERAL RULES
-    "namaz": "Namaz 5 waqt farz hai: Fajr, Dhuhr, Asr, Maghrib, Isha. Namaz jannat ki kunji hai. 🗝️",
-    "zakat": "Zakat har sahib-e-nisab par 2.5% farz hai jo gareebon ka haq hai.",
-    "creator": "Mujhe Mohd Aatif ne create kiya hai.",
-    "aatif": "Mohd Aatif mere admin hain aur ek nek insan hain.",
-    "music": "Islam mein ghair-sharai music aur gana mana hai. Deeni nashid sunna behtar hai."
+    "sehri": "<b>Sehri ki Dua:</b><div class='dua-box'><span class='arabic'>وَبِصَوْمِ غَدٍ نَّوَيْتُ مِنْ شَهْرِ رَمَضَانَ</span>Wa bi-sawmi ghadinn nawaytu min shahri ramadan.</div>",
+    "iftar": "<b>Iftar ki Dua:</b><div class='dua-box'><span class='arabic'>اللَّهُمَّ اِنِّى لَكَ صُمْتُ وَبِكَ امنْتُ وَعَلَى رِزْقِكَ اَفْطَرْتُ</span>Allahumma inni laka sumtu wa bika aamantu wa 'ala rizqika aftartu.</div>",
+    "namaz": "Namaz 5 waqt farz hai aur yeh Allah se rabte ka behtareen zariya hai.",
+    "quran": "Quran Majeed Allah ki aakhri kitab hai jo hidayat ka noor hai.",
+    "aatif": "Mohd Aatif mere creator hain, unhone mujhe aapki madad ke liye banaya hai.",
+    "creator": "Mujhe Mohd Aatif ne design kiya hai.",
+    "zakat": "Zakat har sahib-e-nisab par 2.5% farz hai jo gareebon ki madad ke liye di jati hai."
 };
 
 const chat = document.getElementById("chat");
 const input = document.getElementById("input");
 
-// --- VOICE FUNCTION ---
 function speak(text) {
-    const cleanText = text.replace(/<[^>]*>/g, ''); // HTML tags hata kar bolne ke liye
-    const speech = new SpeechSynthesisUtterance(cleanText);
-    speech.lang = 'hi-IN'; // Hindi/Urdu accent
+    const speech = new SpeechSynthesisUtterance(text.replace(/<[^>]*>/g, ''));
+    speech.lang = 'hi-IN';
     window.speechSynthesis.speak(speech);
 }
 
 function addMsg(html, type) {
     let d = document.createElement("div");
-    d.className = `msg ${type}`;
+    d.className = type;
     d.innerHTML = html;
     chat.appendChild(d);
     chat.scrollTop = chat.scrollHeight;
-    localStorage.setItem("aatif_history", chat.innerHTML);
+    localStorage.setItem("aatif_chat_v2", chat.innerHTML);
 }
 
 function send() {
@@ -133,40 +120,35 @@ function send() {
 
     let q = val.toLowerCase();
     let reply = "";
-
-    // Search logic
-    let keys = Object.keys(DATA);
-    let match = keys.find(k => q.includes(k));
+    
+    let match = Object.keys(DATA).find(k => q.includes(k));
 
     if(match) {
         reply = DATA[match];
     } else {
-        reply = "Mohd Aatif AI: Iski malumat filhal mere paas nahi hai, lekin aap 'Google' par dekh sakte hain ya Mohd Aatif se pooch sakte hain.";
+        let link = "https://www.google.com/search?q=" + encodeURIComponent(val + " in Islam");
+        reply = `Iski malumat filhal mere paas nahi hai. Lekin aap yahan check kar sakte hain: <br><br><a href="${link}" target="_blank" style="color:cyan;">Click here to search on Google</a>`;
     }
 
     setTimeout(() => {
         addMsg(reply, "bot");
-        speak(reply); // AI BOL KAR BATAYEGA
+        speak(reply);
     }, 600);
 }
 
 function clearChat() {
     chat.innerHTML = "";
-    localStorage.removeItem("aatif_history");
-    addMsg("Assalamu Alaikum! Main Mohd Aatif AI hoon. Main bol kar bhi jawab de sakta hoon. Puchiye...", "bot");
+    localStorage.removeItem("aatif_chat_v2");
+    addMsg("Assalamu Alaikum! Main Mohd Aatif AI hoon. Puchiye...", "bot");
 }
 
 function openPage(id) { document.getElementById(id).style.display = "block"; }
 function closePages() { document.querySelectorAll(".page").forEach(p => p.style.display = "none"); }
 
-// Restore history
 window.onload = () => {
-    chat.innerHTML = localStorage.getItem("aatif_history") || "";
-    if(!chat.innerHTML) {
-        addMsg("Assalamu Alaikum! Main Mohd Aatif AI hoon. Deen-e-Islam aur Ramzan ke baare mein kuch bhi puchein.", "bot");
-    }
+    chat.innerHTML = localStorage.getItem("aatif_chat_v2") || "";
+    if(!chat.innerHTML) addMsg("Assalamu Alaikum! Main Mohd Aatif AI hoon. Main bol kar jawab de sakta hoon. Puchiye...", "bot");
 };
 </script>
-
 </body>
 </html>
